@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aplicai/HomePage.dart';
+import 'package:aplicai/home_page.dart';
 import 'package:aplicai/signup_page.dart';
 
 class RouteGenerator {
