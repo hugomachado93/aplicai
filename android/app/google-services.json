@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1021326242435",
+    "firebase_url": "https://aplicai.firebaseio.com",
+    "project_id": "aplicai",
+    "storage_bucket": "aplicai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021326242435:android:f8febed135d722d2f0a1b6",
+        "android_client_info": {
+          "package_name": "com.example.aplicai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021326242435-vjggev0t0jqcmete538hn8e5b7draln7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aplicai",
+            "certificate_hash": "833d9079d1c40a61ed88fb43d6b56a6e76be628b"
+          }
+        },
+        {
+          "client_id": "1021326242435-jt5t8clkd4eucavj27j4img5r27dp00d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD6NZdP3vVC5z2uI68Rc1lkCVTw50l-k4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021326242435-jt5t8clkd4eucavj27j4img5r27dp00d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
