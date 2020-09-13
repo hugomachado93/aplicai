@@ -1,4 +1,7 @@
+import 'package:aplicai/pages/explore_page.dart';
 import 'package:flutter/material.dart';
+
+import 'em_andamento_page.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -9,6 +12,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationState extends State<NavigationPage> {
   int _selectedIndex = 0;
+  List<Widget> _widgetsOptions = <Widget>[ExplorePage(), EmAndamentoPage(), Container(),Container()];
 
   _onItemTapped(int index) {
     setState(() {
@@ -19,21 +23,26 @@ class _NavigationState extends State<NavigationPage> {
   @override
   Widget build(Object context) {
     return Scaffold(
-      body: Container(),
+      body: _widgetsOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: Icon(Icons.search),
+            title: Text('Explorar'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            title: Text('Business'),
+            title: Text('Em andamento'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            title: Text('School'),
+            title: Text('Notificações'),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            title: Text('Perfil'),
+          )
         ],
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,

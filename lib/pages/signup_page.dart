@@ -1,7 +1,8 @@
 import 'dart:ui';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
 class SignupPage extends StatefulWidget {
@@ -16,12 +17,14 @@ class _SignupPageState extends State<SignupPage> {
 
   String _name;
   String _email;
-  String _senha;
+  String _cpf;
   String _curso;
   String _matricula;
   String _linkedinUrl;
   String _portfolioUrl;
   File _image;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  SharedPreferences prefs;
 
   final picker = ImagePicker();
 
@@ -58,13 +61,13 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _buildCpfField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: "Senha"),
+      decoration: InputDecoration(labelText: "CPF"),
       validator: (String value) {
         if (value.isEmpty) {
           return "Cpf invalido";
         }
       },
-      onSaved: (value) => {_senha = value},
+      onSaved: (value) => {_cpf = value},
     );
   }
 
@@ -148,9 +151,16 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  _saveUserData() {
+  _saveUserData() async {
     try {
-      Navigator.of(context)..pushNamed("/explorar");
+      prefs = await SharedPreferences.getInstance();
+
+      _db.collection("Users").doc(prefs.getString("userId")).set(
+        {
+          "name": _name
+        }
+      );
+      Navigator.of(context)..pushNamed("/signup");
     } catch (ex) {
       print("Failed to create user $ex");
     }

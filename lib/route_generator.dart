@@ -1,4 +1,5 @@
 import 'package:aplicai/home_page.dart';
+import 'package:aplicai/pages/navigation_page.dart';
 import 'package:aplicai/pages/pre_singup_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
@@ -10,7 +11,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => NavigationPage());
       case '/signup-start':
         return MaterialPageRoute(builder: (_) => SignupStart());
       case '/signup':
