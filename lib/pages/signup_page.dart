@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:aplicai/entity/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -154,12 +155,8 @@ class _SignupPageState extends State<SignupPage> {
   _saveUserData() async {
     try {
       prefs = await SharedPreferences.getInstance();
-
-      _db.collection("Users").doc(prefs.getString("userId")).set(
-        {
-          "name": _name
-        }
-      );
+      var user = User(_name, _email, _cpf,_curso,_matricula,_linkedinUrl,_portfolioUrl);
+      _db.collection("Users").doc(prefs.getString("userId")).set(user.toJson());
       Navigator.of(context)..pushNamed("/signup");
     } catch (ex) {
       print("Failed to create user $ex");

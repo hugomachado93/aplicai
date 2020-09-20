@@ -1,0 +1,278 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.aplicai"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+9        android:targetSdkVersion="28" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->C:\Users\hugom\aplicai\android\app\src\debug\AndroidManifest.xml:6:5-66
+14-->C:\Users\hugom\aplicai\android\app\src\debug\AndroidManifest.xml:6:22-64
+15    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+15-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-80
+15-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:22-77
+16    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+16-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:5-81
+16-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:22-78
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:24:5-79
+17-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:24:22-76
+18    <uses-permission android:name="android.permission.WAKE_LOCK" />
+18-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:25:5-68
+18-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:25:22-65
+19    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+19-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:26:5-110
+19-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:26:22-107
+20    <!--
+21 io.flutter.app.FlutterApplication is an android.app.Application that
+22         calls FlutterMain.startInitialization(this); in its onCreate method.
+23         In most cases you can leave this as-is, but you if you want to provide
+24         additional functionality it is fine to subclass or reimplement
+25         FlutterApplication and put your custom class here.
+26    -->
+27    <application
+27-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:8:5-46:19
+28        android:name="io.flutter.app.FlutterApplication"
+28-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:9:9-57
+29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+29-->[androidx.core:core:1.1.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\3aaf6e5219b7f981ec263df919098c6f\core-1.1.0\AndroidManifest.xml:24:18-86
+30        android:debuggable="true"
+31        android:icon="@mipmap/ic_launcher"
+31-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:11:9-43
+32        android:label="aplicai" >
+32-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:10:9-32
+33        <activity
+33-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:12:9-40:20
+34            android:name="com.example.aplicai.MainActivity"
+34-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:13:13-41
+35            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+35-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:16:13-163
+36            android:hardwareAccelerated="true"
+36-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:17:13-47
+37            android:launchMode="singleTop"
+37-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:14:13-43
+38            android:theme="@style/LaunchTheme"
+38-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:15:13-47
+39            android:windowSoftInputMode="adjustResize" >
+39-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:18:13-55
+40
+41            <!--
+42                 Specifies an Android theme to apply to this Activity as soon as
+43                 the Android process has started. This theme is visible to the user
+44                 while the Flutter UI initializes. After that, this theme continues
+45                 to determine the Window background behind the Flutter UI.
+46            -->
+47            <meta-data
+47-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:23:13-26:17
+48                android:name="io.flutter.embedding.android.NormalTheme"
+48-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:24:15-70
+49                android:resource="@style/NormalTheme" />
+49-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:25:15-52
+50            <!--
+51                 Displays an Android View that continues showing the launch screen
+52                 Drawable until Flutter paints its first frame, then this splash
+53                 screen fades out. A splash screen is useful to avoid any visual
+54                 gap between the end of Android's launch screen and the painting of
+55                 Flutter's first frame.
+56            -->
+57            <meta-data
+57-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:32:13-35:17
+58                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+58-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:33:15-79
+59                android:resource="@drawable/launch_background" />
+59-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:34:15-61
+60
+61            <intent-filter>
+61-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:36:13-39:29
+62                <action android:name="android.intent.action.MAIN" />
+62-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:37:17-68
+62-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:37:25-66
+63
+64                <category android:name="android.intent.category.LAUNCHER" />
+64-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:38:17-76
+64-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:38:27-74
+65            </intent-filter>
+66        </activity>
+67        <!--
+68             Don't delete the meta-data below.
+69             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+70        -->
+71        <meta-data
+71-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:43:9-45:33
+72            android:name="flutterEmbedding"
+72-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:44:13-44
+73            android:value="2" />
+73-->C:\Users\hugom\aplicai\android\app\src\main\AndroidManifest.xml:45:13-30
+74
+75        <service
+75-->[:firebase_auth] C:\Users\hugom\aplicai\build\firebase_auth\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-12:19
+76            android:name="com.google.firebase.components.ComponentDiscoveryService"
+76-->[:firebase_auth] C:\Users\hugom\aplicai\build\firebase_auth\intermediates\library_manifest\debug\AndroidManifest.xml:8:18-89
+77            android:directBootAware="true"
+77-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:34:13-43
+78            android:exported="false" >
+78-->[com.google.android.gms:play-services-measurement-api:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\d751e1e5368e6ac07484e7b258ca1942\play-services-measurement-api-17.5.0\AndroidManifest.xml:29:13-37
+79            <meta-data
+79-->[:firebase_auth] C:\Users\hugom\aplicai\build\firebase_auth\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-11:85
+80                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
+80-->[:firebase_auth] C:\Users\hugom\aplicai\build\firebase_auth\intermediates\library_manifest\debug\AndroidManifest.xml:10:17-124
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[:firebase_auth] C:\Users\hugom\aplicai\build\firebase_auth\intermediates\library_manifest\debug\AndroidManifest.xml:11:17-82
+82            <meta-data
+82-->[:cloud_firestore] C:\Users\hugom\aplicai\build\cloud_firestore\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-11:85
+83                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+83-->[:cloud_firestore] C:\Users\hugom\aplicai\build\cloud_firestore\intermediates\library_manifest\debug\AndroidManifest.xml:10:17-134
+84                android:value="com.google.firebase.components.ComponentRegistrar" />
+84-->[:cloud_firestore] C:\Users\hugom\aplicai\build\cloud_firestore\intermediates\library_manifest\debug\AndroidManifest.xml:11:17-82
+85            <meta-data
+85-->[:firebase_core] C:\Users\hugom\aplicai\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-11:85
+86                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+86-->[:firebase_core] C:\Users\hugom\aplicai\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:10:17-124
+87                android:value="com.google.firebase.components.ComponentRegistrar" />
+87-->[:firebase_core] C:\Users\hugom\aplicai\build\firebase_core\intermediates\library_manifest\debug\AndroidManifest.xml:11:17-82
+88            <meta-data
+88-->[com.google.android.gms:play-services-measurement-api:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\d751e1e5368e6ac07484e7b258ca1942\play-services-measurement-api-17.5.0\AndroidManifest.xml:30:13-32:85
+89                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+89-->[com.google.android.gms:play-services-measurement-api:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\d751e1e5368e6ac07484e7b258ca1942\play-services-measurement-api-17.5.0\AndroidManifest.xml:31:17-139
+90                android:value="com.google.firebase.components.ComponentRegistrar" />
+90-->[com.google.android.gms:play-services-measurement-api:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\d751e1e5368e6ac07484e7b258ca1942\play-services-measurement-api-17.5.0\AndroidManifest.xml:32:17-82
+91            <meta-data
+91-->[com.google.firebase:firebase-installations:16.3.2] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\a6beb7a08bb153d99f4a6b1869466e43\firebase-installations-16.3.2\AndroidManifest.xml:17:13-19:85
+92                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+92-->[com.google.firebase:firebase-installations:16.3.2] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\a6beb7a08bb153d99f4a6b1869466e43\firebase-installations-16.3.2\AndroidManifest.xml:18:17-127
+93                android:value="com.google.firebase.components.ComponentRegistrar" />
+93-->[com.google.firebase:firebase-installations:16.3.2] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\a6beb7a08bb153d99f4a6b1869466e43\firebase-installations-16.3.2\AndroidManifest.xml:19:17-82
+94            <meta-data
+94-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:36:13-38:85
+95                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+95-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:37:17-109
+96                android:value="com.google.firebase.components.ComponentRegistrar" />
+96-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:38:17-82
+97            <meta-data
+97-->[com.google.firebase:firebase-firestore:21.4.3] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\588d8ac77f3d3f6d4db113069f0d9c44\jetified-firebase-firestore-21.4.3\AndroidManifest.xml:20:13-22:85
+98                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+98-->[com.google.firebase:firebase-firestore:21.4.3] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\588d8ac77f3d3f6d4db113069f0d9c44\jetified-firebase-firestore-21.4.3\AndroidManifest.xml:21:17-111
+99                android:value="com.google.firebase.components.ComponentRegistrar" />
+99-->[com.google.firebase:firebase-firestore:21.4.3] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\588d8ac77f3d3f6d4db113069f0d9c44\jetified-firebase-firestore-21.4.3\AndroidManifest.xml:22:17-82
+100        </service>
+101
+102        <provider
+102-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:9-19:20
+103            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+103-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-82
+104            android:authorities="com.example.aplicai.flutter.image_provider"
+104-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-74
+105            android:exported="false"
+105-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-37
+106            android:grantUriPermissions="true" >
+106-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-47
+107            <meta-data
+107-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:75
+108                android:name="android.support.FILE_PROVIDER_PATHS"
+108-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-67
+109                android:resource="@xml/flutter_image_picker_file_paths" />
+109-->[:image_picker] C:\Users\hugom\aplicai\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:18:17-72
+110        </provider>
+111
+112        <receiver
+112-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:29:9-33:20
+113            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+113-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:30:13-85
+114            android:enabled="true"
+114-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:31:13-35
+115            android:exported="false" >
+115-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:32:13-37
+116        </receiver>
+117
+118        <service
+118-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:35:9-38:40
+119            android:name="com.google.android.gms.measurement.AppMeasurementService"
+119-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:36:13-84
+120            android:enabled="true"
+120-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:37:13-35
+121            android:exported="false" />
+121-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:38:13-37
+122        <service
+122-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:39:9-43:72
+123            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+123-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:40:13-87
+124            android:enabled="true"
+124-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:41:13-35
+125            android:exported="false"
+125-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:42:13-37
+126            android:permission="android.permission.BIND_JOB_SERVICE" />
+126-->[com.google.android.gms:play-services-measurement:17.5.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\e9973ab53e0e0ab3a5a85762e8cae3ab\play-services-measurement-17.5.0\AndroidManifest.xml:43:13-69
+127
+128        <activity
+128-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:23:9-27:75
+129            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+129-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:24:13-93
+130            android:excludeFromRecents="true"
+130-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:25:13-46
+131            android:exported="false"
+131-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:26:13-37
+132            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+132-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:27:13-72
+133        <!--
+134            Service handling Google Sign-In user revocation. For apps that do not integrate with
+135            Google Sign-In, this service will never be started.
+136        -->
+137        <service
+137-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:33:9-36:110
+138            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+138-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:34:13-89
+139            android:exported="true"
+139-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:35:13-36
+140            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" />
+140-->[com.google.android.gms:play-services-auth:16.0.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\1399765fd2e474037b22532f397536a5\jetified-play-services-auth-16.0.1\AndroidManifest.xml:36:13-107
+141
+142        <activity
+142-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:24:9-31:50
+143            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+143-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:25:13-85
+144            android:excludeFromRecents="true"
+144-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:26:13-46
+145            android:exported="true"
+145-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:27:13-36
+146            android:launchMode="singleTask"
+146-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:28:13-44
+147            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
+147-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:29:13-102
+148            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+148-->[com.google.firebase:firebase-auth:19.3.1] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\82681f3c0761d655651a14f400b32223\firebase-auth-19.3.1\AndroidManifest.xml:30:13-72
+149
+150        <provider
+150-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:26:9-30:39
+151            android:name="com.google.firebase.provider.FirebaseInitProvider"
+151-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:27:13-77
+152            android:authorities="com.example.aplicai.firebaseinitprovider"
+152-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:28:13-72
+153            android:exported="false"
+153-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:29:13-37
+154            android:initOrder="100" />
+154-->[com.google.firebase:firebase-common:19.3.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\7c1ea8ba28270fcb5fe07d987139d1a9\jetified-firebase-common-19.3.0\AndroidManifest.xml:30:13-36
+155
+156        <activity
+156-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\6eb14f512292913515d869914807ad40\play-services-base-17.1.0\AndroidManifest.xml:23:9-26:75
+157            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+157-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\6eb14f512292913515d869914807ad40\play-services-base-17.1.0\AndroidManifest.xml:24:13-79
+158            android:exported="false"
+158-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\6eb14f512292913515d869914807ad40\play-services-base-17.1.0\AndroidManifest.xml:25:13-37
+159            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+159-->[com.google.android.gms:play-services-base:17.1.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\6eb14f512292913515d869914807ad40\play-services-base-17.1.0\AndroidManifest.xml:26:13-72
+160
+161        <meta-data
+161-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\4d786a7b28b02c0e3344e6a1eada9cd3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
+162            android:name="com.google.android.gms.version"
+162-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\4d786a7b28b02c0e3344e6a1eada9cd3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
+163            android:value="@integer/google_play_services_version" />
+163-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\hugom\.gradle\caches\transforms-2\files-2.1\4d786a7b28b02c0e3344e6a1eada9cd3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
+164    </application>
+165
+166</manifest>

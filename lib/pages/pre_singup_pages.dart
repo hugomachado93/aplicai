@@ -1,14 +1,24 @@
+import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
 class PreSignupPages extends StatefulWidget {
+  PreSignupPages({this.userTypeEnum});
+
+  final UserTypeEnum userTypeEnum;
+
   @override
   State<StatefulWidget> createState() {
-    return PreSignupPagesState();
+    return PreSignupPagesState(userTypeEnum: userTypeEnum);
   }
 }
 
 class PreSignupPagesState extends State<PreSignupPages> {
+
+  PreSignupPagesState({this.userTypeEnum});
+
+  UserTypeEnum userTypeEnum;
+
   PageController _pageController = PageController(initialPage: 0);
   int _pageIndex = 0;
 
@@ -31,7 +41,8 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 borderRadius: BorderRadius.circular(20.0)),
             onPressed: () {
               if (_pageIndex >= 2) {
-                Navigator.of(context).pushNamed('/signup');
+                var url = userTypeEnum == UserTypeEnum.student ? "/signup-student" : "/signup-employer";
+                Navigator.of(context).pushNamed(url);
               }
               setState(() {
                 _pageController.animateToPage(++_pageIndex,
@@ -105,7 +116,7 @@ class PreSignupPagesState extends State<PreSignupPages> {
                   SizedBox(
                     height: 300,
                   ),
-                  Text("alo"),
+                  userTypeEnum == UserTypeEnum.student ? Text("estudante") : Text("empregador"),
                   SizedBox(
                     height: 300,
                   ),

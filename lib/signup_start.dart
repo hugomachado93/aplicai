@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:flutter/material.dart';
 
 class SignupStart extends StatelessWidget {
@@ -28,7 +29,7 @@ class SignupStart extends StatelessWidget {
                 height: 300,
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/pre-signup-pages');
+                      Navigator.of(context).pushNamed('/pre-signup-pages', arguments: UserTypeEnum.student);
                     },
                     child: Column(
                       children: [
@@ -62,7 +63,7 @@ class SignupStart extends StatelessWidget {
                 height: 350,
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/signup');
+                      Navigator.of(context).pushNamed('/pre-signup-pages', arguments: UserTypeEnum.employer);
                     },
                     child: Column(
                       children: [

@@ -15,7 +15,9 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
         floatingActionButton: Container(
           width: 150  ,
           child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed('/nova-demanda');
+              },
               shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Row(

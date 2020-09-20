@@ -33,7 +33,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                   Expanded(
             child: StreamBuilder<QuerySnapshot>(
-                    stream: _db.collection("Users").snapshots(),
+                    stream: _db.collection("Demands").snapshots(),
                     builder: (context, querySnapshot) {
                       if (querySnapshot.hasError) {
                         return Text("ERROR");
@@ -42,10 +42,10 @@ class _ExplorePageState extends State<ExplorePage> {
                           ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else {
-                        final userList = querySnapshot.data.docs;
+                        final demandList = querySnapshot.data.docs;
 
                         return ListView.builder(
-                            itemCount: userList.length,
+                            itemCount: demandList.length,
                             itemBuilder: (context, index) {
                               return Card(
                                 shape: RoundedRectangleBorder(
@@ -77,9 +77,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                               height: 5,
                                               thickness: 1,
                                             ),
-                                            _textBuilder(Icons.work, "Hey"),
-                                            _textBuilder(Icons.folder, "Hey"),
-                                            _textBuilder(Icons.location_on, "Hey"),
+                                            _textBuilder(Icons.work, demandList[index].data()["name"]),
+                                            _textBuilder(Icons.folder, demandList[index].data()["categories"]),
+                                            _textBuilder(Icons.location_on, demandList[index].data()["localization"]),
                                           ]),
                                     ),
                                     SizedBox(
