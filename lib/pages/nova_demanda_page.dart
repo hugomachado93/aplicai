@@ -126,9 +126,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   Widget _buildEndDateField(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-          labelText: "Data do fim das incrições",
-          hintText: "dd/MM/yyyy"
-        ),
+          labelText: "Data do fim das incrições", hintText: "dd/MM/yyyy"),
       controller: endDateCtrl,
       onTap: () async {
         var myFormat = DateFormat('dd/MM/yyyy');
@@ -140,7 +138,6 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   }
 
   _selectDate(BuildContext context) async {
-
     final DateTime datePicked = await showDatePicker(
         context: context,
         initialDate: _date,
@@ -159,17 +156,14 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     try {
       prefs = await SharedPreferences.getInstance();
 
-      _db
-          .collection("Demands")
-          .doc("5hBQwKzjpF0TQnP08PuO")
-          .set({
-            "name": _name,
-            "description": _description,
-            "categories": _categories,
-            "quantityParticipants": _quantityParticipants,
-            "localization": _localization,
-            "endDate": _date
-          });
+      _db.collection("Demands").doc(prefs.getString("userId")).set({
+        "name": _name,
+        "description": _description,
+        "categories": _categories,
+        "quantityParticipants": _quantityParticipants,
+        "localization": _localization,
+        "endDate": _date
+      });
 
       Navigator.of(context)..pushNamed("/");
     } catch (ex) {
