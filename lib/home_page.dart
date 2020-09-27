@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
 
       if (userData.data() != null) {
         print("usuario com login ${userData.data()}");
-        Navigator.of(context).pushNamed("/signup-start");
+        Navigator.of(context).pushNamed("/navigation");
       } else {
         print("usuario sem login ${userData.data()}");
         _db

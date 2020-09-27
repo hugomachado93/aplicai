@@ -156,7 +156,12 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     try {
       prefs = await SharedPreferences.getInstance();
 
-      _db.collection("Demands").doc(prefs.getString("userId")).set({
+      _db
+          .collection("Demands")
+          .doc(prefs.getString("userId"))
+          .collection("DemandList")
+          .doc()
+          .set({
         "name": _name,
         "description": _description,
         "categories": _categories,
@@ -165,7 +170,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
         "endDate": _date
       });
 
-      Navigator.of(context)..pushNamed("/");
+      Navigator.of(context).pushNamed("/navigation");
     } catch (ex) {
       print("Failed to create user $ex");
     }

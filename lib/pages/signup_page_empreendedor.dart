@@ -158,10 +158,7 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
       prefs = await SharedPreferences.getInstance();
       var user = Empreendedor(_companyName, _email, _cnpj, _razaoSocial,
           _desciption, _linkedinUrl, _portfolioUrl);
-      _db
-          .collection("Empreendedor")
-          .doc(prefs.getString("userId"))
-          .set(user.toJson());
+      _db.collection("Users").doc(prefs.getString("userId")).set(user.toJson());
 
       Navigator.of(context)..pushNamed("/navigation");
     } catch (ex) {
