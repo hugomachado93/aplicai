@@ -6,6 +6,7 @@ import 'package:aplicai/pages/navigation_page.dart';
 import 'package:aplicai/pages/nova_demanda_page.dart';
 import 'package:aplicai/pages/pre_singup_pages.dart';
 import 'package:aplicai/pages/signup_page_empreendedor.dart';
+import 'package:aplicai/pages/subscription_finished.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
 import 'package:aplicai/pages/signup_page.dart';
@@ -40,6 +41,9 @@ class RouteGenerator {
       case '/demand-subscription':
         return MaterialPageRoute(
             builder: (_) => DemandSubscriptionPage(demanda: args));
+      case '/finished-subscription':
+        return MaterialPageRoute(
+            builder: (_) => SubscriptionFinishedPage(demanda: args));
     }
   }
 }

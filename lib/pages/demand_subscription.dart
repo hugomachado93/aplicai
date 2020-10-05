@@ -11,12 +11,16 @@ class DemandSubscriptionPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _DemandSubscriptionPageState();
+    return _DemandSubscriptionPageState(demanda: demanda);
   }
 }
 
 class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
   Demanda demanda;
+  String _motivationText;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   _DemandSubscriptionPageState({this.demanda});
@@ -24,18 +28,6 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
   Widget _textBuilder(IconData icon, String text) {
     return Row(children: [Icon(icon), Text(text)]);
   }
-
-  // solicitation() async {
-  //   var prefs = await SharedPreferences.getInstance();
-  //   _db
-  //       .collection("Demands")
-  //       .doc("GynLolnoRlc418C9fCEbK6BrXKA2")
-  //       .collection("DemandList")
-  //       .doc("crCxLs9cDcywzq0ktIcq")
-  //       .collection("Solicitation")
-  //       .doc(prefs.getString("userId"))
-  //       .set({'motivationText': 'text here'});
-  // }
 
   Widget _createTop() {
     return Row(children: [
@@ -77,6 +69,26 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
     return userData.data()['type'];
   }
 
+  _createSolicitation() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    _formKey.currentState.save();
+
+    var prefs = await SharedPreferences.getInstance();
+    _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Solicitation")
+        .doc(prefs.getString("userId"))
+        .set({'motivationText': _motivationText});
+
+    Navigator.of(context)
+        .pushNamed("/finished-subscription", arguments: demanda);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +98,8 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text("Error");
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
               return Container(
@@ -99,6 +112,63 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
                           height: 50,
                         ),
                         _createTop(),
+                        Divider(
+                          height: 50,
+                          thickness: 1,
+                        ),
+                        Text(
+                          "Interessado no projeto?",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text("O que te faz querer ingressar nesse projeto?"),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                            "Conte um pouco sobre suas ambições para seu parceiro!"),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            maxLength: 400,
+                            onSaved: (value) => _motivationText = value,
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return "Não pode ser vazio!";
+                              }
+                            },
+                            buildCounter: (
+                              BuildContext context, {
+                              int currentLength,
+                              int maxLength,
+                              bool isFocused,
+                            }) =>
+                                Text("$currentLength/$maxLength"),
+                            maxLines: 10,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: RaisedButton(
+                              color: Colors.blueAccent,
+                              onPressed: _createSolicitation,
+                              child: Text(
+                                "Quero me increver!",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
                       ]));
             }
           }),

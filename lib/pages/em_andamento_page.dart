@@ -45,8 +45,9 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
               height: 100,
               width: 100,
               decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                      image: AssetImage("assets/images/placeholder.png"),
+                      image: NetworkImage(demand.data()['urlImage']),
                       fit: BoxFit.fill)),
             ),
             SizedBox(
@@ -78,65 +79,62 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _getUserType() != 'employer'
-          ? Container(
-              width: 150,
-              child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/nova-demanda');
-                  },
-                  shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 15,
-                        ),
-                        Text("Nova demanda"),
-                      ])),
-            )
-          : null,
-      body: Container(
-        child: Center(
-            child: Column(
-          children: [
-            Container(
-              alignment: Alignment.bottomLeft,
-              height: 100,
-              width: MediaQuery.of(context).size.width,
-              child: Row(children: [
-                SizedBox(width: 15),
-                Text("Explorar", style: TextStyle(fontSize: 30))
-              ]),
-            ),
-            Expanded(
-              child: FutureBuilder<QuerySnapshot>(
-                  future: _getUserDemands(),
-                  builder: (context, querySnapshot) {
-                    if (querySnapshot.hasError) {
-                      return Text("ERROR");
-                    }
-                    if (querySnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else {
-                      List<QueryDocumentSnapshot> demandList =
-                          querySnapshot.data.docs;
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _getUserType() != 'employer'
+            ? Container(
+                width: 150,
+                child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/nova-demanda');
+                    },
+                    shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add,
+                            size: 15,
+                          ),
+                          Text("Nova demanda"),
+                        ])),
+              )
+            : null,
+        body: FutureBuilder<QuerySnapshot>(
+            future: _getUserDemands(),
+            builder: (context, querySnapshot) {
+              if (querySnapshot.hasError) {
+                return Text("ERROR");
+              }
+              if (querySnapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                List<QueryDocumentSnapshot> demandList =
+                    querySnapshot.data.docs;
 
-                      return ListView.builder(
-                          itemCount: demandList.length,
-                          itemBuilder: (context, index) {
-                            return _createCards(demandList[index]);
-                          });
-                    }
-                  }),
-            ),
-          ],
-        )),
-      ),
-    );
+                return Container(
+                  child: Center(
+                      child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        height: 100,
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(children: [
+                          SizedBox(width: 15),
+                          Text("Explorar", style: TextStyle(fontSize: 30))
+                        ]),
+                      ),
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: demandList.length,
+                              itemBuilder: (context, index) {
+                                return _createCards(demandList[index]);
+                              })),
+                    ],
+                  )),
+                );
+              }
+            }));
   }
 }

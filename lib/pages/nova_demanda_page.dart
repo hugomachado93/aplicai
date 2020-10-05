@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class NovaDemandaPage extends StatefulWidget {
   @override
@@ -21,18 +22,37 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   String _categories;
   String _quantityParticipants;
   String _localization;
+  String _urlImage;
   DateTime _date = DateTime.now();
   TextEditingController endDateCtrl = TextEditingController();
   File _image;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
+
+  bool isLoadingImage = false;
 
   final picker = ImagePicker();
 
   Future _getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
+      isLoadingImage = true;
       _image = File(pickedFile.path);
+    });
+
+    var prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString("userId");
+
+    StorageReference reference = _storage.ref().child(
+        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    StorageUploadTask storageUploadTask = reference.putFile(_image);
+
+    StorageTaskSnapshot storageTaskSnapshot =
+        await storageUploadTask.onComplete;
+    _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
+    setState(() {
+      isLoadingImage = false;
     });
   }
 
@@ -156,21 +176,25 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     try {
       prefs = await SharedPreferences.getInstance();
 
-      _db
-          .collection("Demands")
-          .doc(prefs.getString("userId"))
-          .collection("DemandList")
-          .doc()
-          .set({
-        "name": _name,
-        "description": _description,
-        "categories": _categories,
-        "quantityParticipants": _quantityParticipants,
-        "localization": _localization,
-        "endDate": _date
-      });
+      if (isLoadingImage) {
+      } else {
+        _db
+            .collection("Demands")
+            .doc(prefs.getString("userId"))
+            .collection("DemandList")
+            .doc()
+            .set({
+          "name": _name,
+          "description": _description,
+          "categories": _categories,
+          "quantityParticipants": _quantityParticipants,
+          "localization": _localization,
+          "endDate": _date,
+          "urlImage": _urlImage
+        });
 
-      Navigator.of(context).pushNamed("/navigation");
+        Navigator.of(context).pushNamed("/navigation");
+      }
     } catch (ex) {
       print("Failed to create user $ex");
     }

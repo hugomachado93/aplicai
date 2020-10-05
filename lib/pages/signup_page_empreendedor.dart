@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:aplicai/entity/empreendedor.dart';
-import 'package:aplicai/entity/user.dart';
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

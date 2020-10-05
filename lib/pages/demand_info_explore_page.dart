@@ -1,5 +1,6 @@
 import 'package:aplicai/entity/demanda.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,8 @@ class DemandInfoExplorePage extends StatefulWidget {
 class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   Demanda demanda;
   FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirebaseStorage _storage = FirebaseStorage.instance;
+  String _demandPictureUrl;
 
   _DemandInfoExplorePageState({this.demanda});
 
@@ -32,8 +35,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
         width: 100,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/placeholder.png"),
-                fit: BoxFit.fill)),
+                image: NetworkImage(_demandPictureUrl), fit: BoxFit.fill)),
       ),
       SizedBox(
         width: 30,
@@ -76,7 +78,10 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
     );
   }
 
-  _loadUserType() async {
+  _loadData() async {
+    final ref = _storage.ref().child("demands/${demanda.parentId}");
+    _demandPictureUrl = await ref.getDownloadURL();
+
     var prefs = await SharedPreferences.getInstance();
     var userData =
         await _db.collection("Users").doc(prefs.getString("userId")).get();
@@ -86,86 +91,86 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: FutureBuilder(
-          future: _loadUserType(),
+      body: FutureBuilder(
+          future: _loadData(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text("Error");
+              return Center(child: Text("Error"));
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
-              return Container(
-                  margin: EdgeInsets.all(20),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                        ),
-                        _createTop(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        SizedBox(height: 15),
-                        Center(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Text(
-                              "Ver perfil do empreendimento",
-                              style: TextStyle(color: Colors.blueAccent),
+              return SingleChildScrollView(
+                  child: Container(
+                      margin: EdgeInsets.all(20),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 50,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Descrição:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(demanda.description),
-                        Divider(
-                          height: 50,
-                          thickness: 1,
-                        ),
-                        _bottomDescriptions(Icons.calendar_today,
-                            "Fim das inscrições", endDateFormated()),
-                        _bottomDescriptions(
-                            Icons.watch_later, "Duração", "Média, até 1 mês"),
-                        _bottomDescriptions(Icons.group, "Grupo",
-                            "${demanda.quantityParticipants} participantes"),
-                        _bottomDescriptions(
-                            Icons.folder, "Categorias", demanda.categories),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        snapshot.data == "employer"
-                            ? Center(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: RaisedButton(
-                                    color: Colors.blueAccent,
-                                    onPressed: () {
-                                      Navigator.of(context).pushNamed(
-                                          "/demand-subscription",
-                                          arguments: demanda);
-                                    },
-                                    child: Text(
-                                      "Quero me increver!",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
+                            _createTop(),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            SizedBox(height: 15),
+                            Center(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Text(
+                                  "Ver perfil do empreendimento",
+                                  style: TextStyle(color: Colors.blueAccent),
                                 ),
-                              )
-                            : Container()
-                      ]));
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "Descrição:",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(demanda.description),
+                            Divider(
+                              height: 50,
+                              thickness: 1,
+                            ),
+                            _bottomDescriptions(Icons.calendar_today,
+                                "Fim das inscrições", endDateFormated()),
+                            _bottomDescriptions(Icons.watch_later, "Duração",
+                                "Média, até 1 mês"),
+                            _bottomDescriptions(Icons.group, "Grupo",
+                                "${demanda.quantityParticipants} participantes"),
+                            _bottomDescriptions(
+                                Icons.folder, "Categorias", demanda.categories),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            snapshot.data == "employer"
+                                ? Center(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: RaisedButton(
+                                        color: Colors.blueAccent,
+                                        onPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                              "/demand-subscription",
+                                              arguments: demanda);
+                                        },
+                                        child: Text(
+                                          "Quero me increver!",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container()
+                          ])));
             }
           }),
-    ));
+    );
   }
 }

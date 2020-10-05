@@ -8,6 +8,7 @@ class Demanda {
   String localization;
   String quantityParticipants;
   String parentId;
+  String childId;
 
   Demanda(this.name, this.categories, this.endDate, this.localization,
       this.quantityParticipants, this.description);

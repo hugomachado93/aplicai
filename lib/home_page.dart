@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:aplicai/service/auth_service.dart';
+import 'package:aplicai/service/user_service.dart';
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,9 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  AuthService authService = AuthService();
+  UserService userService = UserService();
   SharedPreferences prefs;
 
   bool isLoading = false;
@@ -25,31 +24,19 @@ class _HomePageState extends State<HomePage> {
         isLoading = true;
       });
 
-      var googleUser = await _googleSignIn.signIn();
-      var googleAuth = await googleUser.authentication;
-      var credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      var authResult = await _firebaseAuth.signInWithCredential(credential);
-      var user = authResult.user;
+      var userAuth = await authService.getUserUidAuth();
+      UserEntity user = await userService.getUserById(userAuth.uid);
 
-      var userData = await _db.collection("Users").doc(user.uid).get();
-
-      setState(() {
-        isLoading = false;
-      });
-
-      if (userData.data() != null) {
-        print("usuario com login ${userData.data()}");
+      if (user != null) {
+        print("usuario já cadastrado ${user}");
         Navigator.of(context).pushNamed("/navigation");
       } else {
-        print("usuario sem login ${userData.data()}");
-        _db
-            .collection("Users")
-            .doc(user.uid)
-            .set({"nome": user.displayName, "email": user.email});
+        print("usuario sem login ${user}");
+        await userService.createInitialuserLogin(
+            userAuth.uid, userAuth.displayName, userAuth.email);
 
         prefs = await SharedPreferences.getInstance();
-        prefs.setString("userId", user.uid);
+        prefs.setString("userId", userAuth.uid);
         Navigator.of(context).pushNamed("/signup-start");
       }
     } catch (ex) {
