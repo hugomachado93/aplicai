@@ -9,6 +9,7 @@ class Demanda {
   String quantityParticipants;
   String parentId;
   String childId;
+  String urlImage;
 
   Demanda(this.name, this.categories, this.endDate, this.localization,
       this.quantityParticipants, this.description);
@@ -20,6 +21,7 @@ class Demanda {
     endDate = json['endDate'];
     localization = json['localization'];
     quantityParticipants = json['quantityParticipants'];
+    urlImage = json['urlImage'];
   }
 
   Map<String, dynamic> toJson() => {

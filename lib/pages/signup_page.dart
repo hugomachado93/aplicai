@@ -158,7 +158,7 @@ class _SignupPageState extends State<SignupPage> {
       var user = UserEntity(
           _name, _email, _cpf, _curso, _matricula, _linkedinUrl, _portfolioUrl);
       _db.collection("Users").doc(prefs.getString("userId")).set(user.toJson());
-      Navigator.of(context)..pushNamed("/navigation");
+      Navigator.of(context).pushNamed("/navigation");
     } catch (ex) {
       print("Failed to create user $ex");
     }

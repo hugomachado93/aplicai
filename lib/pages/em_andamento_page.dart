@@ -32,6 +32,8 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
 
   Widget _createCards(QueryDocumentSnapshot demand) {
     Demanda demanda = Demanda.fromJson(demand.data());
+    demanda.parentId = demand.reference.parent.parent.id;
+    demanda.childId = demand.id;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       margin: EdgeInsets.all(15),

@@ -54,7 +54,9 @@ class _SubscriptionFinishedPageState extends State<SubscriptionFinishedPage> {
                 width: MediaQuery.of(context).size.width,
                 child: RaisedButton(
                   color: Colors.blueAccent,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/navigation");
+                  },
                   child: Text(
                     "Voltar a navegação!",
                     style: TextStyle(color: Colors.white),

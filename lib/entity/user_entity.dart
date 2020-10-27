@@ -1,35 +1,35 @@
 import 'package:aplicai/enum/userTypeEnum.dart';
 
 class UserEntity {
-  String _name;
-  String _email;
-  String _cpf;
-  String _curso;
-  String _matricula;
-  String _linkedinUrl;
-  String _portfolioUrl;
+  String name;
+  String email;
+  String cpf;
+  String curso;
+  String matricula;
+  String linkedinUrl;
+  String portfolioUrl;
 
-  UserEntity(this._name, this._email, this._cpf, this._curso, this._matricula,
-      this._linkedinUrl, this._portfolioUrl);
+  UserEntity(this.name, this.email, this.cpf, this.curso, this.matricula,
+      this.linkedinUrl, this.portfolioUrl);
 
   UserEntity.fromJson(Map<String, dynamic> json) {
-    _name = json['name'];
-    _email = json['categories'];
-    _cpf = json['cpf'];
-    _curso = json['curso'];
-    _matricula = json['matricula'];
-    _linkedinUrl = json['linkedinUrl'];
-    _portfolioUrl = json['portfolioUrl'];
+    name = json['name'];
+    email = json['email'];
+    cpf = json['cpf'];
+    curso = json['curso'];
+    matricula = json['matricula'];
+    linkedinUrl = json['linkedinUrl'];
+    portfolioUrl = json['portfolioUrl'];
   }
 
   Map<String, dynamic> toJson() => {
-        'name': _name,
-        'email': _email,
-        'cpf': _cpf,
-        'curso': _curso,
-        'matricula': _matricula,
-        'linkedinUrl': _linkedinUrl,
-        'portfolioUrl': _portfolioUrl,
+        'name': name,
+        'email': email,
+        'cpf': cpf,
+        'curso': curso,
+        'matricula': matricula,
+        'linkedinUrl': linkedinUrl,
+        'portfolioUrl': portfolioUrl,
         'type': UserTypeEnum.student.toString().split('.').last
       };
 }

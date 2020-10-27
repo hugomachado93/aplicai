@@ -28,9 +28,9 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
         height: 100,
         width: 100,
         decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
-                image: AssetImage("assets/images/placeholder.png"),
-                fit: BoxFit.fill)),
+                image: NetworkImage(demanda.urlImage), fit: BoxFit.fill)),
       ),
       SizedBox(
         width: 30,
@@ -110,7 +110,10 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                     width: 170,
                     child: RaisedButton(
                         color: Colors.blue,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed("/solicitation", arguments: demanda);
+                        },
                         child: Text("Ver solicitações")),
                   ),
                   Container(
