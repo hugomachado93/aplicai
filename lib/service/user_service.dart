@@ -9,6 +9,9 @@ class UserService {
   Future<UserEntity> getUserById(String id) async {
     DocumentSnapshot documentSnapshot =
         await _db.collection("Users").doc(id).get();
+    if (documentSnapshot.data() == null) {
+      return null;
+    }
     return UserEntity.fromJson(documentSnapshot.data());
   }
 

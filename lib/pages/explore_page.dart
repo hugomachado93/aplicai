@@ -57,7 +57,6 @@ class _ExplorePageState extends State<ExplorePage> {
                                     .parent
                                     .id;
                                 demanda.childId = demandList[index].id;
-                                print(demandList[index].id);
                                 Navigator.of(context).pushNamed(
                                     "/demand-info-explore",
                                     arguments: demanda);

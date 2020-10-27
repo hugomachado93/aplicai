@@ -35,7 +35,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
         width: 100,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(_demandPictureUrl), fit: BoxFit.fill)),
+                image: NetworkImage(demanda.urlImage), fit: BoxFit.fill)),
       ),
       SizedBox(
         width: 30,
@@ -79,9 +79,6 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   }
 
   _loadData() async {
-    final ref = _storage.ref().child("demands/${demanda.parentId}");
-    _demandPictureUrl = await ref.getDownloadURL();
-
     var prefs = await SharedPreferences.getInstance();
     var userData =
         await _db.collection("Users").doc(prefs.getString("userId")).get();
