@@ -32,8 +32,10 @@ class UserService {
         .get();
 
     for (var ref in refs.docs) {
-      final user = await _db.collection("Users").doc(ref.id).get();
-      userEntityList.add(UserEntity.fromJson(user.data()));
+      var user = await _db.collection("Users").doc(ref.id).get();
+      var userEntity = UserEntity.fromJson(user.data());
+      userEntity.userId = ref.id;
+      userEntityList.add(userEntity);
     }
 
     return userEntityList;

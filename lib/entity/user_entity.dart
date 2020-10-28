@@ -1,6 +1,7 @@
 import 'package:aplicai/enum/userTypeEnum.dart';
 
 class UserEntity {
+  String userId;
   String name;
   String email;
   String cpf;

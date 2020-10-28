@@ -6,6 +6,7 @@ import 'package:aplicai/pages/navigation_page.dart';
 import 'package:aplicai/pages/nova_demanda_page.dart';
 import 'package:aplicai/pages/pre_singup_pages.dart';
 import 'package:aplicai/pages/signup_page_empreendedor.dart';
+import 'package:aplicai/pages/solicitation_detail.dart';
 import 'package:aplicai/pages/solicitation_page.dart';
 import 'package:aplicai/pages/subscription_finished.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,11 @@ class RouteGenerator {
       case '/solicitation':
         return MaterialPageRoute(
             builder: (_) => SolicitationPage(demanda: args));
+      case '/solicitation-detail':
+        return MaterialPageRoute(
+            builder: (_) => SolicitationDetailPage(
+                  demanda: args,
+                ));
     }
   }
 }

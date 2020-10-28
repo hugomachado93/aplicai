@@ -84,7 +84,13 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                           ),
                                           Container(
                                             child: RaisedButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                demanda.solicitationId =
+                                                    snapshot.data[index].userId;
+                                                Navigator.of(context).pushNamed(
+                                                    "/solicitation-detail",
+                                                    arguments: demanda);
+                                              },
                                               color: Colors.blue,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:

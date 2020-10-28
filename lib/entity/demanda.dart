@@ -9,6 +9,7 @@ class Demanda {
   String quantityParticipants;
   String parentId;
   String childId;
+  String solicitationId;
   String urlImage;
 
   Demanda(this.name, this.categories, this.endDate, this.localization,
