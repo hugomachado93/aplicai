@@ -89,7 +89,8 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                                     snapshot.data[index].userId;
                                                 Navigator.of(context).pushNamed(
                                                     "/solicitation-detail",
-                                                    arguments: demanda);
+                                                    arguments: demanda).then((_){setState(() {
+                                                    });});
                                               },
                                               color: Colors.blue,
                                               shape: RoundedRectangleBorder(

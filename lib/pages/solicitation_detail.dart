@@ -23,6 +23,26 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
 
   _SolicitationDetailPageState({this.demanda});
 
+  _updateParticipantsOfDemand(AsyncSnapshot<Solicitation> snapshot) async {
+    List<String> reference = [];
+    reference.add("Users/${snapshot.data.demanda.solicitationId}");
+    await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .update({'users': FieldValue.arrayUnion(reference)});
+    
+    await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Solicitation")
+        .doc(demanda.solicitationId)
+        .delete();
+  }
+
   Future<Solicitation> _getUserSolicitation() async {
     final solicitation = await _db
         .collection("Demands")
@@ -143,15 +163,8 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     onPressed: () async {
-                                      List<String> reference = [];
-                                      reference.add(
-                                          "Users/${snapshot.data.demanda.solicitationId}");
-                                      final data = await _db
-                                          .collection("Demands")
-                                          .doc(demanda.parentId)
-                                          .collection("DemandList")
-                                          .doc(demanda.childId)
-                                          .set({'users': reference});
+                                      await _updateParticipantsOfDemand(snapshot);
+                                      Navigator.of(context).pop();
                                     }),
                               ),
                               Container(
