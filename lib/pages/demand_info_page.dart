@@ -50,8 +50,6 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
     ]);
   }
 
-  teste() {}
-
   String endDateFormated() {
     var dateFormat = DateFormat('dd/MM/yyyy');
     return dateFormat.format(demanda.endDate.toDate());

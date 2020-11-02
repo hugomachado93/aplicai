@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:aplicai/entity/user_entity.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,17 +24,31 @@ class _SignupPageState extends State<SignupPage> {
   String _matricula;
   String _linkedinUrl;
   String _portfolioUrl;
+  String _urlImage;
   File _image;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
 
   final picker = ImagePicker();
 
   Future _getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
+
     setState(() {
       _image = File(pickedFile.path);
-    });
+    });  
+
+    var prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString("userId");
+
+    StorageReference reference = _storage.ref().child("/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    StorageUploadTask storageUploadTask = reference.putFile(_image);
+
+    StorageTaskSnapshot storageTaskSnapshot =
+        await storageUploadTask.onComplete;
+  
+    _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
   }
 
   Widget _buildNameField() {
@@ -154,11 +169,16 @@ class _SignupPageState extends State<SignupPage> {
 
   _saveUserData() async {
     try {
-      prefs = await SharedPreferences.getInstance();
-      var user = UserEntity(
-          _name, _email, _cpf, _curso, _matricula, _linkedinUrl, _portfolioUrl);
-      _db.collection("Users").doc(prefs.getString("userId")).set(user.toJson());
-      Navigator.of(context).pushNamed("/navigation");
+      if (_urlImage != null) {
+        prefs = await SharedPreferences.getInstance();
+        var user = UserEntity(_name, _email, _cpf, _curso, _matricula, _urlImage,
+            _linkedinUrl, _portfolioUrl);
+        _db
+            .collection("Users")
+            .doc(prefs.getString("userId"))
+            .set(user.toJson());
+        Navigator.of(context).pushNamed("/navigation");
+      }
     } catch (ex) {
       print("Failed to create user $ex");
     }

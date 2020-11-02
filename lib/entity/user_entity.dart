@@ -7,10 +7,11 @@ class UserEntity {
   String cpf;
   String curso;
   String matricula;
+  String urlImage;
   String linkedinUrl;
   String portfolioUrl;
 
-  UserEntity(this.name, this.email, this.cpf, this.curso, this.matricula,
+  UserEntity(this.name, this.email, this.cpf, this.curso, this.matricula, this.urlImage,
       this.linkedinUrl, this.portfolioUrl);
 
   UserEntity.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,7 @@ class UserEntity {
     matricula = json['matricula'];
     linkedinUrl = json['linkedinUrl'];
     portfolioUrl = json['portfolioUrl'];
+    urlImage = json['urlImage'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -29,6 +31,7 @@ class UserEntity {
         'cpf': cpf,
         'curso': curso,
         'matricula': matricula,
+        'urlImage': urlImage,
         'linkedinUrl': linkedinUrl,
         'portfolioUrl': portfolioUrl,
         'type': UserTypeEnum.student.toString().split('.').last

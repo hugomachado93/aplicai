@@ -19,7 +19,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => SignupPage());
       case '/signup-start':
         return MaterialPageRoute(builder: (_) => SignupStart());
       case '/signup-student':

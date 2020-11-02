@@ -1,4 +1,5 @@
 import 'package:aplicai/pages/explore_page.dart';
+import 'package:aplicai/pages/user_profile.dart';
 import 'package:flutter/material.dart';
 
 import 'em_andamento_page.dart';
@@ -12,7 +13,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationState extends State<NavigationPage> {
   int _selectedIndex = 0;
-  List<Widget> _widgetsOptions = <Widget>[ExplorePage(), EmAndamentoPage(), Container(),Container()];
+  List<Widget> _widgetsOptions = <Widget>[ExplorePage(), EmAndamentoPage(), Container(), UserProfilePage()];
 
   _onItemTapped(int index) {
     setState(() {
