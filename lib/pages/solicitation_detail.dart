@@ -4,6 +4,7 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SolicitationDetailPage extends StatefulWidget {
   Demanda demanda;
@@ -24,15 +25,25 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
   _SolicitationDetailPageState({this.demanda});
 
   _updateParticipantsOfDemand(AsyncSnapshot<Solicitation> snapshot) async {
-    List<String> reference = [];
-    reference.add("Users/${snapshot.data.demanda.solicitationId}");
+    final userData =
+        await _db.collection("Users").doc(demanda.solicitationId).get();
+
+    final demandData = await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .get();
+
     await _db
         .collection("Demands")
         .doc(demanda.parentId)
         .collection("DemandList")
         .doc(demanda.childId)
-        .update({'users': FieldValue.arrayUnion(reference)});
-    
+        .collection("Users")
+        .doc(demanda.solicitationId)
+        .set(userData.data());
+
     await _db
         .collection("Demands")
         .doc(demanda.parentId)
@@ -41,6 +52,22 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
         .collection("Solicitation")
         .doc(demanda.solicitationId)
         .delete();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await _db
+        .collection("Users")
+        .doc(prefs.getString("userId"))
+        .collection("Demands")
+        .doc(demanda.childId)
+        .set(demandData.data());
+
+    await _db
+        .collection("Users")
+        .doc(prefs.getString("userId"))
+        .collection("Notifications")
+        .doc()
+        .set({"notification": "Sua proposta foi aceita"});
   }
 
   Future<Solicitation> _getUserSolicitation() async {
@@ -163,7 +190,8 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     onPressed: () async {
-                                      await _updateParticipantsOfDemand(snapshot);
+                                      await _updateParticipantsOfDemand(
+                                          snapshot);
                                       Navigator.of(context).pop();
                                     }),
                               ),

@@ -80,9 +80,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 SizedBox(
                   height: 30,
                 ),
-                Divider(
-                  color: Colors.black,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

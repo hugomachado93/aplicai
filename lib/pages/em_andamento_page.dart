@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,8 +23,14 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
 
   Future<QuerySnapshot> _getUserDemands() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString("userId");
-    return _db.collection("Demands").doc(userId).collection("DemandList").get();
+    final userId = prefs.getString("userId");
+    final userData = await _db.collection("Users").doc(userId).get();
+    final type = userData.data()['type'];
+    if(type == UserTypeEnum.student.toString()){
+      return _db.collection("Users").doc(userId).collection("Demands").get();
+    } else {
+      return _db.collection("Demands").doc(userId).collection("DemandList").get();
+    }
   }
 
   Widget _textBuilder(IconData icon, String text) {

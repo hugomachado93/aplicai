@@ -3,6 +3,7 @@ import 'package:aplicai/pages/demand_info_explore_page.dart';
 import 'package:aplicai/pages/demand_info_page.dart';
 import 'package:aplicai/pages/demand_subscription.dart';
 import 'package:aplicai/pages/navigation_page.dart';
+import 'package:aplicai/pages/notification_page.dart';
 import 'package:aplicai/pages/nova_demanda_page.dart';
 import 'package:aplicai/pages/pre_singup_pages.dart';
 import 'package:aplicai/pages/signup_page_empreendedor.dart';
@@ -19,7 +20,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => SignupPage());
+        return MaterialPageRoute(builder: (_) => HomePage());
       case '/signup-start':
         return MaterialPageRoute(builder: (_) => SignupStart());
       case '/signup-student':
@@ -54,6 +55,8 @@ class RouteGenerator {
             builder: (_) => SolicitationDetailPage(
                   demanda: args,
                 ));
+      case '/notifications':
+        return MaterialPageRoute(builder: (_) => NotificationPage());
     }
   }
 }
