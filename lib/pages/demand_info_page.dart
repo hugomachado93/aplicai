@@ -1,7 +1,9 @@
+import 'package:aplicai/providers/demand_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DemandInfoPage extends StatefulWidget {
   final Demanda demanda;
@@ -17,6 +19,8 @@ class DemandInfoPage extends StatefulWidget {
 class _DemandInfoPageState extends State<DemandInfoPage> {
   Demanda demanda;
   _DemandInfoPageState({this.demanda});
+
+  DemandProvider demandProvider = new DemandProvider();
 
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -146,27 +150,52 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Divider(
                           color: Colors.black,
                         ),
+                        Text("Participants"),
                         Container(
-                          height: 100,
-                          width: MediaQuery.of(context).size.width,
-                          child: Expanded(
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data.docs.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      image: DecorationImage(
-                                          image: NetworkImage(snapshot.data.docs[index].data()['urlImage']),
-                                          fit: BoxFit.fill)),
-                                );
-                              }, separatorBuilder: (BuildContext context, int index) { 
-                                return SizedBox(width: 30,);
-                               },),
-                        ))
+                            height: 100,
+                            width: MediaQuery.of(context).size.width,
+                            child: Expanded(
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.docs.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                            image: NetworkImage(snapshot
+                                                .data.docs[index]
+                                                .data()['urlImage']),
+                                            fit: BoxFit.fill)),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return SizedBox(
+                                    width: 30,
+                                  );
+                                },
+                              ),
+                            )),
+                        Text("Contatos"),
+                        Row(children: [
+                          Icon(Icons.email),
+                          Text("${demanda.name}: ${demanda.name}"),
+                          ]),
+                        Expanded(
+                            child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data.docs.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    children: [
+                                      Icon(Icons.email),
+                                      Text("${snapshot.data.docs[index].data()['name']}: ${snapshot.data.docs[index].data()['email']}"),
+                                    ],
+                                  );
+                                }))
                       ],
                     ));
               }

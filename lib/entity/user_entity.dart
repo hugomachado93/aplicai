@@ -11,8 +11,8 @@ class UserEntity {
   String linkedinUrl;
   String portfolioUrl;
 
-  UserEntity(this.name, this.email, this.cpf, this.curso, this.matricula, this.urlImage,
-      this.linkedinUrl, this.portfolioUrl);
+  UserEntity({this.userId, this.name, this.email, this.cpf, this.curso, this.matricula, this.urlImage,
+      this.linkedinUrl, this.portfolioUrl});
 
   UserEntity.fromJson(Map<String, dynamic> json) {
     name = json['name'];

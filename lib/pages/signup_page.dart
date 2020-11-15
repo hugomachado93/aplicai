@@ -171,8 +171,8 @@ class _SignupPageState extends State<SignupPage> {
     try {
       if (_urlImage != null) {
         prefs = await SharedPreferences.getInstance();
-        var user = UserEntity(_name, _email, _cpf, _curso, _matricula, _urlImage,
-            _linkedinUrl, _portfolioUrl);
+        var user = UserEntity(name: _name, email: _email,cpf: _cpf,curso: _curso,matricula: _matricula,urlImage: _urlImage,
+            linkedinUrl: _linkedinUrl,portfolioUrl: _portfolioUrl);
         _db
             .collection("Users")
             .doc(prefs.getString("userId"))
