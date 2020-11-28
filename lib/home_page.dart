@@ -1,9 +1,7 @@
 import 'package:aplicai/service/auth_service.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:aplicai/entity/user_entity.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {

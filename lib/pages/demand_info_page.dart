@@ -1,4 +1,5 @@
 import 'package:aplicai/providers/demand_provider.dart';
+import 'package:aplicai/service/demand_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,9 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                 width: 170,
                                 child: RaisedButton(
                                     color: Colors.blue,
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      DemandService().finishDemand(demanda.parentId, demanda.childId);
+                                    },
                                     child: Text("Concluir demanda")))
                           ],
                         ),

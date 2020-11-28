@@ -27,9 +27,9 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
     final userData = await _db.collection("Users").doc(userId).get();
     final type = userData.data()['type'];
     if(type == UserTypeEnum.student.toString()){
-      return _db.collection("Users").doc(userId).collection("Demands").get();
+      return _db.collection("Users").doc(userId).collection("Demands").where('isFinished', isEqualTo: false).get();
     } else {
-      return _db.collection("Demands").doc(userId).collection("DemandList").get();
+      return _db.collection("Demands").doc(userId).collection("DemandList").where('isFinished', isEqualTo: false).get();
     }
   }
 

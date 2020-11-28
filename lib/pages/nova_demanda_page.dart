@@ -190,7 +190,8 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
           "quantityParticipants": _quantityParticipants,
           "localization": _localization,
           "endDate": _date,
-          "urlImage": _urlImage
+          "urlImage": _urlImage,
+          "isFinished": false,
         });
 
         Navigator.of(context).pushNamed("/navigation");

@@ -1,5 +1,7 @@
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -20,29 +22,35 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: FutureBuilder(
-            future: _getNotifications(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error"),
-                );
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                List<QueryDocumentSnapshot> notifications = snapshot.data.docs;
-                return ListView.builder(
-                    itemCount: notifications.length,
-                    itemBuilder: (context, index) {
-                      String notification = notifications[index].data()["notification"];
-                      return Card(
-                        child: Text(notification),
-                      );                  
-                    });
-              }
-            }));
+    var userEntity = Provider.of<UserEntity>(context);
+    if(userEntity != null) {
+      return Scaffold(
+          body: StreamBuilder(
+              stream: _db.collection("Users").doc(userEntity.userId).collection("Notifications").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error"),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  List<QueryDocumentSnapshot> notifications = snapshot.data.docs;
+                  return ListView.builder(
+                      itemCount: notifications.length,
+                      itemBuilder: (context, index) {
+                        String notification = notifications[index].data()["notification"];
+                        return Card(
+                          child: Text(notification),
+                        );                  
+                      });
+                }
+              }));
+    } else {
+      return Container();
+    }
+
   }
 }

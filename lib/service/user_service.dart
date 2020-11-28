@@ -1,9 +1,15 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/test.dart';
 import 'package:aplicai/entity/user_entity.dart';
+import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
   UserEntity user;
 
   Future<UserEntity> getUserById(String id) async {
@@ -37,7 +43,16 @@ class UserService {
       userEntity.userId = ref.id;
       userEntityList.add(userEntity);
     }
-
+    
     return userEntityList;
   }
+
+  Stream<Test> getUserInfo(String uid) {
+    return _db.collection("Users").doc(uid).snapshots().map((doc) => Test.fromJson(doc.data()));
+  }
+
+  Stream<List<Notify>> streamNotifications(String uid) {
+    return _db.collection("Users").doc(uid).collection("Notifications").snapshots().map((list) => list.docs.map((doc) => Notify.fromJson(doc.data())).toList());
+  }
+
 }

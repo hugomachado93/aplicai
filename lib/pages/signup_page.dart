@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -170,12 +171,12 @@ class _SignupPageState extends State<SignupPage> {
   _saveUserData() async {
     try {
       if (_urlImage != null) {
-        prefs = await SharedPreferences.getInstance();
+        UserEntity userEntity = Provider.of<UserEntity>(context);
         var user = UserEntity(name: _name, email: _email,cpf: _cpf,curso: _curso,matricula: _matricula,urlImage: _urlImage,
             linkedinUrl: _linkedinUrl,portfolioUrl: _portfolioUrl);
         _db
             .collection("Users")
-            .doc(prefs.getString("userId"))
+            .doc(userEntity.userId)
             .set(user.toJson());
         Navigator.of(context).pushNamed("/navigation");
       }

@@ -1,8 +1,10 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/demand_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -50,7 +52,6 @@ class _ExplorePageState extends State<ExplorePage> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
-                                DemandService().getDemand(index, demandList);
                                 Demanda demanda =
                                     Demanda.fromJson(demandList[index].data());
                                 demanda.parentId = demandList[index]
