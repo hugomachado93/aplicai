@@ -147,7 +147,7 @@ class PreSignupPagesState extends State<PreSignupPages> {
                           style: TextStyle(color: Colors.white),
                         ),
                   SizedBox(
-                    height: 250,
+                    height: 230,
                   ),
                   DotsIndicator(
                     dotsCount: 3,
@@ -166,7 +166,7 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 150,
+                    height: 100,
                   ),
                   Container(
                     height: 200,
@@ -202,7 +202,7 @@ class PreSignupPagesState extends State<PreSignupPages> {
                           ),
                         ),
                   SizedBox(
-                    height: 150,
+                    height: 230,
                   ),
                   DotsIndicator(
                     dotsCount: 3,

@@ -152,7 +152,10 @@ class _SignupPageState extends State<SignupPage> {
                 width: 100,
                 child: FittedBox(
                   fit: BoxFit.fill,
-                  child: Icon(Icons.photo),
+                  child: Icon(
+                    Icons.photo,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
                 ),
               )
             : Container(
