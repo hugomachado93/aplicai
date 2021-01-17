@@ -18,7 +18,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
   FirebaseStorage _storage = FirebaseStorage.instance;
 
   Widget _textBuilder(IconData icon, String text) {
-    return Row(children: [Icon(icon), Text(text)]);
+    return Row(children: [
+      Icon(icon),
+      Expanded(
+        child: Text(
+          text,
+          overflow: TextOverflow.ellipsis,
+        ),
+      )
+    ]);
   }
 
   Future<UserEntity> _getUserInfo() async {
@@ -32,11 +40,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _createTop(AsyncSnapshot<UserEntity> snapshot) {
     return Row(children: [
       Container(
-        height: 100,
-        width: 100,
+        height: 120,
+        width: 120,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(image: NetworkImage(snapshot.data.urlImage), fit: BoxFit.fill)),
+            image: DecorationImage(
+                image: NetworkImage(snapshot.data.urlImage), fit: BoxFit.fill)),
       ),
       SizedBox(
         width: 30,
@@ -88,7 +97,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       child: RaisedButton(
                           color: Colors.blue,
                           onPressed: () async {
-                            if(await canLaunch(snapshot.data.linkedinUrl)) {
+                            if (await canLaunch(snapshot.data.linkedinUrl)) {
                               await launch(snapshot.data.linkedinUrl);
                             } else {
                               throw 'Could not launch your url';

@@ -32,8 +32,8 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
   Widget _createTop() {
     return Row(children: [
       Container(
-        height: 100,
-        width: 100,
+        height: 120,
+        width: 120,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
@@ -145,7 +145,9 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                 child: RaisedButton(
                                     color: Colors.blue,
                                     onPressed: () async {
-                                      DemandService().finishDemand(demanda.parentId, demanda.childId);
+                                      DemandService().finishDemand(
+                                          demanda.parentId, demanda.childId);
+                                      Navigator.pop(context);
                                     },
                                     child: Text("Concluir demanda")))
                           ],
@@ -186,7 +188,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Row(children: [
                           Icon(Icons.email),
                           Text("${demanda.name}: ${demanda.name}"),
-                          ]),
+                        ]),
                         Expanded(
                             child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
@@ -195,7 +197,17 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   return Row(
                                     children: [
                                       Icon(Icons.email),
-                                      Text("${snapshot.data.docs[index].data()['name']}: ${snapshot.data.docs[index].data()['email']}"),
+                                      Container(
+                                        width: 150,
+                                        child: Text(
+                                          "${snapshot.data.docs[index].data()['name']}",
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        child: Text(
+                                            "${snapshot.data.docs[index].data()['email']}"),
+                                      ),
                                     ],
                                   );
                                 }))

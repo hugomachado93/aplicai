@@ -34,21 +34,22 @@ class _SignupPageState extends State<SignupPage> {
   final picker = ImagePicker();
 
   Future _getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       _image = File(pickedFile.path);
-    });  
+    });
 
     var prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString("userId");
 
-    StorageReference reference = _storage.ref().child("/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    StorageReference reference = _storage.ref().child(
+        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
     StorageUploadTask storageUploadTask = reference.putFile(_image);
 
     StorageTaskSnapshot storageTaskSnapshot =
         await storageUploadTask.onComplete;
-  
+
     _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
   }
 
@@ -114,8 +115,6 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _buildLinkedinLinkField() {
     return TextFormField(
-      style: TextStyle(color: Colors.amber),
-      obscureText: true,
       decoration: InputDecoration(labelText: "Url Linkedin (Opcional)"),
       validator: (String value) {
         if (value.isEmpty) {
@@ -128,8 +127,6 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _buildPortfolioLinkField() {
     return TextFormField(
-      style: TextStyle(color: Colors.amber),
-      obscureText: true,
       decoration: InputDecoration(labelText: "Url Portfolio (Opcional)"),
       validator: (String value) {
         if (value.isEmpty) {
@@ -168,16 +165,19 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  _saveUserData() async {
+  _saveUserData(String userId) async {
     try {
       if (_urlImage != null) {
-        UserEntity userEntity = Provider.of<UserEntity>(context);
-        var user = UserEntity(name: _name, email: _email,cpf: _cpf,curso: _curso,matricula: _matricula,urlImage: _urlImage,
-            linkedinUrl: _linkedinUrl,portfolioUrl: _portfolioUrl);
-        _db
-            .collection("Users")
-            .doc(userEntity.userId)
-            .set(user.toJson());
+        var user = UserEntity(
+            name: _name,
+            email: _email,
+            cpf: _cpf,
+            curso: _curso,
+            matricula: _matricula,
+            urlImage: _urlImage,
+            linkedinUrl: _linkedinUrl,
+            portfolioUrl: _portfolioUrl);
+        _db.collection("Users").doc(userId).set(user.toJson());
         Navigator.of(context).pushNamed("/navigation");
       }
     } catch (ex) {
@@ -187,6 +187,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserEntity userEntity = Provider.of<UserEntity>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -242,7 +243,7 @@ class _SignupPageState extends State<SignupPage> {
                               return;
                             }
                             _formKey.currentState.save();
-                            _saveUserData();
+                            _saveUserData(userEntity.userId);
                           },
                         ),
                       )

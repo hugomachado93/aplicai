@@ -79,7 +79,14 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                           Row(
                                             children: [
                                               Icon(Icons.person),
-                                              Text(snapshot.data[index].name),
+                                              Container(
+                                                width: 240,
+                                                child: Text(
+                                                  snapshot.data[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           Container(
@@ -87,10 +94,13 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                               onPressed: () {
                                                 demanda.solicitationId =
                                                     snapshot.data[index].userId;
-                                                Navigator.of(context).pushNamed(
-                                                    "/solicitation-detail",
-                                                    arguments: demanda).then((_){setState(() {
-                                                    });});
+                                                Navigator.of(context)
+                                                    .pushNamed(
+                                                        "/solicitation-detail",
+                                                        arguments: demanda)
+                                                    .then((_) {
+                                                  setState(() {});
+                                                });
                                               },
                                               color: Colors.blue,
                                               shape: RoundedRectangleBorder(

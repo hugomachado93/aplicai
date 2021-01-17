@@ -67,7 +67,11 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
         .doc(prefs.getString("userId"))
         .collection("Notifications")
         .doc()
-        .set({"notification": "Sua proposta foi aceita"});
+        .set({
+      "name": demanda.name,
+      "imageUrl": demanda.urlImage,
+      "notification": "Sua proposta foi aceita"
+    });
   }
 
   Future<Solicitation> _getUserSolicitation() async {
@@ -82,12 +86,8 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
 
     String data = solicitation.data()['motivationText'];
 
-    final _data = await _db
-        .collection("Demands")
-        .doc(demanda.parentId)
-        .collection("DemandList")
-        .doc(demanda.childId)
-        .get();
+    final _data =
+        await _db.collection("Users").doc(demanda.solicitationId).get();
 
     UserEntity userEntity = UserEntity.fromJson(_data.data());
 
@@ -136,8 +136,9 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
                                   width: 100,
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/images/placeholder.png"))),
+                                          image: NetworkImage(snapshot
+                                              .data.userEntity.urlImage),
+                                          fit: BoxFit.fill)),
                                 ),
                                 SizedBox(
                                   width: 20,

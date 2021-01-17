@@ -29,7 +29,8 @@ class SignupStart extends StatelessWidget {
                 height: 300,
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/pre-signup-pages', arguments: UserTypeEnum.student);
+                      Navigator.of(context).pushNamed('/pre-signup-pages',
+                          arguments: UserTypeEnum.student);
                     },
                     child: Column(
                       children: [
@@ -41,8 +42,7 @@ class SignupStart extends StatelessWidget {
                           width: 100,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/placeholder.png"),
+                                  image: AssetImage("assets/images/lapis.png"),
                                   fit: BoxFit.fill)),
                         ),
                         SizedBox(
@@ -63,7 +63,8 @@ class SignupStart extends StatelessWidget {
                 height: 350,
                 child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/pre-signup-pages', arguments: UserTypeEnum.employer);
+                      Navigator.of(context).pushNamed('/pre-signup-pages',
+                          arguments: UserTypeEnum.employer);
                     },
                     child: Column(
                       children: [
@@ -75,16 +76,17 @@ class SignupStart extends StatelessWidget {
                           width: 100,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/placeholder.png"),
+                                  image: AssetImage("assets/images/maleta.png"),
                                   fit: BoxFit.fill)),
                         ),
                         SizedBox(
                           height: 30,
                         ),
-                        Text("Aluno"),
-                        Text("Procurando mais pratica na"),
-                        Text("sua formação.")
+                        Text("Empreendimento"),
+                        Text("Projetos Sociais,"),
+                        Text("Microempreendimentos,"),
+                        Text("Empresas"),
+                        Text("etc.")
                       ],
                     )),
               ),

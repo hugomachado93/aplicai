@@ -136,7 +136,9 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
             : Container(
                 height: 100,
                 width: 100,
+                margin: EdgeInsets.all(15),
                 decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
                         image: FileImage(_image), fit: BoxFit.fill)))
       ]),

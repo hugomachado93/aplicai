@@ -14,7 +14,6 @@ class PreSignupPages extends StatefulWidget {
 }
 
 class PreSignupPagesState extends State<PreSignupPages> {
-
   PreSignupPagesState({this.userTypeEnum});
 
   UserTypeEnum userTypeEnum;
@@ -41,7 +40,9 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 borderRadius: BorderRadius.circular(20.0)),
             onPressed: () {
               if (_pageIndex >= 2) {
-                var url = userTypeEnum == UserTypeEnum.student ? "/signup-student" : "/signup-employer";
+                var url = userTypeEnum == UserTypeEnum.student
+                    ? "/signup-student"
+                    : "/signup-employer";
                 Navigator.of(context).pushNamed(url);
               }
               setState(() {
@@ -68,11 +69,29 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 300,
+                    height: 100,
                   ),
-                  Text("alo"),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: userTypeEnum == UserTypeEnum.student
+                                ? AssetImage("assets/images/crie.png")
+                                : AssetImage("assets/images/crie2.png"),
+                            fit: BoxFit.fill)),
+                  ),
                   SizedBox(
-                    height: 300,
+                    height: 30,
+                  ),
+                  Text(
+                    "Crie seu perfil!",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  Text("E seja parte da rede APLICAÍ!",
+                      style: TextStyle(color: Colors.white)),
+                  SizedBox(
+                    height: 250,
                   ),
                   DotsIndicator(
                     dotsCount: 3,
@@ -91,11 +110,44 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 300,
+                    height: 100,
                   ),
-                  Text("alo"),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: userTypeEnum == UserTypeEnum.student
+                                ? AssetImage("assets/images/ache.png")
+                                : AssetImage("assets/images/encontre.png"),
+                            fit: BoxFit.fill)),
+                  ),
                   SizedBox(
-                    height: 300,
+                    height: 30,
+                  ),
+                  userTypeEnum == UserTypeEnum.student
+                      ? Text(
+                          "Encontre demandas!",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        )
+                      : Text("Faça conexões!",
+                          style: TextStyle(color: Colors.white, fontSize: 20)),
+                  userTypeEnum == UserTypeEnum.student
+                      ? Container(
+                          width: 300,
+                          child: Text(
+                            "E veja onde suas habilidades podem ser colocadas em prática!",
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Text(
+                          "Entre em contato com estudantes que queiram pôr seus conhecimentos em prática!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                  SizedBox(
+                    height: 250,
                   ),
                   DotsIndicator(
                     dotsCount: 3,
@@ -114,11 +166,43 @@ class PreSignupPagesState extends State<PreSignupPages> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 300,
+                    height: 150,
                   ),
-                  userTypeEnum == UserTypeEnum.student ? Text("estudante") : Text("empregador"),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/aplique.png"),
+                            fit: BoxFit.fill)),
+                  ),
                   SizedBox(
-                    height: 300,
+                    height: 30,
+                  ),
+                  userTypeEnum == UserTypeEnum.student
+                      ? Text(
+                          "Aplique seu conhecimento!",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        )
+                      : Text(
+                          "Melhore seu empreendimento!",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                  userTypeEnum == UserTypeEnum.student
+                      ? Text(
+                          "E tenha ativamente uma experiência no mundo real!",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : Container(
+                          width: 300,
+                          child: Text(
+                            "Oferecendo oportunidade de experimentação ativa no mundo real!",
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                  SizedBox(
+                    height: 150,
                   ),
                   DotsIndicator(
                     dotsCount: 3,

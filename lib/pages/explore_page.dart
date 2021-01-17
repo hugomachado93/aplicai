@@ -21,14 +21,21 @@ class _ExplorePageState extends State<ExplorePage> {
     return Row(children: [Icon(icon), Text(text)]);
   }
 
+  Stream<QuerySnapshot> _getDemandsFilteredForUser() {
+    return _db
+        .collectionGroup("DemandList")
+        .where('isFinished', isEqualTo: false)
+        .snapshots();
+  }
+
   @override
   Widget build(Object context) {
     return Scaffold(
         body: StreamBuilder<QuerySnapshot>(
-            stream: _db.collectionGroup("DemandList").snapshots(),
+            stream: _getDemandsFilteredForUser(),
             builder: (context, querySnapshot) {
               if (querySnapshot.hasError) {
-                return Text("ERROR");
+                return Center(child: Text(querySnapshot.error.toString()));
               } else if (querySnapshot.connectionState ==
                   ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -72,8 +79,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                     child: Row(
                                   children: [
                                     Container(
-                                      height: 100,
-                                      width: 100,
+                                      height: 120,
+                                      width: 120,
+                                      margin: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),

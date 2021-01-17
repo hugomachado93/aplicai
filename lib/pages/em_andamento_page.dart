@@ -26,10 +26,20 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
     final userId = prefs.getString("userId");
     final userData = await _db.collection("Users").doc(userId).get();
     final type = userData.data()['type'];
-    if(type == UserTypeEnum.student.toString()){
-      return _db.collection("Users").doc(userId).collection("Demands").where('isFinished', isEqualTo: false).get();
+    if (type == UserTypeEnum.student.toString()) {
+      return _db
+          .collection("Users")
+          .doc(userId)
+          .collection("Demands")
+          .where('isFinished', isEqualTo: false)
+          .get();
     } else {
-      return _db.collection("Demands").doc(userId).collection("DemandList").where('isFinished', isEqualTo: false).get();
+      return _db
+          .collection("Demands")
+          .doc(userId)
+          .collection("DemandList")
+          .where('isFinished', isEqualTo: false)
+          .get();
     }
   }
 
@@ -51,8 +61,9 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
             child: Row(
           children: [
             Container(
-              height: 100,
-              width: 100,
+              height: 120,
+              width: 120,
+              margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
@@ -131,7 +142,7 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
                         width: MediaQuery.of(context).size.width,
                         child: Row(children: [
                           SizedBox(width: 15),
-                          Text("Explorar", style: TextStyle(fontSize: 30))
+                          Text("Em Andamento", style: TextStyle(fontSize: 30))
                         ]),
                       ),
                       Expanded(

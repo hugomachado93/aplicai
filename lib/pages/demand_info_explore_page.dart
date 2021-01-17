@@ -31,9 +31,10 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   Widget _createTop() {
     return Row(children: [
       Container(
-        height: 100,
-        width: 100,
+        height: 120,
+        width: 120,
         decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
                 image: NetworkImage(demanda.urlImage), fit: BoxFit.fill)),
       ),
