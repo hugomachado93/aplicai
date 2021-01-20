@@ -4,7 +4,6 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -23,7 +22,10 @@ class UserService {
 
   Future<UserEntity> createInitialuserLogin(
       String uid, String displayName, String email) async {
-    _db.collection("Users").doc(uid).set({"nome": displayName, "email": email});
+    _db
+        .collection("Users")
+        .doc(uid)
+        .set({"nome": displayName, "email": email, "isFinished": false});
   }
 
   Future<List<UserEntity>> getAllUsersSolicitation(Demanda demanda) async {
@@ -43,16 +45,33 @@ class UserService {
       userEntity.userId = ref.id;
       userEntityList.add(userEntity);
     }
-    
+
     return userEntityList;
   }
 
   Stream<Test> getUserInfo(String uid) {
-    return _db.collection("Users").doc(uid).snapshots().map((doc) => Test.fromJson(doc.data()));
+    return _db
+        .collection("Users")
+        .doc(uid)
+        .snapshots()
+        .map((doc) => Test.fromJson(doc.data()));
   }
 
   Stream<List<Notify>> streamNotifications(String uid) {
-    return _db.collection("Users").doc(uid).collection("Notifications").snapshots().map((list) => list.docs.map((doc) => Notify.fromJson(doc.data())).toList());
+    return _db
+        .collection("Users")
+        .doc(uid)
+        .collection("Notifications")
+        .snapshots()
+        .map((list) =>
+            list.docs.map((doc) => Notify.fromJson(doc.data())).toList());
   }
 
+  Stream<QuerySnapshot> getUserNotifications(UserEntity userEntity) {
+    return _db
+        .collection("Users")
+        .doc(userEntity.userId)
+        .collection("Notifications")
+        .snapshots();
+  }
 }

@@ -27,11 +27,11 @@ class _HomePageState extends State<HomePage> {
       var userAuth = await authService.getUserUidAuth();
       UserEntity user = await userService.getUserById(userAuth.uid);
 
-      if (user != null) {
+      if (user != null && user.isFinished) {
         print("usuario já cadastrado ${user}");
         Navigator.of(context).pushNamed("/navigation");
       } else {
-        print("usuario sem login ${user}");
+        print("usuario sem login");
         await userService.createInitialuserLogin(
             userAuth.uid, userAuth.displayName, userAuth.email);
 
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(Object context) {    
+  Widget build(Object context) {
     return Scaffold(
       body: Container(
         child: Center(

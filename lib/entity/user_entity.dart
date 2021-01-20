@@ -1,6 +1,7 @@
 import 'package:aplicai/enum/userTypeEnum.dart';
 
 class UserEntity {
+  bool isFinished;
   String userId;
   String name;
   String email;
@@ -11,8 +12,17 @@ class UserEntity {
   String linkedinUrl;
   String portfolioUrl;
 
-  UserEntity({this.userId, this.name, this.email, this.cpf, this.curso, this.matricula, this.urlImage,
-      this.linkedinUrl, this.portfolioUrl});
+  UserEntity(
+      {this.userId,
+      this.name,
+      this.email,
+      this.cpf,
+      this.curso,
+      this.matricula,
+      this.urlImage,
+      this.linkedinUrl,
+      this.portfolioUrl,
+      this.isFinished});
 
   UserEntity.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -23,6 +33,7 @@ class UserEntity {
     linkedinUrl = json['linkedinUrl'];
     portfolioUrl = json['portfolioUrl'];
     urlImage = json['urlImage'];
+    isFinished = json['isFinished'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +45,7 @@ class UserEntity {
         'urlImage': urlImage,
         'linkedinUrl': linkedinUrl,
         'portfolioUrl': portfolioUrl,
+        'isFinished': isFinished,
         'type': UserTypeEnum.student.toString().split('.').last
       };
 }

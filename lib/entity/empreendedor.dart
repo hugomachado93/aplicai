@@ -8,9 +8,17 @@ class Empreendedor {
   String _desciption;
   String _linkedinUrl;
   String _portfolioUrl;
+  bool _isFinished;
 
-  Empreendedor(this._companyName, this._email, this._cnpj, this._razaoSocial,
-      this._desciption, this._linkedinUrl, this._portfolioUrl);
+  Empreendedor(
+      this._companyName,
+      this._email,
+      this._cnpj,
+      this._razaoSocial,
+      this._desciption,
+      this._linkedinUrl,
+      this._portfolioUrl,
+      this._isFinished);
 
   Map<String, dynamic> toJson() => {
         'companyName': _companyName,
@@ -20,6 +28,7 @@ class Empreendedor {
         'description': _desciption,
         'linkedinUrl': _linkedinUrl,
         'portfolioUrl': _portfolioUrl,
+        'isFinished': _isFinished,
         'type': UserTypeEnum.employer.toString().split('.').last
       };
 }

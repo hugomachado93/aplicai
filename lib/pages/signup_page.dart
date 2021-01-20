@@ -138,33 +138,36 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildPerfilImageField() {
-    return Container(
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        InkWell(
-            onTap: () => {_getImage()},
-            child: Text("Selecionar imagem de perfil")),
-        Container(
-          color: Colors.transparent,
-        ),
-        _image == null
-            ? Container(
-                height: 100,
-                width: 100,
-                child: FittedBox(
-                  fit: BoxFit.fill,
-                  child: Icon(
-                    Icons.photo,
-                    color: Colors.black.withOpacity(0.5),
+    return InkWell(
+      onTap: _getImage,
+      child: Container(
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Text("Selecionar imagem de perfil"),
+          Container(
+            color: Colors.transparent,
+          ),
+          _image == null
+              ? Container(
+                  height: 100,
+                  width: 100,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Icon(
+                      Icons.photo,
+                      color: Colors.black.withOpacity(0.5),
+                    ),
                   ),
-                ),
-              )
-            : Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: FileImage(_image), fit: BoxFit.fill)))
-      ]),
+                )
+              : Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black, width: 1.0),
+                      image: DecorationImage(
+                          image: FileImage(_image), fit: BoxFit.fill)))
+        ]),
+      ),
     );
   }
 
@@ -179,7 +182,8 @@ class _SignupPageState extends State<SignupPage> {
             matricula: _matricula,
             urlImage: _urlImage,
             linkedinUrl: _linkedinUrl,
-            portfolioUrl: _portfolioUrl);
+            portfolioUrl: _portfolioUrl,
+            isFinished: true);
         _db.collection("Users").doc(userId).set(user.toJson());
         Navigator.of(context).pushNamed("/navigation");
       }

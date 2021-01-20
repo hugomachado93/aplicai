@@ -3,7 +3,7 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:aplicai/service/user_service.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -14,14 +14,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  Stream<QuerySnapshot> _getUserNotifications(UserEntity userEntity) {
-    return _db
-        .collection("Users")
-        .doc(userEntity.userId)
-        .collection("Notifications")
-        .snapshots();
-  }
+  UserService userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +22,7 @@ class _NotificationPageState extends State<NotificationPage> {
     if (userEntity != null) {
       return Scaffold(
           body: StreamBuilder(
-              stream: _getUserNotifications(userEntity),
+              stream: userService.getUserNotifications(userEntity),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(

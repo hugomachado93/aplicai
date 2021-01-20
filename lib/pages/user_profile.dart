@@ -98,7 +98,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           color: Colors.blue,
                           onPressed: () async {
                             if (await canLaunch(snapshot.data.linkedinUrl)) {
-                              await launch(snapshot.data.linkedinUrl);
+                              launch(snapshot.data.linkedinUrl);
                             } else {
                               throw 'Could not launch your url';
                             }
