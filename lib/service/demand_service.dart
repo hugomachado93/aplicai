@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DemandService {
@@ -25,16 +26,16 @@ class DemandService {
         .doc(parentId)
         .collection("DemandList")
         .doc(childId)
-        .collection("Users").get();
+        .collection("Users")
+        .get();
 
-    for(var user in users.docs) {
-      await _db.collection("Users")
-        .doc(user.id)
-        .collection("Demands")
-        .doc(childId)
-        .update({
-          'isFinished': true
-        });
+    for (var user in users.docs) {
+      await _db
+          .collection("Users")
+          .doc(user.id)
+          .collection("Demands")
+          .doc(childId)
+          .update({'isFinished': true});
     }
 
     await _db
@@ -43,6 +44,5 @@ class DemandService {
         .collection("DemandList")
         .doc(childId)
         .update({'isFinished': true});
-
   }
 }

@@ -1,10 +1,9 @@
-import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:aplicai/service/user_service.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -27,14 +26,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
       )
     ]);
-  }
-
-  Future<UserEntity> _getUserInfo() async {
-    final pref = await SharedPreferences.getInstance();
-    final userId = pref.getString("userId");
-    DocumentSnapshot documentSnapshot =
-        await _db.collection("Users").doc(userId).get();
-    return UserEntity.fromJson(documentSnapshot.data());
   }
 
   Widget _createTop(AsyncSnapshot<UserEntity> snapshot) {
@@ -65,11 +56,73 @@ class _UserProfilePageState extends State<UserProfilePage> {
     ]);
   }
 
+  _launchUrl(AsyncSnapshot<UserEntity> snapshot) async {
+    if (await canLaunch(snapshot.data.linkedinUrl)) {
+      await launch(snapshot.data.linkedinUrl);
+    } else {
+      throw 'Could not launch your url';
+    }
+  }
+
+  _finishedDemands(AsyncSnapshot<UserEntity> snapshot) {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: snapshot.data.demandas.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                child: Container(
+                  height: 130,
+                  child: Card(
+                    color: Colors.blue,
+                    shadowColor: Colors.blueGrey,
+                    elevation: 10,
+                    child: Row(children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    snapshot.data.demandas[index].urlImage),
+                                fit: BoxFit.fill)),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Title"),
+                              Divider(color: Colors.black),
+                              _textBuilder(Icons.work,
+                                  snapshot.data.demandas[index].name),
+                              _textBuilder(Icons.folder,
+                                  snapshot.data.demandas[index].categories),
+                              _textBuilder(Icons.location_on,
+                                  snapshot.data.demandas[index].localization),
+                            ]),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ]),
+                  ),
+                ),
+              );
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
+    UserService userService = UserService();
     return Scaffold(
         body: FutureBuilder<UserEntity>(
-      future: _getUserInfo(),
+      future: userService.getUserProfile(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -97,11 +150,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       child: RaisedButton(
                           color: Colors.blue,
                           onPressed: () async {
-                            if (await canLaunch(snapshot.data.linkedinUrl)) {
-                              await launch(snapshot.data.linkedinUrl);
-                            } else {
-                              throw 'Could not launch your url';
-                            }
+                            _launchUrl(snapshot);
                           },
                           child: Text("Acessar linkedin")),
                     ),
@@ -109,13 +158,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         width: 170,
                         child: RaisedButton(
                             color: Colors.blue,
-                            onPressed: () {},
+                            onPressed: () async {
+                              _launchUrl(snapshot);
+                            },
                             child: Text("Acessar portfolio")))
                   ],
                 ),
                 Divider(
                   color: Colors.black,
-                )
+                ),
+                Text("Demandas concluidas"),
+                _finishedDemands(snapshot),
               ]));
         }
       },

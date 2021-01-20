@@ -1,3 +1,4 @@
+import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/enum/userTypeEnum.dart';
 
 class UserEntity {
@@ -11,6 +12,7 @@ class UserEntity {
   String urlImage;
   String linkedinUrl;
   String portfolioUrl;
+  List<Demanda> demandas;
 
   UserEntity(
       {this.userId,

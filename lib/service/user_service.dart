@@ -4,6 +4,7 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -73,5 +74,23 @@ class UserService {
         .doc(userEntity.userId)
         .collection("Notifications")
         .snapshots();
+  }
+
+  Future<UserEntity> getUserProfile() async {
+    final pref = await SharedPreferences.getInstance();
+
+    List<Demanda> demandas = [];
+
+    final userId = pref.getString("userId");
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(userId).get();
+    var user = UserEntity.fromJson(documentSnapshot.data());
+    QuerySnapshot querySnapshot =
+        await _db.collection("Users").doc(userId).collection("Demands").get();
+    querySnapshot.docs.forEach((element) {
+      demandas.add(Demanda.fromJson(element.data()));
+    });
+    user.demandas = demandas;
+    return user;
   }
 }
