@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:aplicai/service/user_service.dart';
+import 'package:aplicai/service/auth_service.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseStorage _storage = FirebaseStorage.instance;
+  AuthService authService = AuthService();
 
   Widget _textBuilder(IconData icon, String text) {
     return Row(children: [
@@ -77,20 +79,20 @@ class _UserProfilePageState extends State<UserProfilePage> {
             itemBuilder: (context, index) {
               return InkWell(
                 child: Container(
-                  height: 130,
+                  height: 120,
                   child: Card(
-                    color: Colors.blue,
+                    color: Colors.blueGrey,
                     shadowColor: Colors.blueGrey,
                     elevation: 10,
                     child: Row(children: [
                       SizedBox(
-                        width: 10,
+                        width: 0,
                       ),
                       Container(
-                        height: 100,
-                        width: 100,
+                        height: 120,
+                        width: 120,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: NetworkImage(
                                     snapshot.data.demandas[index].urlImage),
@@ -103,6 +105,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text("Title"),
                               Divider(color: Colors.black),
                               _textBuilder(Icons.work,
@@ -131,6 +136,27 @@ class _UserProfilePageState extends State<UserProfilePage> {
           centerTitle: true,
           title: Text("Perfil do estudante"),
           leading: Container(),
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Text('Drawer Header'),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+              ListTile(
+                title: Text('Item 1'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {},
+              ),
+            ],
+          ),
         ),
         body: FutureBuilder<UserEntity>(
           future: userService.getUserProfile(),
@@ -176,11 +202,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         Divider(
                           color: Colors.black,
                         ),
-                        Text("Demandas concluidas"),
+                        Text(
+                          "Demandas concluidas",
+                          style: TextStyle(fontSize: 20),
+                        ),
                         SizedBox(
                           height: 15,
                         ),
-                        _finishedDemands(snapshot),
+                        snapshot.data.demandas.length != 0
+                            ? _finishedDemands(snapshot)
+                            : Text("Não há demandas concluidas..."),
+                        RaisedButton(
+                          onPressed: () async {
+                            await authService.logoutUser();
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/", (Route<dynamic> route) => false);
+                          },
+                          child: Text("Logout"),
+                        )
                       ]));
             }
           },

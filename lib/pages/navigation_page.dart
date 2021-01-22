@@ -61,10 +61,12 @@ class _NavigationState extends State<NavigationPage> {
                     label: 'Em andamento',
                   ),
                   BottomNavigationBarItem(
-                    icon: Badge(
-                        badgeContent: Text(snapshot.data.toString()),
-                        position: BadgePosition.topEnd(top: -10, end: -10),
-                        child: Icon(Icons.school)),
+                    icon: snapshot.data == 0
+                        ? Icon(Icons.school)
+                        : Badge(
+                            badgeContent: Text(snapshot.data.toString()),
+                            position: BadgePosition.topEnd(top: -10, end: -10),
+                            child: Icon(Icons.school)),
                     label: 'Notificações',
                   ),
                   BottomNavigationBarItem(

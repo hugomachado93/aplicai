@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:aplicai/entity/notify.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
@@ -185,6 +186,17 @@ class _SignupPageState extends State<SignupPage> {
             portfolioUrl: _portfolioUrl,
             isFinished: true);
         _db.collection("Users").doc(userId).set(user.toJson());
+        _db
+            .collection("Users")
+            .doc(userId)
+            .collection("Notifications")
+            .doc()
+            .set({
+          "name": "",
+          "imageUrl": "",
+          "notification": "Seja bem vindo ao Aplicai",
+          "type": "signUp"
+        });
         Navigator.of(context).pushNamed("/navigation");
       }
     } catch (ex) {
@@ -215,7 +227,7 @@ class _SignupPageState extends State<SignupPage> {
                 ],
               ),
               decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.blueGrey,
                   border: Border(bottom: BorderSide(color: Colors.black))),
             ),
             Container(

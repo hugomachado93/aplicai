@@ -7,7 +7,9 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Stream<UserEntity> get user {
-    return _firebaseAuth.authStateChanges().map((User user) => user != null ? UserEntity(userId: user.uid):null);
+    return _firebaseAuth
+        .authStateChanges()
+        .map((User user) => user != null ? UserEntity(userId: user.uid) : null);
   }
 
   Future<User> getUserUidAuth() async {
@@ -18,5 +20,10 @@ class AuthService {
     var authResult = await _firebaseAuth.signInWithCredential(credential);
     var user = authResult.user;
     return user;
+  }
+
+  logoutUser() async {
+    await _firebaseAuth.signOut();
+    await _googleSignIn.signOut();
   }
 }

@@ -36,48 +36,64 @@ class _NotificationPageState extends State<NotificationPage> {
                 } else {
                   List<QueryDocumentSnapshot> notifications =
                       snapshot.data.docs;
-                  return ListView.builder(
-                      itemExtent: 100,
-                      shrinkWrap: true,
-                      itemCount: notifications.length,
-                      itemBuilder: (context, index) {
-                        Notify notify =
-                            Notify.fromJson(notifications[index].data());
-                        return Dismissible(
-                          onDismissed: (direction) {
-                            _db
-                                .collection("Users")
-                                .doc(userEntity.userId)
-                                .collection("Notifications")
-                                .doc(notifications[index].id)
-                                .delete();
-                          },
-                          key: Key(notify.imageUrl),
-                          background: Container(
-                            child: Icon(Icons.delete),
-                          ),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              margin: EdgeInsets.all(15),
-                              child: Container(
-                                  height: 200,
-                                  child: Row(children: [
-                                    Container(
-                                        height: 120,
-                                        width: 120,
-                                        margin: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    notify.imageUrl)))),
-                                    Text(notify.name),
-                                    Text(notify.notification)
-                                  ]))),
-                        );
-                      });
+                  return Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          height: 100,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(children: [
+                            SizedBox(width: 15),
+                            Text("Notificações", style: TextStyle(fontSize: 30))
+                          ]),
+                        ),
+                        ListView.builder(
+                            itemExtent: 100,
+                            shrinkWrap: true,
+                            itemCount: notifications.length,
+                            itemBuilder: (context, index) {
+                              Notify notify =
+                                  Notify.fromJson(notifications[index].data());
+                              return Dismissible(
+                                onDismissed: (direction) {
+                                  _db
+                                      .collection("Users")
+                                      .doc(userEntity.userId)
+                                      .collection("Notifications")
+                                      .doc(notifications[index].id)
+                                      .delete();
+                                },
+                                key: Key(notify.imageUrl),
+                                background: Container(
+                                  child: Icon(Icons.delete),
+                                ),
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    margin: EdgeInsets.all(15),
+                                    child: Container(
+                                        height: 200,
+                                        child: Row(children: [
+                                          Container(
+                                              height: 120,
+                                              width: 120,
+                                              margin: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          notify.imageUrl)))),
+                                          Text(notify.name),
+                                          Text(notify.notification)
+                                        ]))),
+                              );
+                            }),
+                      ],
+                    ),
+                  );
                 }
               }));
     }
