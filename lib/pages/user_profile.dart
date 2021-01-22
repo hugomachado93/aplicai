@@ -19,6 +19,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _textBuilder(IconData icon, String text) {
     return Row(children: [
       Icon(icon),
+      SizedBox(
+        width: 10,
+      ),
       Expanded(
         child: Text(
           text,
@@ -34,6 +37,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
         height: 120,
         width: 120,
         decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(color: Colors.black, blurRadius: 5)
+            ],
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
                 image: NetworkImage(snapshot.data.urlImage), fit: BoxFit.fill)),
@@ -121,57 +127,63 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     UserService userService = UserService();
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Perfil do estudante"),
+          leading: Container(),
+        ),
         body: FutureBuilder<UserEntity>(
-      future: userService.getUserProfile(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text("Error"),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          return Container(
-              margin: EdgeInsets.all(20),
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                SizedBox(
-                  height: 50,
-                ),
-                _createTop(snapshot),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 170,
-                      child: RaisedButton(
-                          color: Colors.blue,
-                          onPressed: () async {
-                            _launchUrl(snapshot);
-                          },
-                          child: Text("Acessar linkedin")),
-                    ),
-                    Container(
-                        width: 170,
-                        child: RaisedButton(
-                            color: Colors.blue,
-                            onPressed: () async {
-                              _launchUrl(snapshot);
-                            },
-                            child: Text("Acessar portfolio")))
-                  ],
-                ),
-                Divider(
-                  color: Colors.black,
-                ),
-                Text("Demandas concluidas"),
-                _finishedDemands(snapshot),
-              ]));
-        }
-      },
-    ));
+          future: userService.getUserProfile(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error"),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return Container(
+                  margin: EdgeInsets.all(20),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _createTop(snapshot),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 170,
+                              child: RaisedButton(
+                                  color: Colors.blue,
+                                  onPressed: () async {
+                                    _launchUrl(snapshot);
+                                  },
+                                  child: Text("Acessar linkedin")),
+                            ),
+                            Container(
+                                width: 170,
+                                child: RaisedButton(
+                                    color: Colors.blue,
+                                    onPressed: () async {
+                                      _launchUrl(snapshot);
+                                    },
+                                    child: Text("Acessar portfolio")))
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.black,
+                        ),
+                        Text("Demandas concluidas"),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _finishedDemands(snapshot),
+                      ]));
+            }
+          },
+        ));
   }
 }

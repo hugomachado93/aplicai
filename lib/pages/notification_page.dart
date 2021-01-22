@@ -43,26 +43,40 @@ class _NotificationPageState extends State<NotificationPage> {
                       itemBuilder: (context, index) {
                         Notify notify =
                             Notify.fromJson(notifications[index].data());
-                        return Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            margin: EdgeInsets.all(15),
-                            child: Container(
-                                height: 200,
-                                child: Row(children: [
-                                  Container(
-                                      height: 120,
-                                      width: 120,
-                                      margin: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  notify.imageUrl)))),
-                                  Text(notify.name),
-                                  Text(notify.notification)
-                                ])));
+                        return Dismissible(
+                          onDismissed: (direction) {
+                            _db
+                                .collection("Users")
+                                .doc(userEntity.userId)
+                                .collection("Notifications")
+                                .doc(notifications[index].id)
+                                .delete();
+                          },
+                          key: Key(notify.imageUrl),
+                          background: Container(
+                            child: Icon(Icons.delete),
+                          ),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              margin: EdgeInsets.all(15),
+                              child: Container(
+                                  height: 200,
+                                  child: Row(children: [
+                                    Container(
+                                        height: 120,
+                                        width: 120,
+                                        margin: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    notify.imageUrl)))),
+                                    Text(notify.name),
+                                    Text(notify.notification)
+                                  ]))),
+                        );
                       });
                 }
               }));
