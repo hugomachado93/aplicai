@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/notify.dart';
+import 'package:aplicai/notifications/notification_enum.dart';
 import 'package:aplicai/notifications/notifications_factory.dart';
 import 'package:flutter/material.dart';
 
@@ -23,4 +24,10 @@ class SignupNotification implements NotificationsFactory {
               Text(notify.notification)
             ])));
   }
+
+  @override
+  String getType() {
+    return NotificationType.Signup.toString();
+  }
+
 }

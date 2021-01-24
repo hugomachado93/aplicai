@@ -30,16 +30,13 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
 
-  bool isLoadingImage = false;
+  bool _isLoadingImage = true;
 
   final picker = ImagePicker();
 
   Future _getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
-    setState(() {
-      isLoadingImage = true;
-      _image = File(pickedFile.path);
-    });
+    _image = File(pickedFile.path);
 
     var prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString("userId");
@@ -52,7 +49,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
         await storageUploadTask.onComplete;
     _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
     setState(() {
-      isLoadingImage = false;
+      _isLoadingImage = false;
     });
   }
 
@@ -126,10 +123,11 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
           Container(
             color: Colors.transparent,
           ),
-          _image == null
+          _urlImage == null
               ? Container(
                   height: 100,
                   width: 100,
+                  margin: EdgeInsets.all(15),
                   child: FittedBox(
                     fit: BoxFit.fill,
                     child: Icon(Icons.photo),
@@ -181,7 +179,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     try {
       prefs = await SharedPreferences.getInstance();
 
-      if (isLoadingImage) {
+      if (_isLoadingImage) {
       } else {
         _db
             .collection("Demands")

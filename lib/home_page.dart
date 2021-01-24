@@ -26,27 +26,25 @@ class _HomePageState extends State<HomePage> {
 
       var userAuth = await authService.getUserUidAuth();
       UserEntity user = await userService.getUserById(userAuth.uid);
-
+        prefs = await SharedPreferences.getInstance();
+        prefs.setString("userId", userAuth.uid);
+        
       if (user != null && user.isFinished) {
         print("usuario já cadastrado ${user}");
-        setState(() {
-          isLoading = false;
-        });
+        
         Navigator.of(context).pushNamed("/navigation");
       } else {
         print("usuario sem login");
         await userService.createInitialuserLogin(
             userAuth.uid, userAuth.displayName, userAuth.email);
-
-        prefs = await SharedPreferences.getInstance();
-        prefs.setString("userId", userAuth.uid);
-        setState(() {
-          isLoading = false;
-        });
         Navigator.of(context).pushNamed("/signup-start");
       }
     } catch (ex) {
       print("Falha ao logar $ex");
+    } finally {
+        setState(() {
+          isLoading = false;
+        });
     }
   }
 

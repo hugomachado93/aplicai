@@ -117,11 +117,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildLinkedinLinkField() {
     return TextFormField(
       decoration: InputDecoration(labelText: "Url Linkedin (Opcional)"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Link invalido";
-        }
-      },
+      validator: null,
       onSaved: (value) => {_linkedinUrl = value},
     );
   }
@@ -129,11 +125,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildPortfolioLinkField() {
     return TextFormField(
       decoration: InputDecoration(labelText: "Url Portfolio (Opcional)"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Link invalido";
-        }
-      },
+      validator: null,
       onSaved: (value) => {_portfolioUrl = value},
     );
   }

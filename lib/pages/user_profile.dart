@@ -2,6 +2,7 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:aplicai/service/auth_service.dart';
@@ -128,6 +129,45 @@ class _UserProfilePageState extends State<UserProfilePage> {
             }));
   }
 
+  Widget _drawer() {
+    return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Text('Drawer Header'),
+                margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey,
+                ),
+              ),
+              Container(
+                height: 10,
+                color: Colors.black87,),
+              ListTile(
+                tileColor: Colors.blue,
+                title: Text('Settings'),
+                onTap: () async {
+                },
+              onLongPress: (){},
+              ),
+                            Container(
+                height: 1,
+                color: Colors.black87,),
+              ListTile(
+                title: Text('Logout'),
+                tileColor: Colors.blue,
+                onTap: () async {
+                   await authService.logoutUser();
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/", (Route<dynamic> route) => false);
+                },
+              ),
+            ],
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     UserService userService = UserService();
@@ -137,33 +177,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
           title: Text("Perfil do estudante"),
           leading: Container(),
         ),
-        endDrawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Text('Drawer Header'),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-              ),
-              ListTile(
-                title: Text('Item 1'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
+        endDrawer: _drawer(),
         body: FutureBuilder<UserEntity>(
           future: userService.getUserProfile(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
-                child: Text("Error"),
+                child: Text("Error ${snapshot.error}"),
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -183,6 +203,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             Container(
                               width: 170,
                               child: RaisedButton(
+                                hoverColor: Colors.orange,
                                   color: Colors.blue,
                                   onPressed: () async {
                                     _launchUrl(snapshot);
@@ -212,14 +233,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         snapshot.data.demandas.length != 0
                             ? _finishedDemands(snapshot)
                             : Text("Não há demandas concluidas..."),
-                        RaisedButton(
-                          onPressed: () async {
-                            await authService.logoutUser();
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                "/", (Route<dynamic> route) => false);
-                          },
-                          child: Text("Logout"),
-                        )
                       ]));
             }
           },

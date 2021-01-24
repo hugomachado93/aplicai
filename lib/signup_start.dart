@@ -60,7 +60,7 @@ class SignupStart extends StatelessWidget {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 350,
+                height: 330,
                 child: FlatButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('/pre-signup-pages',
