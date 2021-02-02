@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class DemandInfoPage extends StatefulWidget {
   final Demanda demanda;
@@ -66,8 +65,11 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
     return demanda.endDate.toDate().difference(DateTime.now()).inDays;
   }
 
-  int progressBarCalculation() {
-    calculateDaysToEndDemand();
+  double progressBarCalculation() {
+    int daysToEnd = calculateDaysToEndDemand();
+    int totalNumOfDays = demanda.endDate.toDate().difference(demanda.startDate.toDate()).inDays;
+    var date = 1 - ((daysToEnd) / totalNumOfDays);
+    return date.toDouble();
   }
 
   @override
@@ -101,7 +103,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         ),
                         calculateDaysToEndDemand() > 1
                             ? Text("Faltam ${calculateDaysToEndDemand()} dias")
-                            : Text("É hoje"),
+                            : Text("Prazo para a entrega finalizado"),
                         Container(
                           margin: EdgeInsets.all(10),
                           height: 15,
@@ -109,7 +111,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: LinearProgressIndicator(
-                              value: 0.05,
+                              value: progressBarCalculation(),
                             ),
                           ),
                         ),
@@ -155,8 +157,8 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Divider(
                           color: Colors.black,
                         ),
-                        Text("Participants"),
-                        Container(
+                        Text("Participantes"),
+                        snapshot.data.docs.length != 0 ? Container(
                             height: 100,
                             width: MediaQuery.of(context).size.width,
                             child: Expanded(
@@ -183,7 +185,14 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   );
                                 },
                               ),
-                            )),
+                            )) : Container(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 15,),
+                                  Text("Ainda não existe participantes..."),
+                                  SizedBox(height: 15,)
+                                ],
+                              )),
                         Text("Contatos"),
                         Row(children: [
                           Icon(Icons.email),

@@ -5,6 +5,7 @@ class Demanda {
   String categories;
   String description;
   Timestamp endDate;
+  Timestamp startDate;
   String localization;
   String quantityParticipants;
   String parentId;
@@ -12,7 +13,7 @@ class Demanda {
   String solicitationId;
   String urlImage;
 
-  Demanda(this.name, this.categories, this.endDate, this.localization,
+  Demanda(this.name, this.categories, this.endDate, this.startDate, this.localization,
       this.quantityParticipants, this.description);
 
   Demanda.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,7 @@ class Demanda {
     categories = json['categories'];
     description = json['description'];
     endDate = json['endDate'];
+    startDate = json['startDate'];
     localization = json['localization'];
     quantityParticipants = json['quantityParticipants'];
     urlImage = json['urlImage'];

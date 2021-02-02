@@ -193,6 +193,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
           "quantityParticipants": _quantityParticipants,
           "localization": _localization,
           "endDate": _date,
+          "startDate": DateTime.now(),
           "urlImage": _urlImage,
           "isFinished": false,
         });
