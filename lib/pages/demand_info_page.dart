@@ -196,7 +196,9 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Text("Contatos"),
                         Row(children: [
                           Icon(Icons.email),
-                          Text("${demanda.name}: ${demanda.name}"),
+                          Text("${demanda.name}:"),
+                          SizedBox(width: 50,),
+                          Text("${demanda.name}"),
                         ]),
                         Expanded(
                             child: ListView.builder(
@@ -207,7 +209,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                     children: [
                                       Icon(Icons.email),
                                       Container(
-                                        width: 150,
+                                        width: 140,
                                         child: Text(
                                           "${snapshot.data.docs[index].data()['name']}",
                                         ),

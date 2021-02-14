@@ -66,8 +66,8 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                         width: 100,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
-                                                image: AssetImage(
-                                                    "assets/images/placeholder.png"))),
+                                              fit: BoxFit.fill,
+                                                image: NetworkImage(snapshot.data[index].urlImage))),
                                       ),
                                       SizedBox(
                                         width: 20,
@@ -80,7 +80,7 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                             children: [
                                               Icon(Icons.person),
                                               Container(
-                                                width: 240,
+                                                width: 200,
                                                 child: Text(
                                                   snapshot.data[index].name,
                                                   overflow:

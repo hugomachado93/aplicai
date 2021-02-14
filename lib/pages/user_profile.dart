@@ -79,6 +79,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             itemCount: snapshot.data.demandas.length,
             itemBuilder: (context, index) {
               return InkWell(
+                onTap: () => {
+                  Navigator.of(context).pushNamed("/demand-info-explore", arguments: snapshot.data.demandas[index])
+                },
                 child: Container(
                   height: 120,
                   child: Card(
@@ -197,6 +200,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         SizedBox(
                           height: 30,
                         ),
+                        Text("Descrição:", style: TextStyle(fontWeight: FontWeight.bold),),
+                        InkWell(child: Text("Colocar uma descrição..."), onTap: () {
+                        },),
+                        SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

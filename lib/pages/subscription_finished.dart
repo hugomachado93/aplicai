@@ -39,8 +39,9 @@ class _SubscriptionFinishedPageState extends State<SubscriptionFinishedPage> {
                 height: 150,
                 width: 150,
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                        image: AssetImage("assets/images/placeholder.png"),
+                        image: NetworkImage(demanda.urlImage),
                         fit: BoxFit.fill)),
               ),
               Text(demanda.name),
