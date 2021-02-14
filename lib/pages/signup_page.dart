@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'dart:io';
 
 class SignupPage extends StatefulWidget {
@@ -31,6 +32,9 @@ class _SignupPageState extends State<SignupPage> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+  List _items = [];
+  List<String> _itemsTitle = [];
 
   final picker = ImagePicker();
 
@@ -164,7 +168,15 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+    _getAllItem() {
+      List<Item> lst = _tagStateKey.currentState?.getAllItem;
+      if (lst != null)
+        lst.where((a) => a.active == true).forEach((a) => _itemsTitle.add(a.title));
+      return _itemsTitle.toList();         
+    }
+
   _saveUserData(String userId) async {
+
     try {
       if (_urlImage != null) {
         var user = UserEntity(
@@ -174,10 +186,12 @@ class _SignupPageState extends State<SignupPage> {
             curso: _curso,
             matricula: _matricula,
             urlImage: _urlImage,
+            categories: _getAllItem(),
             linkedinUrl: _linkedinUrl,
             portfolioUrl: _portfolioUrl,
             isFinished: true);
         _db.collection("Users").doc(userId).set(user.toJson());
+
         _db
             .collection("Users")
             .doc(userId)
@@ -194,6 +208,46 @@ class _SignupPageState extends State<SignupPage> {
     } catch (ex) {
       print("Failed to create user $ex");
     }
+  }
+
+  _buildCategoryTagField() {
+    return Tags(
+      key: _tagStateKey,
+      textField: TagsTextField(
+          textStyle: TextStyle(fontSize: 15),
+          hintText: "Adicionar skill, ex: Java",
+          constraintSuggestion: false,
+          suggestions: [],
+          onSubmitted: (String str) {
+            setState(() {
+              _items.add(Item(title: str));
+            });
+          }),
+      columns: 6,
+      itemCount: _items.length,
+      itemBuilder: (index) {
+        final item = _items[index];
+
+        return ItemTags(
+          key: Key(index.toString()),
+          index: index,
+          title: item.title,
+          pressEnabled: false,
+          customData: item.customData,
+          combine: ItemTagsCombine.withTextBefore,
+          icon: ItemTagsIcon(icon: Icons.add),
+          onPressed: (i) => print(i),
+          onLongPressed: (i) => print(i),
+          removeButton: ItemTagsRemoveButton(onRemoved: () {
+            setState(() {
+              _items.removeAt(index);
+            });
+
+            return true;
+          }),
+        );
+      },
+    );
   }
 
   @override
@@ -234,6 +288,10 @@ class _SignupPageState extends State<SignupPage> {
                       _buildCpfField(),
                       _buildCursoField(),
                       _buildMatriculaField(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildCategoryTagField(),
                       SizedBox(
                         height: 10,
                       ),

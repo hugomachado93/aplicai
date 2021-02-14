@@ -201,7 +201,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           height: 30,
                         ),
                         Text("Descrição:", style: TextStyle(fontWeight: FontWeight.bold),),
-                        InkWell(child: Text("Colocar uma descrição..."), onTap: () {
+                        InkWell(child: Text("Colocar uma descrição..."), 
+                        onTap: () {
+                          
                         },),
                         SizedBox(height: 10,),
                         Row(
