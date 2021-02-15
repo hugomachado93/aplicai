@@ -27,7 +27,7 @@ class SignupNotification implements NotificationsFactory {
 
   @override
   String getType() {
-    return NotificationType.Signup.toString();
+    return NotificationType.Signup.toString().split('.').last.toLowerCase();
   }
 
 }

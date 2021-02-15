@@ -10,10 +10,10 @@ class NotificationInvoker {
 
   Widget invokeNotificationByType(Notify notify) {
     for(var notification in notifications) {
-      if(notification.getType() == notify.name) {
+      print(notify.name);
+      if(notification.getType() == notify.type) {
         return notification.createCard(notify);
       }
     }
   }
-
 }
