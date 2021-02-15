@@ -9,7 +9,7 @@ class AuthService {
   Stream<UserEntity> get user {
     return _firebaseAuth
         .authStateChanges()
-        .map((User user) => user != null ? UserEntity(userId: user.uid) : null);
+        .map((User user) => user != null ? UserEntity(userId: user.uid) : UserEntity(userId: ""));
   }
 
   Future<User> getUserUidAuth() async {

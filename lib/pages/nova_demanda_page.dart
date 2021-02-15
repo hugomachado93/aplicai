@@ -41,12 +41,11 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     var prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString("userId");
 
-    StorageReference reference = _storage.ref().child(
+    Reference reference = _storage.ref().child(
         "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    StorageUploadTask storageUploadTask = reference.putFile(_image);
+    UploadTask uploadTask = reference.putFile(_image);
 
-    StorageTaskSnapshot storageTaskSnapshot =
-        await storageUploadTask.onComplete;
+    TaskSnapshot storageTaskSnapshot = await uploadTask;
     _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
     setState(() {
       _isLoadingImage = false;
@@ -67,13 +66,25 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
 
   Widget _buildDescriptionField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: "Descrição"),
+      maxLength: 400,
+      onSaved: (value) => _description = value,
       validator: (String value) {
         if (value.isEmpty) {
-          return "Descrição invalida";
+          return "Não pode ser vazio!";
         }
       },
-      onSaved: (value) => {_description = value},
+      buildCounter: (
+        BuildContext context, {
+        int currentLength,
+        int maxLength,
+        bool isFocused,
+      }) =>
+          Text("$currentLength/$maxLength"),
+      maxLines: 10,
+      decoration: InputDecoration(
+        alignLabelWithHint: true,
+        labelText: "Descrição",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
     );
   }
 
@@ -222,6 +233,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                         height: 50,
                       ),
                       _buildNameField(),
+                      SizedBox(height: 20,),
                       _buildDescriptionField(),
                       _buildCategoriesField(),
                       _buildQuantityParticipantsField(),

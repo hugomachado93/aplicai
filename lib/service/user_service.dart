@@ -69,6 +69,7 @@ class UserService {
   }
 
   Stream<QuerySnapshot> getUserNotifications(UserEntity userEntity) {
+    print("Userid ${userEntity}");
     return _db
         .collection("Users")
         .doc(userEntity.userId)

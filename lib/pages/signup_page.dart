@@ -28,6 +28,7 @@ class _SignupPageState extends State<SignupPage> {
   String _linkedinUrl;
   String _portfolioUrl;
   String _urlImage;
+  String _description;
   File _image;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -48,12 +49,12 @@ class _SignupPageState extends State<SignupPage> {
     var prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString("userId");
 
-    StorageReference reference = _storage.ref().child(
+    Reference reference = _storage.ref().child(
         "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    StorageUploadTask storageUploadTask = reference.putFile(_image);
+    UploadTask storageUploadTask = reference.putFile(_image);
 
-    StorageTaskSnapshot storageTaskSnapshot =
-        await storageUploadTask.onComplete;
+    TaskSnapshot storageTaskSnapshot =
+        await storageUploadTask;
 
     _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
   }
@@ -118,6 +119,30 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  Widget _buildDescriptionField() {
+    return TextFormField(
+      maxLength: 400,
+      onSaved: (value) => _description = value,
+      validator: (String value) {
+        if (value.isEmpty) {
+          return "Não pode ser vazio!";
+        }
+      },
+      buildCounter: (
+        BuildContext context, {
+        int currentLength,
+        int maxLength,
+        bool isFocused,
+      }) =>
+          Text("$currentLength/$maxLength"),
+      maxLines: 10,
+      decoration: InputDecoration(
+          hintText: "Descrição",
+          alignLabelWithHint: true,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+    );
+  }
+
   Widget _buildLinkedinLinkField() {
     return TextFormField(
       decoration: InputDecoration(labelText: "Url Linkedin (Opcional)"),
@@ -168,15 +193,16 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-    _getAllItem() {
-      List<Item> lst = _tagStateKey.currentState?.getAllItem;
-      if (lst != null)
-        lst.where((a) => a.active == true).forEach((a) => _itemsTitle.add(a.title));
-      return _itemsTitle.toList();         
-    }
+  _getAllItem() {
+    List<Item> lst = _tagStateKey.currentState?.getAllItem;
+    if (lst != null)
+      lst
+          .where((a) => a.active == true)
+          .forEach((a) => _itemsTitle.add(a.title));
+    return _itemsTitle.toList();
+  }
 
   _saveUserData(String userId) async {
-
     try {
       if (_urlImage != null) {
         var user = UserEntity(
@@ -185,6 +211,7 @@ class _SignupPageState extends State<SignupPage> {
             cpf: _cpf,
             curso: _curso,
             matricula: _matricula,
+            description: _description,
             urlImage: _urlImage,
             categories: _getAllItem(),
             linkedinUrl: _linkedinUrl,
@@ -198,10 +225,10 @@ class _SignupPageState extends State<SignupPage> {
             .collection("Notifications")
             .doc()
             .set({
-          "name": "",
+          "name": _name,
           "imageUrl": "",
           "notification": "Seja bem vindo ao Aplicai",
-          "type": "signUp"
+          "type": "signup"
         });
         Navigator.of(context).pushNamed("/navigation");
       }
@@ -288,6 +315,10 @@ class _SignupPageState extends State<SignupPage> {
                       _buildCpfField(),
                       _buildCursoField(),
                       _buildMatriculaField(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildDescriptionField(),
                       SizedBox(
                         height: 10,
                       ),

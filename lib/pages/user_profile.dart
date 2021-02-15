@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:aplicai/service/auth_service.dart';
@@ -56,7 +55,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           Text(snapshot.data.name),
           Divider(color: Colors.black),
           _textBuilder(Icons.school, snapshot.data.curso),
-          _textBuilder(Icons.date_range, snapshot.data.matricula),
+          _textBuilder(Icons.person, snapshot.data.matricula),
           _textBuilder(Icons.email, snapshot.data.email),
         ]),
       ),
@@ -202,10 +201,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           height: 30,
                         ),
                         Text("Descrição:", style: TextStyle(fontWeight: FontWeight.bold),),
-                        InkWell(child: Text("Colocar uma descrição..."), 
-                        onTap: () {
-
-                        },),
+                        Text(snapshot.data.description),
                         SizedBox(height: 20,),
                         Text("Skills:", style: TextStyle(fontWeight: FontWeight.bold),),
                         Row(

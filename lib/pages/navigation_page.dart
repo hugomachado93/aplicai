@@ -1,12 +1,10 @@
+import 'package:aplicai/blocs/badge_bloc.dart';
 import 'package:aplicai/pages/explore_page.dart';
 import 'package:aplicai/pages/user_profile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/service/user_service.dart';
-import 'package:provider/provider.dart';
-import 'package:aplicai/entity/user_entity.dart';
 
 import 'em_andamento_page.dart';
 import 'notification_page.dart';
@@ -21,6 +19,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationState extends State<NavigationPage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   UserService userService = UserService();
+  BadgeBloc badgeBloc = BadgeBloc();
 
   int _selectedIndex = 0;
   List<Widget> _widgetsOptions = <Widget>[
@@ -38,29 +37,48 @@ class _NavigationState extends State<NavigationPage> {
 
   @override
   Widget build(Object context) {
-    return FutureBuilder<int>(
-        future: userService.getUserNumNotifications(),
-        initialData: 0,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text("Error"),
-            );
-          } else {
-            return Scaffold(
-              body: _widgetsOptions.elementAt(_selectedIndex),
-              bottomNavigationBar: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.search),
-                    label: 'Explorar',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.business),
-                    label: 'Em andamento',
-                  ),
-                  BottomNavigationBarItem(
+    return Scaffold(
+      body: _widgetsOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Explorar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Em andamento',
+          ),
+          BottomNavigationBarItem(
+            icon: StreamBuilder(
+              initialData: 0,
+              stream: badgeBloc.stream,
+              builder: (context, snapshot) { 
+                print(snapshot.data);
+                return Badge(
+                            badgeContent: Text(snapshot.data.toString()),
+                            position: BadgePosition.topEnd(top: -10, end: -10),
+                            child: Icon(Icons.school));
+              }
+            ),
+            label: 'Notificações',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Perfil',
+          )
+        ],
+        onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+      ),
+    );
+  }
+}
+
+/*
+BottomNavigationBarItem(
                     icon: snapshot.data == 0
                         ? Icon(Icons.school)
                         : Badge(
@@ -69,17 +87,4 @@ class _NavigationState extends State<NavigationPage> {
                             child: Icon(Icons.school)),
                     label: 'Notificações',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.school),
-                    label: 'Perfil',
-                  )
-                ],
-                onTap: _onItemTapped,
-                currentIndex: _selectedIndex,
-                selectedItemColor: Colors.amber[800],
-              ),
-            );
-          }
-        });
-  }
-}
+                  */

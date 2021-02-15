@@ -20,7 +20,6 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     var userEntity = Provider.of<UserEntity>(context);
-    if (userEntity != null) {
       return Scaffold(
           body: StreamBuilder(
               stream: userService.getUserNotifications(userEntity),
@@ -34,7 +33,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else {
+                } else if (snapshot.hasData){
                   List<QueryDocumentSnapshot> notifications =
                       snapshot.data.docs;
                   return Container(
@@ -64,9 +63,6 @@ class _NotificationPageState extends State<NotificationPage> {
                                       .collection("Notifications")
                                       .doc(notifications[index].id)
                                       .delete();
-                                  setState(() {
-                                    
-                                  });
                                 },
                                 key: Key(notify.imageUrl),
                                 background: Container(
@@ -79,6 +75,6 @@ class _NotificationPageState extends State<NotificationPage> {
                   );
                 }
               }));
-    }
+    
   }
 }

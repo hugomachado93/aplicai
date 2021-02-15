@@ -14,14 +14,16 @@ class SignupNotification implements NotificationsFactory {
             child: Row(children: [
               Container(
                   height: 120,
-                  width: 120,
+                  width: 80,
                   margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                           image: NetworkImage(notify.imageUrl)))),
               Text(notify.name),
-              Text(notify.notification)
+              Text(notify.notification, style: TextStyle(
+                fontSize: 20
+              ),)
             ])));
   }
 

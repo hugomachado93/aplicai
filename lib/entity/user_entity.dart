@@ -9,6 +9,7 @@ class UserEntity {
   String cpf;
   String curso;
   String matricula;
+  String description;
   List categories;
   String urlImage;
   String linkedinUrl;
@@ -22,6 +23,7 @@ class UserEntity {
       this.cpf,
       this.curso,
       this.matricula,
+      this.description,
       this.urlImage,
       this.categories,
       this.linkedinUrl,
@@ -37,6 +39,7 @@ class UserEntity {
     linkedinUrl = json['linkedinUrl'];
     portfolioUrl = json['portfolioUrl'];
     categories = json['categories'];
+    description = json['description'];
     urlImage = json['urlImage'];
     isFinished = json['isFinished'];
   }
@@ -47,6 +50,7 @@ class UserEntity {
         'cpf': cpf,
         'curso': curso,
         'matricula': matricula,
+        'description': description,
         'urlImage': urlImage,
         'categories': categories,
         'linkedinUrl': linkedinUrl,
