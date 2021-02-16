@@ -2,6 +2,7 @@ import 'package:aplicai/service/auth_service.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       UserEntity user = await userService.getUserById(userAuth.uid);
         prefs = await SharedPreferences.getInstance();
         prefs.setString("userId", userAuth.uid);
-        
+
       if (user != null && user.isFinished) {
         print("usuario já cadastrado ${user}");
         

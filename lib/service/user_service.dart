@@ -69,7 +69,6 @@ class UserService {
   }
 
   Stream<QuerySnapshot> getUserNotifications(UserEntity userEntity) {
-    print("Userid ${userEntity}");
     return _db
         .collection("Users")
         .doc(userEntity.userId)
@@ -77,15 +76,13 @@ class UserService {
         .snapshots();
   }
 
-  Future<int> getUserNumNotifications() async {
-    final pref = await SharedPreferences.getInstance();
-    final userId = pref.getString("userId");
-    var notifications = await _db
+  Stream<int> getUserNumNotifications(UserEntity userEntity) {
+    return _db
         .collection("Users")
-        .doc(userId)
+        .doc(userEntity.userId)
         .collection("Notifications")
-        .get();
-    return notifications.docs.length;
+        .snapshots()
+        .map((event) => event.docs.length);
   }
 
   Future<UserEntity> getUserProfile() async {

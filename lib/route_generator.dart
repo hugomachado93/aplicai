@@ -14,13 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
 import 'package:aplicai/pages/signup_page.dart';
 
+import 'root.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => RootPage());
       case '/signup-start':
         return MaterialPageRoute(builder: (_) => SignupStart());
       case '/signup-student':

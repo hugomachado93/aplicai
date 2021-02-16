@@ -30,11 +30,14 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
 
-  bool _isLoadingImage = true;
+  bool _isLoadingImage = false;
 
   final picker = ImagePicker();
 
   Future _getImage() async {
+    setState(() {
+      _isLoadingImage = true;      
+    });
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     _image = File(pickedFile.path);
 
@@ -131,11 +134,8 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
       child: Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text("Selecionar imagem"),
-          Container(
-            color: Colors.transparent,
-          ),
           _urlImage == null
-              ? Container(
+              ? !_isLoadingImage ? Container(
                   height: 100,
                   width: 100,
                   margin: EdgeInsets.all(15),
@@ -143,7 +143,9 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                     fit: BoxFit.fill,
                     child: Icon(Icons.photo),
                   ),
-                )
+                ) : Container(
+                  margin: EdgeInsets.all(15),
+                  child: CircularProgressIndicator())
               : Container(
                   height: 100,
                   width: 100,
