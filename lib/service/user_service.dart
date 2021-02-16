@@ -85,7 +85,7 @@ class UserService {
         .map((event) => event.docs.length);
   }
 
-  Future<UserEntity> getUserProfile() async {
+  Future<UserEntity> getUserFinishedDemands() async {
     final pref = await SharedPreferences.getInstance();
 
     List<Demanda> demandas = [];
@@ -95,7 +95,7 @@ class UserService {
         await _db.collection("Users").doc(userId).get();
     var user = UserEntity.fromJson(documentSnapshot.data());
     QuerySnapshot querySnapshot =
-        await _db.collection("Users").doc(userId).collection("Demands").get();
+        await _db.collection("Users").doc(userId).collection("Demands").where('isFinished', isEqualTo: true).get();
     querySnapshot.docs.forEach((element) {
       demandas.add(Demanda.fromJson(element.data()));
     });

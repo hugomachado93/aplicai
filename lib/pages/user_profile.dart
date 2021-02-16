@@ -35,7 +35,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     ]);
   }
 
-    Widget _textListBuilder(IconData icon, List<String> listText) {
+    Widget _textListBuilder(IconData icon, List listText) {
     return Row(children: [
       Icon(icon),
       SizedBox(
@@ -203,7 +203,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
         endDrawer: _drawer(),
         body: FutureBuilder<UserEntity>(
-          future: userService.getUserProfile(),
+          future: userService.getUserFinishedDemands(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(

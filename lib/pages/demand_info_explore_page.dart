@@ -147,7 +147,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
                             SizedBox(
                               height: 15,
                             ),
-                            snapshot.data != "employer"
+                            snapshot.data != "employer" && demanda.isFinished
                                 ? Center(
                                     child: Container(
                                       width: MediaQuery.of(context).size.width,
