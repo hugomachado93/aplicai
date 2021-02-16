@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/user_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -36,16 +37,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _createTop(AsyncSnapshot<UserEntity> snapshot) {
     return Row(children: [
-      Container(
-        height: 120,
-        width: 120,
-        decoration: BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(color: Colors.black, blurRadius: 5)
-            ],
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-                image: NetworkImage(snapshot.data.urlImage), fit: BoxFit.fill)),
+      CachedNetworkImage(
+        imageUrl: snapshot.data.urlImage,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: Colors.black, blurRadius: 5)
+              ],
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.fill)),
+        ),
+        placeholder: (context, url) => CircularProgressIndicator(),
       ),
       SizedBox(
         width: 30,
@@ -80,7 +86,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () => {
-                  Navigator.of(context).pushNamed("/demand-info-explore", arguments: snapshot.data.demandas[index])
+                  Navigator.of(context).pushNamed("/demand-info-explore",
+                      arguments: snapshot.data.demandas[index])
                 },
                 child: Container(
                   height: 120,
@@ -134,41 +141,42 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _drawer() {
     return Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Text('Drawer Header'),
-                margin: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                ),
-              ),
-              Container(
-                height: 10,
-                color: Colors.black87,),
-              ListTile(
-                tileColor: Colors.blue,
-                title: Text('Settings'),
-                onTap: () async {
-                },
-              onLongPress: (){},
-              ),
-                            Container(
-                height: 1,
-                color: Colors.black87,),
-              ListTile(
-                title: Text('Logout'),
-                tileColor: Colors.blue,
-                onTap: () async {
-                   await authService.logoutUser();
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                "/", (Route<dynamic> route) => false);
-                },
-              ),
-            ],
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Text('Drawer Header'),
+            margin: EdgeInsets.zero,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey,
+            ),
           ),
-        );
+          Container(
+            height: 10,
+            color: Colors.black87,
+          ),
+          ListTile(
+            tileColor: Colors.blue,
+            title: Text('Settings'),
+            onTap: () async {},
+            onLongPress: () {},
+          ),
+          Container(
+            height: 1,
+            color: Colors.black87,
+          ),
+          ListTile(
+            title: Text('Logout'),
+            tileColor: Colors.blue,
+            onTap: () async {
+              await authService.logoutUser();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/", (Route<dynamic> route) => false);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -200,21 +208,33 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         SizedBox(
                           height: 30,
                         ),
-                        Text("Descrição:", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(
+                          "Descrição:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         Text(snapshot.data.description),
-                        SizedBox(height: 20,),
-                        Text("Skills:", style: TextStyle(fontWeight: FontWeight.bold),),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Skills:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: snapshot.data.categories.map((skill) => Text("$skill; ")).toList()),
-                        SizedBox(height: 10,),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: snapshot.data.categories
+                                .map((skill) => Text("$skill; "))
+                                .toList()),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                               width: 170,
                               child: RaisedButton(
-                                hoverColor: Colors.orange,
+                                  hoverColor: Colors.orange,
                                   color: Colors.blue,
                                   onPressed: () async {
                                     _launchUrl(snapshot);
