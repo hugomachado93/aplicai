@@ -83,7 +83,7 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
                       thickness: 1,
                     ),
                     _textBuilder(Icons.work, demanda.name),
-                    _textBuilder(Icons.folder, demanda.categories),
+                    _textBuilder(Icons.folder, demanda.categories.toString()),
                     _textBuilder(Icons.location_on, demanda.localization),
                   ]),
             ),

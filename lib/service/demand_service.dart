@@ -1,6 +1,7 @@
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DemandService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -45,4 +46,20 @@ class DemandService {
         .doc(childId)
         .update({'isFinished': true});
   }
+
+  saveDemandData(Demanda demanda) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+        _db
+            .collection("Demands")
+            .doc(prefs.getString("userId"))
+            .collection("DemandList")
+            .doc()
+            .set(demanda.toJson());
+      
+    }catch (ex) {
+      print("Failed to create user $ex");
+    }
+  }
+
 }

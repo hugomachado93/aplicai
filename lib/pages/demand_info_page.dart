@@ -46,7 +46,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
           Text("Title"),
           Divider(color: Colors.black),
           _textBuilder(Icons.work, demanda.name),
-          _textBuilder(Icons.folder, demanda.categories),
+          _textBuilder(Icons.folder, demanda.categories.toString()),
           _textBuilder(Icons.location_on, demanda.localization),
         ]),
       ),

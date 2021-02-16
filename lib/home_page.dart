@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   bool isLoading = false;
 
-  Future _signIn(context) async {
+  Future _signInWithGoogle(context) async {
     try {
       setState(() {
         isLoading = true;
@@ -58,8 +58,8 @@ class _HomePageState extends State<HomePage> {
               ? CircularProgressIndicator()
               : RaisedButton(
                   child: Text("Entrar com o google"),
-                  onPressed: () {
-                    _signIn(context);
+                  onPressed: () async {
+                    await _signInWithGoogle(context);
                   }),
         ),
       ),

@@ -1,4 +1,7 @@
 import 'dart:ui';
+import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/service/demand_service.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,19 +19,21 @@ class NovaDemandaPage extends StatefulWidget {
 
 class _NovaDemandaPageState extends State<NovaDemandaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   String _name;
   String _description;
-  String _categories;
   String _quantityParticipants;
   String _localization;
   String _urlImage;
+  List _items = [];
+  List<String> _itemsTitle = [];
   DateTime _date = DateTime.now();
   TextEditingController endDateCtrl = TextEditingController();
   File _image;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
+  final demandService = DemandService();
 
   bool _isLoadingImage = false;
 
@@ -67,6 +72,46 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     );
   }
 
+  Widget _buildCategoryTagField() {
+    return Tags(
+      key: _tagStateKey,
+      textField: TagsTextField(
+          textStyle: TextStyle(fontSize: 15),
+          hintText: "Adicionar skill, ex: Java",
+          constraintSuggestion: false,
+          suggestions: [],
+          onSubmitted: (String str) {
+            setState(() {
+              _items.add(Item(title: str));
+            });
+          }),
+      columns: 6,
+      itemCount: _items.length,
+      itemBuilder: (index) {
+        final item = _items[index];
+
+        return ItemTags(
+          key: Key(index.toString()),
+          index: index,
+          title: item.title,
+          pressEnabled: false,
+          customData: item.customData,
+          combine: ItemTagsCombine.withTextBefore,
+          icon: ItemTagsIcon(icon: Icons.add),
+          onPressed: (i) => print(i),
+          onLongPressed: (i) => print(i),
+          removeButton: ItemTagsRemoveButton(onRemoved: () {
+            setState(() {
+              _items.removeAt(index);
+            });
+
+            return true;
+          }),
+        );
+      },
+    );
+  }
+
   Widget _buildDescriptionField() {
     return TextFormField(
       maxLength: 400,
@@ -88,19 +133,6 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
         alignLabelWithHint: true,
         labelText: "Descrição",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
-    );
-  }
-
-  Widget _buildCategoriesField() {
-    return TextFormField(
-      decoration:
-          InputDecoration(labelText: "Categorias (separadas por virgula)"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Categoria inválida";
-        }
-      },
-      onSaved: (value) => {_categories = value},
     );
   }
 
@@ -188,34 +220,13 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     return datePicked;
   }
 
-  _saveDemandData() async {
-    try {
-      prefs = await SharedPreferences.getInstance();
-
-      if (_isLoadingImage) {
-      } else {
-        _db
-            .collection("Demands")
-            .doc(prefs.getString("userId"))
-            .collection("DemandList")
-            .doc()
-            .set({
-          "name": _name,
-          "description": _description,
-          "categories": _categories,
-          "quantityParticipants": _quantityParticipants,
-          "localization": _localization,
-          "endDate": _date,
-          "startDate": DateTime.now(),
-          "urlImage": _urlImage,
-          "isFinished": false,
-        });
-
-        Navigator.of(context).pushNamed("/navigation");
-      }
-    } catch (ex) {
-      print("Failed to create user $ex");
-    }
+  _getAllItem() {
+    List<Item> lst = _tagStateKey.currentState?.getAllItem;
+    if (lst != null)
+      lst
+          .where((a) => a.active == true)
+          .forEach((a) => _itemsTitle.add(a.title));
+    return _itemsTitle.toList();
   }
 
   @override
@@ -237,7 +248,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                       _buildNameField(),
                       SizedBox(height: 20,),
                       _buildDescriptionField(),
-                      _buildCategoriesField(),
+                      _buildCategoryTagField(),
                       _buildQuantityParticipantsField(),
                       _buildLocalizationsField(),
                       _buildEndDateField(context),
@@ -256,7 +267,11 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                               return;
                             }
                             _formKey.currentState.save();
-                            _saveDemandData();
+                            final demanda = Demanda(name: _name, description: _description, categories: _getAllItem(), quantityParticipants: _quantityParticipants, localization: _localization, endDate: Timestamp.fromDate(_date), startDate: Timestamp.now(), urlImage: _urlImage, isFinished: false);
+                            if(!_isLoadingImage) {
+                              demandService.saveDemandData(demanda);
+                              Navigator.of(context).pushNamed("/navigation");
+                            }
                           },
                         ),
                       )

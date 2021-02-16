@@ -35,6 +35,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
     ]);
   }
 
+    Widget _textListBuilder(IconData icon, List<String> listText) {
+    return Row(children: [
+      Icon(icon),
+      SizedBox(
+        width: 10,
+      ),
+      Expanded(
+        child: Row(children: listText.map((e) => Text(e,
+          overflow: TextOverflow.ellipsis,)).toList()
+      ))
+    ]);
+  }
+
   Widget _createTop(AsyncSnapshot<UserEntity> snapshot) {
     return Row(children: [
       CachedNetworkImage(
@@ -123,7 +136,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               Divider(color: Colors.black),
                               _textBuilder(Icons.work,
                                   snapshot.data.demandas[index].name),
-                              _textBuilder(Icons.folder,
+                              _textListBuilder(Icons.folder,
                                   snapshot.data.demandas[index].categories),
                               _textBuilder(Icons.location_on,
                                   snapshot.data.demandas[index].localization),

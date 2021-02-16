@@ -45,7 +45,9 @@ class _SubscriptionFinishedPageState extends State<SubscriptionFinishedPage> {
                         fit: BoxFit.fill)),
               ),
               Text(demanda.name),
-              Text(demanda.categories),
+              Row(
+                children: demanda.categories.map((e) => Text(e)).toList(),
+              ),
               SizedBox(
                 height: 200,
               ),

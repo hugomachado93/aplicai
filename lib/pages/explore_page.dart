@@ -4,7 +4,6 @@ import 'package:aplicai/service/demand_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -19,6 +18,19 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget _textBuilder(IconData icon, String text) {
     return Row(children: [Icon(icon), Text(text)]);
+  }
+
+  Widget _textListBuilder(IconData icon, List listText) {
+    return Row(children: [
+      Icon(icon),
+      SizedBox(
+        width: 10,
+      ),
+      Expanded(
+        child: Row(children: listText.map((e) => Text(e,
+          overflow: TextOverflow.ellipsis,)).toList()
+      ))
+    ]);
   }
 
   Stream<QuerySnapshot> _getDemandsFilteredForUser() {
@@ -57,10 +69,9 @@ class _ExplorePageState extends State<ExplorePage> {
                       child: ListView.builder(
                           itemCount: demandList.length,
                           itemBuilder: (context, index) {
+                            Demanda demanda = Demanda.fromJson(demandList[index].data());
                             return InkWell(
                               onTap: () {
-                                Demanda demanda =
-                                    Demanda.fromJson(demandList[index].data());
                                 demanda.parentId = demandList[index]
                                     .reference
                                     .parent
@@ -106,16 +117,11 @@ class _ExplorePageState extends State<ExplorePage> {
                                             ),
                                             _textBuilder(
                                                 Icons.work,
-                                                demandList[index]
-                                                    .data()["name"]),
-                                            _textBuilder(
-                                                Icons.folder,
-                                                demandList[index]
-                                                    .data()["categories"]),
+                                                demanda.name),
+                                            _textListBuilder(Icons.folder, demanda.categories),
                                             _textBuilder(
                                                 Icons.location_on,
-                                                demandList[index]
-                                                    .data()["localization"]),
+                                                demanda.localization),
                                           ]),
                                     ),
                                     SizedBox(

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Demanda {
   String name;
-  String categories;
+  List categories;
   String description;
   Timestamp endDate;
   Timestamp startDate;
@@ -12,9 +12,10 @@ class Demanda {
   String childId;
   String solicitationId;
   String urlImage;
+  bool isFinished;
 
-  Demanda(this.name, this.categories, this.endDate, this.startDate, this.localization,
-      this.quantityParticipants, this.description);
+  Demanda({this.name, this.categories, this.endDate, this.startDate, this.localization,
+      this.quantityParticipants, this.description, this.urlImage, this.isFinished});
 
   Demanda.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -25,14 +26,18 @@ class Demanda {
     localization = json['localization'];
     quantityParticipants = json['quantityParticipants'];
     urlImage = json['urlImage'];
+    isFinished = json['isFinished'];
   }
 
   Map<String, dynamic> toJson() => {
-        'categories': name,
-        'description': description,
-        'endDate': endDate,
-        'localization': localization,
         'name': name,
-        'quantityParticipants': quantityParticipants
+        'description': description,
+        'categories': categories,
+        'endDate': endDate,
+        'startDate': startDate,
+        'localization': localization,
+        'quantityParticipants': quantityParticipants,
+        'urlImage': urlImage,
+        'isFinished': isFinished
       };
 }

@@ -17,7 +17,6 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    //var userEntity = Provider.of<UserEntity>(context);
     return HomePage();
   }
 
