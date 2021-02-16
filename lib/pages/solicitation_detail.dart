@@ -70,7 +70,8 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
         .set({
       "name": demanda.name,
       "imageUrl": demanda.urlImage,
-      "notification": "Sua proposta foi aceita"
+      "notification": "Sua proposta foi aceita",
+      "type": "solicitation"
     });
   }
 

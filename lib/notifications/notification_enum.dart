@@ -1,3 +1,3 @@
 enum NotificationType {
-  Signup
+  Signup, Subscription
 }
