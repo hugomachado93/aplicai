@@ -1,9 +1,9 @@
 import 'package:aplicai/entity/notify.dart';
-import 'package:aplicai/notifications/notifications_factory.dart';
+import 'package:aplicai/notifications/notifications_strategy.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/notifications/notification_enum.dart';
 
-class SubscriptionNotification implements NotificationsFactory {
+class SubscriptionNotification implements NotificationsStrategy {
   @override
   Widget createCard(Notify notify) {
     return Container(
