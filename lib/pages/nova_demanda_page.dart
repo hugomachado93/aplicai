@@ -40,24 +40,31 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   final picker = ImagePicker();
 
   Future _getImage() async {
-    setState(() {
-      _isLoadingImage = true;      
-    });
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    _image = File(pickedFile.path);
+    try {
+      setState(() {
+        _isLoadingImage = true;      
+      });
+      final pickedFile = await picker.getImage(source: ImageSource.camera);
+      _image = File(pickedFile.path);
 
-    var prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString("userId");
+      var prefs = await SharedPreferences.getInstance();
+      String userId = prefs.getString("userId");
 
-    Reference reference = _storage.ref().child(
-        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    UploadTask uploadTask = reference.putFile(_image);
+      Reference reference = _storage.ref().child(
+          "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+      UploadTask uploadTask = reference.putFile(_image);
 
-    TaskSnapshot storageTaskSnapshot = await uploadTask;
-    _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
-    setState(() {
-      _isLoadingImage = false;
-    });
+      TaskSnapshot storageTaskSnapshot = await uploadTask;
+      _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
+      setState(() {
+        _isLoadingImage = false;
+      });
+    }catch(err) {
+      print(err);
+      setState(() {
+        _isLoadingImage = false;
+      });
+    }
   }
 
   Widget _buildNameField() {
