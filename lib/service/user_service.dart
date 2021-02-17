@@ -68,12 +68,12 @@ class UserService {
             list.docs.map((doc) => Notify.fromJson(doc.data())).toList());
   }
 
-  Stream<QuerySnapshot> getUserNotifications(UserEntity userEntity) {
-    return _db
+  Future<QuerySnapshot> getUserNotifications(UserEntity userEntity) async {
+    return await _db
         .collection("Users")
         .doc(userEntity.userId)
         .collection("Notifications")
-        .snapshots();
+        .get();
   }
 
   Stream<int> getUserNumNotifications(UserEntity userEntity) {

@@ -1,8 +1,10 @@
+import 'package:aplicai/bloc/notification_bloc.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/notifications/notification_invoker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:aplicai/service/user_service.dart';
 
@@ -15,35 +17,37 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
-  UserService userService = UserService();
+  
+  
 
   @override
   Widget build(BuildContext context) {
     var userEntity = Provider.of<UserEntity>(context);
+
     return Scaffold(
-        body: StreamBuilder(
-            stream: userService.getUserNotifications(userEntity),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error"),
-                );
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasData) {
-                List<QueryDocumentSnapshot> notifications = snapshot.data.docs;
-                return Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(children: [
-                          SizedBox(width: 15),
-                          Text("Notificações", style: TextStyle(fontSize: 30))
+        body: BlocProvider(
+          create: (context) => NotificationBloc()..add(GetNotifications(userEntity: userEntity)),
+          child: BlocBuilder<NotificationBloc, NotificationState>(
+                    builder: (context, state) {
+                      if (state is NotificationInitial) {
+                        return Container();
+                      }else if (state is NotificationLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is NotificationLoaded) {
+                        List<QueryDocumentSnapshot> notifications = state.notifySnapshot;
+                        return Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.bottomLeft,
+                                height: 100,
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(children: [
+                                  SizedBox(width: 15),
+                         
+                 Text("Notificações", style: TextStyle(fontSize: 30))
                         ]),
                       ),
                       ListView.builder(
@@ -72,6 +76,6 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                 );
               }
-            }));
+            })));
   }
 }

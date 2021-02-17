@@ -1,7 +1,8 @@
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/enum/userTypeEnum.dart';
+import 'package:equatable/equatable.dart';
 
-class UserEntity {
+class UserEntity extends Equatable {
   bool isFinished;
   String userId;
   String name;
@@ -58,4 +59,20 @@ class UserEntity {
         'isFinished': isFinished,
         'type': UserTypeEnum.student.toString().split('.').last
       };
+
+  @override
+  List<Object> get props => [
+        this.userId,
+        this.name,
+        this.email,
+        this.cpf,
+        this.curso,
+        this.matricula,
+        this.description,
+        this.urlImage,
+        this.categories,
+        this.linkedinUrl,
+        this.portfolioUrl,
+        this.isFinished
+      ];
 }
