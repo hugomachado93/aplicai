@@ -1,9 +1,6 @@
 
 import 'package:aplicai/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'entity/user_entity.dart';
 
 class RootPage extends StatefulWidget {
   @override

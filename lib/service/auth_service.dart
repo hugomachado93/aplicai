@@ -22,6 +22,14 @@ class AuthService {
     return user;
   }
 
+  Future createUser(String email, String password) {
+    try {
+      _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    } catch (err) {
+      print(err);
+    }
+  }
+
   logoutUser() async {
     await _firebaseAuth.signOut();
     await _googleSignIn.signOut();
