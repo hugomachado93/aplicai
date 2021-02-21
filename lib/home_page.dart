@@ -20,8 +20,8 @@ class _HomePageState extends State<HomePage> {
   SharedPreferences prefs;
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  String _email;
-  String _password;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   Future _signInWithGoogle(context) async {
     try {
@@ -55,11 +55,11 @@ class _HomePageState extends State<HomePage> {
 
   _buildEmailField(LoginState state, BuildContext context) {
     return TextFormField(
+      controller: _emailController,
       decoration: InputDecoration(
           labelText: "Email",
           errorText: !state.isEmailValid ? "Email invalido" : null),
       onChanged: (value) {
-        _email = value;
         Provider.of<LoginBloc>(context, listen: false)
             .add(LoginEmailEvent(value));
       },
@@ -68,80 +68,107 @@ class _HomePageState extends State<HomePage> {
 
   _buildPasswordField(LoginState state, BuildContext context) {
     return TextFormField(
+      controller: _passwordController,
       decoration: InputDecoration(
           labelText: "Senha",
           errorText: !state.isPasswordValid ? "Senha invalida" : null),
       onChanged: (value) {
-        _password = value;
         Provider.of<LoginBloc>(context, listen: false)
             .add(LoginPasswordEvent(value));
       },
     );
   }
 
-  _buildLoginButton(LoginState state) {
+  _buildLoginButton(BuildContext context, LoginState state) {
     return Container(
       child: RaisedButton(
-          child: Text("Login"), onPressed: state.isValid ? _login : null),
+          child: Text("Login"),
+          onPressed: state.isValid ? () => _login(context) : null),
     );
   }
 
-  _buildSignupButton(LoginState state) {
+  _buildSignupButton(BuildContext context, LoginState state) {
     return Container(
       child: RaisedButton(
-          child: Text("Signup"), onPressed: state.isValid ? _signup : null),
+          child: Text("Signup"),
+          onPressed: state.isValid ? () => _signup(context) : null),
     );
   }
 
-  _login() {
+  _login(BuildContext context) {
     print("Logado");
   }
 
-  _signup() {
-    authService.createUser(_email, _password);
+  _signup(BuildContext context) {
+    Provider.of<LoginBloc>(context, listen: false).add(
+        LoginUserSignupEvent(_emailController.text, _passwordController.text));
   }
 
   @override
   Widget build(Object context) {
     return Scaffold(
-        body: BlocProvider(
-      create: (context) => LoginBloc(),
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          return Container(
-              margin: EdgeInsets.all(30),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 100,
-                    ),
-                    _buildEmailField(state, context),
-                    _buildPasswordField(state, context),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: BlocProvider(
+        create: (context) => LoginBloc(),
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LoginUserCreatedState) {
+              Navigator.of(context).pushNamed("/signup-start");
+            }
+          },
+          builder: (context, state) {
+            if (state is LoginLoadingState) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is LoginState) {
+              return Container(
+                  margin: EdgeInsets.all(30),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildLoginButton(state),
-                        _buildSignupButton(state),
+                        SizedBox(
+                          height: 100,
+                        ),
+                        _buildEmailField(state, context),
+                        _buildPasswordField(state, context),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        !state.signupError.isValid
+                            ? Text(
+                                state.signupError.message,
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildLoginButton(context, state),
+                            _buildSignupButton(context, state),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        isLoading
+                            ? CircularProgressIndicator()
+                            : RaisedButton(
+                                child: Text("Entrar com o google"),
+                                onPressed: () async {
+                                  await _signInWithGoogle(context);
+                                }),
                       ],
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    isLoading
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
-                            child: Text("Entrar com o google"),
-                            onPressed: () async {
-                              await _signInWithGoogle(context);
-                            }),
-                  ],
-                ),
-              ));
-        },
+                  ));
+            }
+          },
+        ),
       ),
-    ));
+    );
   }
 }

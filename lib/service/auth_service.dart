@@ -1,3 +1,4 @@
+import 'package:aplicai/bloc/login_bloc.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,9 +8,8 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Stream<UserEntity> get user {
-    return _firebaseAuth
-        .authStateChanges()
-        .map((User user) => user != null ? UserEntity(userId: user.uid) : UserEntity(userId: null));
+    return _firebaseAuth.authStateChanges().map((User user) =>
+        user != null ? UserEntity(userId: user.uid) : UserEntity(userId: null));
   }
 
   Future<User> getUserUidAuth() async {
@@ -22,11 +22,31 @@ class AuthService {
     return user;
   }
 
-  Future createUser(String email, String password) {
+  Future<SignupError> createUser(String email, String password) async {
     try {
-      _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return SignupError(isValid: true);
+    } on FirebaseAuthException catch (err) {
+      String message;
+      switch (err.code) {
+        case "email-already-in-use":
+          message = "Email já está em uso";
+          break;
+        case "invalid-email":
+          message = "Email invalido";
+          break;
+        case "weak-password":
+          message = "Senha não é forte o suficiente";
+          break;
+        default:
+          message = "Não foi possivel efetuar o cadastro";
+          break;
+      }
+      return SignupError(isValid: false, message: message);
     } catch (err) {
-      print(err);
+      return SignupError(
+          isValid: false, message: "Não foi possivel efetuar o cadastro");
     }
   }
 
