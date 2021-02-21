@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
   _buildPasswordField(LoginState state, BuildContext context) {
     return TextFormField(
       controller: _passwordController,
+      obscureText: true,
       decoration: InputDecoration(
           labelText: "Senha",
           errorText: !state.isPasswordValid ? "Senha invalida" : null),
