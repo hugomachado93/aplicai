@@ -96,7 +96,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   _login(BuildContext context) {
-    print("Logado");
+    Provider.of<LoginBloc>(context, listen: false).add(
+        LoginUserSigninEvent(_emailController.text, _passwordController.text));
   }
 
   _signup(BuildContext context) {
@@ -112,6 +113,10 @@ class _HomePageState extends State<HomePage> {
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginUserCreatedState) {
+              Navigator.of(context).pushNamed("/signup-start");
+            } else if (state is LoginUserFinishedState) {
+              Navigator.of(context).pushNamed("/navigation");
+            } else if (state is LoginUserNotFinishedState) {
               Navigator.of(context).pushNamed("/signup-start");
             }
           },
@@ -136,9 +141,9 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           height: 10,
                         ),
-                        !state.signupError.isValid
+                        !state.userLoginState.isValid
                             ? Text(
-                                state.signupError.message,
+                                state.userLoginState.message,
                                 style: TextStyle(color: Colors.red),
                               )
                             : Container(),

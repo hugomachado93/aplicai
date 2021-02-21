@@ -4,29 +4,31 @@ class LoginState extends Equatable {
   final bool isPasswordValid;
   final bool isEmailValid;
   final bool isValid;
-  final SignupError signupError;
+  final UserLoginState userLoginState;
 
-  const LoginState(
-      {this.isEmailValid = true,
-      this.isPasswordValid = true,
-      this.isValid = false,
-      this.signupError = const SignupError(isValid: true)});
+  const LoginState({
+    this.isEmailValid = true,
+    this.isPasswordValid = true,
+    this.isValid = false,
+    this.userLoginState =
+        const UserLoginState(isValid: true, isFinished: false),
+  });
 
   copyWith(
       {bool isPasswordValid,
       bool isEmailValid,
       bool isValid,
-      SignupError signupError}) {
+      UserLoginState userLoginState}) {
     return LoginState(
         isPasswordValid: isPasswordValid ?? this.isPasswordValid,
         isEmailValid: isEmailValid ?? this.isEmailValid,
         isValid: isValid ?? this.isValid,
-        signupError: signupError ?? this.signupError);
+        userLoginState: userLoginState ?? this.userLoginState);
   }
 
   @override
   List<Object> get props =>
-      [isPasswordValid, isEmailValid, isValid, signupError];
+      [isPasswordValid, isEmailValid, isValid, userLoginState];
 }
 
 class LoginInitState extends LoginState {
@@ -44,9 +46,20 @@ class LoginUserCreatedState extends LoginState {
   List<Object> get props => [];
 }
 
-class SignupError {
+class LoginUserFinishedState extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginUserNotFinishedState extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class UserLoginState {
   final bool isValid;
+  final bool isFinished;
   final String message;
 
-  const SignupError({this.isValid = false, this.message});
+  const UserLoginState({this.isValid = false, this.isFinished, this.message});
 }

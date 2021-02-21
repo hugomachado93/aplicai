@@ -38,14 +38,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield _validateEmail(event);
     } else if (event is LoginUserSignupEvent) {
       yield LoginLoadingState();
-      final SignupError signupError =
+      final UserLoginState userLoginState =
           await _authService.createUser(event.email, event.password);
-      if (signupError.isValid) {
+      if (userLoginState.isValid) {
         yield LoginUserCreatedState();
       } else {
-        yield state.copyWith(signupError: signupError);
+        yield state.copyWith(userLoginState: userLoginState);
+      }
+    } else if (event is LoginUserSigninEvent) {
+      yield LoginLoadingState();
+      final UserLoginState userLoginState =
+          await _authService.signinUser(event.email, event.password);
+      if (userLoginState.isValid && userLoginState.isFinished) {
+        yield LoginUserFinishedState();
+      } else if (userLoginState.isValid && !userLoginState.isFinished) {
+        yield LoginUserNotFinishedState();
+      } else {
+        yield state.copyWith(userLoginState: userLoginState);
       }
     }
+
     if (state.isEmailValid && state.isPasswordValid) {
       yield state.copyWith(isValid: true);
     } else {

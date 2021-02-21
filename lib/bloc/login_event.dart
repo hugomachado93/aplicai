@@ -31,3 +31,13 @@ class LoginUserSignupEvent extends LoginEvent {
   @override
   List<Object> get props => [email, password];
 }
+
+class LoginUserSigninEvent extends LoginEvent {
+  String email;
+  String password;
+
+  LoginUserSigninEvent(this.email, this.password);
+
+  @override
+  List<Object> get props => [email, password];
+}
