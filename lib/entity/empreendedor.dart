@@ -1,34 +1,33 @@
 import 'package:aplicai/enum/userTypeEnum.dart';
 
 class Empreendedor {
-  String _companyName;
-  String _email;
-  String _cnpj;
-  String _razaoSocial;
-  String _desciption;
-  String _linkedinUrl;
-  String _portfolioUrl;
-  bool _isFinished;
+  final String companyName;
+  final String email;
+  final String cnpj;
+  final String razaoSocial;
+  final String desciption;
+  final String linkedinUrl;
+  final String portfolioUrl;
+  final bool isFinished;
 
   Empreendedor(
-      this._companyName,
-      this._email,
-      this._cnpj,
-      this._razaoSocial,
-      this._desciption,
-      this._linkedinUrl,
-      this._portfolioUrl,
-      this._isFinished);
+      {this.companyName,
+      this.email,
+      this.cnpj,
+      this.razaoSocial,
+      this.desciption,
+      this.linkedinUrl,
+      this.portfolioUrl,
+      this.isFinished});
 
   Map<String, dynamic> toJson() => {
-        'companyName': _companyName,
-        'email': _email,
-        'cnpj': _cnpj,
-        'razapSocial': _razaoSocial,
-        'description': _desciption,
-        'linkedinUrl': _linkedinUrl,
-        'portfolioUrl': _portfolioUrl,
-        'isFinished': _isFinished,
+        'companyName': companyName,
+        'cnpj': cnpj,
+        'razapSocial': razaoSocial,
+        'description': desciption,
+        'linkedinUrl': linkedinUrl,
+        'portfolioUrl': portfolioUrl,
+        'isFinished': isFinished,
         'type': UserTypeEnum.employer.toString().split('.').last
       };
 }

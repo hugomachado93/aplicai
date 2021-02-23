@@ -56,6 +56,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         yield state.copyWith(userLoginState: userLoginState);
       }
+    } else if (event is LoginGoogleEvent) {
+      yield LoginLoadingState();
+      UserLoginState userLoginState = await _authService.signInWithGoogle();
+      if (userLoginState.isValid && userLoginState.isFinished) {
+        yield LoginUserFinishedState();
+      } else if (userLoginState.isValid && !userLoginState.isFinished) {
+        yield LoginUserNotFinishedState();
+      } else {
+        yield state.copyWith(userLoginState: userLoginState);
+      }
     }
 
     if (state.isEmailValid && state.isPasswordValid) {

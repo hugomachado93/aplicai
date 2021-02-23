@@ -23,36 +23,6 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  Future _signInWithGoogle(context) async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      var userAuth = await authService.getUserUidAuth();
-      UserEntity user = await userService.getUserById(userAuth.uid);
-      prefs = await SharedPreferences.getInstance();
-      prefs.setString("userId", userAuth.uid);
-
-      if (user != null && user.isFinished) {
-        print("usuario já cadastrado ${user}");
-
-        Navigator.of(context).pushNamed("/navigation");
-      } else {
-        print("usuario sem login");
-        await userService.createInitialuserLogin(
-            userAuth.uid, userAuth.displayName, userAuth.email);
-        Navigator.of(context).pushNamed("/signup-start");
-      }
-    } catch (ex) {
-      print("Falha ao logar $ex");
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
   _buildEmailField(LoginState state, BuildContext context) {
     return TextFormField(
       controller: _emailController,
@@ -165,8 +135,9 @@ class _HomePageState extends State<HomePage> {
                             ? CircularProgressIndicator()
                             : RaisedButton(
                                 child: Text("Entrar com o google"),
-                                onPressed: () async {
-                                  await _signInWithGoogle(context);
+                                onPressed: () {
+                                  Provider.of<LoginBloc>(context, listen: false)
+                                      .add(LoginGoogleEvent());
                                 }),
                       ],
                     ),

@@ -21,12 +21,8 @@ class UserService {
     return UserEntity.fromJson(documentSnapshot.data());
   }
 
-  Future<UserEntity> createInitialuserLogin(
-      String uid, String displayName, String email) async {
-    _db
-        .collection("Users")
-        .doc(uid)
-        .set({"nome": displayName, "email": email, "isFinished": false});
+  Future<UserEntity> createInitialuserLogin(String uid, String email) async {
+    _db.collection("Users").doc(uid).set({"email": email, "isFinished": false});
   }
 
   Future<List<UserEntity>> getAllUsersSolicitation(Demanda demanda) async {
@@ -94,8 +90,12 @@ class UserService {
     DocumentSnapshot documentSnapshot =
         await _db.collection("Users").doc(userId).get();
     var user = UserEntity.fromJson(documentSnapshot.data());
-    QuerySnapshot querySnapshot =
-        await _db.collection("Users").doc(userId).collection("Demands").where('isFinished', isEqualTo: true).get();
+    QuerySnapshot querySnapshot = await _db
+        .collection("Users")
+        .doc(userId)
+        .collection("Demands")
+        .where('isFinished', isEqualTo: true)
+        .get();
     querySnapshot.docs.forEach((element) {
       demandas.add(Demanda.fromJson(element.data()));
     });

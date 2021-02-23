@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:aplicai/entity/empreendedor.dart';
-import 'package:aplicai/entity/user_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +17,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _companyName;
-  String _email;
   String _cnpj;
   String _razaoSocial;
   String _desciption;
@@ -46,18 +44,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
         }
       },
       onSaved: (value) => {_companyName = value},
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: "Email"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Nome invalido";
-        }
-      },
-      onSaved: (value) => {_email = value},
     );
   }
 
@@ -156,9 +142,7 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
   _saveUserData() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      var user = Empreendedor(_companyName, _email, _cnpj, _razaoSocial,
-          _desciption, _linkedinUrl, _portfolioUrl, true);
-      _db.collection("Users").doc(prefs.getString("userId")).set(user.toJson());
+      _db.collection("Users").doc(prefs.getString("userId")).update({});
 
       Navigator.of(context)..pushNamed("/navigation");
     } catch (ex) {
@@ -199,7 +183,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       _buildCompanyNameField(),
-                      _buildEmailField(),
                       _buildCnpjField(),
                       _buildRazaoSocialField(),
                       _buildDescriptionField(),

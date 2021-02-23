@@ -47,7 +47,6 @@ class UserEntity extends Equatable {
 
   Map<String, dynamic> toJson() => {
         'name': name,
-        'email': email,
         'cpf': cpf,
         'curso': curso,
         'matricula': matricula,

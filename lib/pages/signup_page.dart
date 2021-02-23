@@ -21,7 +21,6 @@ class _SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _name;
-  String _email;
   String _cpf;
   String _curso;
   String _matricula;
@@ -53,8 +52,7 @@ class _SignupPageState extends State<SignupPage> {
         "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
     UploadTask storageUploadTask = reference.putFile(_image);
 
-    TaskSnapshot storageTaskSnapshot =
-        await storageUploadTask;
+    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
 
     _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
   }
@@ -68,18 +66,6 @@ class _SignupPageState extends State<SignupPage> {
         }
       },
       onSaved: (value) => {_name = value},
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: "Email"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Nome invalido";
-        }
-      },
-      onSaved: (value) => {_email = value},
     );
   }
 
@@ -207,7 +193,6 @@ class _SignupPageState extends State<SignupPage> {
       if (_urlImage != null) {
         var user = UserEntity(
             name: _name,
-            email: _email,
             cpf: _cpf,
             curso: _curso,
             matricula: _matricula,
@@ -217,7 +202,7 @@ class _SignupPageState extends State<SignupPage> {
             linkedinUrl: _linkedinUrl,
             portfolioUrl: _portfolioUrl,
             isFinished: true);
-        _db.collection("Users").doc(userId).set(user.toJson());
+        _db.collection("Users").doc(userId).update(user.toJson());
 
         _db
             .collection("Users")
@@ -311,7 +296,6 @@ class _SignupPageState extends State<SignupPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       _buildNameField(),
-                      _buildEmailField(),
                       _buildCpfField(),
                       _buildCursoField(),
                       _buildMatriculaField(),
