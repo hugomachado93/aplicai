@@ -1,7 +1,9 @@
 import 'dart:ui';
+import 'package:aplicai/bloc/signup_bloc.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -266,75 +268,86 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     UserEntity userEntity = Provider.of<UserEntity>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.bottomLeft,
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: Row(
+      body: BlocProvider(
+        create: (context) => SignupBloc(),
+        child: BlocConsumer<SignupBloc, SignupState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 20,
+                  Container(
+                    alignment: Alignment.bottomLeft,
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Aluno",
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        border:
+                            Border(bottom: BorderSide(color: Colors.black))),
                   ),
-                  Text(
-                    "Aluno",
-                    style: TextStyle(fontSize: 40),
+                  Container(
+                    margin: EdgeInsets.all(24),
+                    child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _buildNameField(),
+                            _buildCpfField(),
+                            _buildCursoField(),
+                            _buildMatriculaField(),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            _buildDescriptionField(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _buildCategoryTagField(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _buildPerfilImageField(),
+                            _buildLinkedinLinkField(),
+                            _buildPortfolioLinkField(),
+                            SizedBox(
+                              height: 70,
+                            ),
+                            Container(
+                              width: 400,
+                              child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Text("Criar conta"),
+                                onPressed: () {
+                                  if (!_formKey.currentState.validate()) {
+                                    return;
+                                  }
+                                  _formKey.currentState.save();
+                                  _saveUserData(userEntity.userId);
+                                },
+                              ),
+                            )
+                          ],
+                        )),
                   ),
                 ],
               ),
-              decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  border: Border(bottom: BorderSide(color: Colors.black))),
-            ),
-            Container(
-              margin: EdgeInsets.all(24),
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildNameField(),
-                      _buildCpfField(),
-                      _buildCursoField(),
-                      _buildMatriculaField(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildDescriptionField(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildCategoryTagField(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildPerfilImageField(),
-                      _buildLinkedinLinkField(),
-                      _buildPortfolioLinkField(),
-                      SizedBox(
-                        height: 70,
-                      ),
-                      Container(
-                        width: 400,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text("Criar conta"),
-                          onPressed: () {
-                            if (!_formKey.currentState.validate()) {
-                              return;
-                            }
-                            _formKey.currentState.save();
-                            _saveUserData(userEntity.userId);
-                          },
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

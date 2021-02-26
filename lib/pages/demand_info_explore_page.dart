@@ -142,12 +142,12 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
                                 "Média, até 1 mês"),
                             _bottomDescriptions(Icons.group, "Grupo",
                                 "${demanda.quantityParticipants} participantes"),
-                            _bottomDescriptions(
-                                Icons.folder, "Categorias", demanda.categories.toString()),
+                            _bottomDescriptions(Icons.folder, "Categorias",
+                                demanda.categories.toString()),
                             SizedBox(
                               height: 15,
                             ),
-                            snapshot.data != "employer" && demanda.isFinished
+                            snapshot.data != "employer" && !demanda.isFinished
                                 ? Center(
                                     child: Container(
                                       width: MediaQuery.of(context).size.width,
