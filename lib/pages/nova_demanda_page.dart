@@ -42,9 +42,9 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   Future _getImage() async {
     try {
       setState(() {
-        _isLoadingImage = true;      
+        _isLoadingImage = true;
       });
-      final pickedFile = await picker.getImage(source: ImageSource.camera);
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
       _image = File(pickedFile.path);
 
       var prefs = await SharedPreferences.getInstance();
@@ -59,7 +59,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
       setState(() {
         _isLoadingImage = false;
       });
-    }catch(err) {
+    } catch (err) {
       print(err);
       setState(() {
         _isLoadingImage = false;
@@ -137,8 +137,8 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
           Text("$currentLength/$maxLength"),
       maxLines: 10,
       decoration: InputDecoration(
-        alignLabelWithHint: true,
-        labelText: "Descrição",
+          alignLabelWithHint: true,
+          labelText: "Descrição",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
     );
   }
@@ -174,17 +174,19 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text("Selecionar imagem"),
           _urlImage == null
-              ? !_isLoadingImage ? Container(
-                  height: 100,
-                  width: 100,
-                  margin: EdgeInsets.all(15),
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: Icon(Icons.photo),
-                  ),
-                ) : Container(
-                  margin: EdgeInsets.all(15),
-                  child: CircularProgressIndicator())
+              ? !_isLoadingImage
+                  ? Container(
+                      height: 100,
+                      width: 100,
+                      margin: EdgeInsets.all(15),
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Icon(Icons.photo),
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.all(15),
+                      child: CircularProgressIndicator())
               : Container(
                   height: 100,
                   width: 100,
@@ -253,7 +255,9 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                         height: 50,
                       ),
                       _buildNameField(),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       _buildDescriptionField(),
                       _buildCategoryTagField(),
                       _buildQuantityParticipantsField(),
@@ -274,8 +278,17 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                               return;
                             }
                             _formKey.currentState.save();
-                            final demanda = Demanda(name: _name, description: _description, categories: _getAllItem(), quantityParticipants: _quantityParticipants, localization: _localization, endDate: Timestamp.fromDate(_date), startDate: Timestamp.now(), urlImage: _urlImage, isFinished: false);
-                            if(!_isLoadingImage) {
+                            final demanda = Demanda(
+                                name: _name,
+                                description: _description,
+                                categories: _getAllItem(),
+                                quantityParticipants: _quantityParticipants,
+                                localization: _localization,
+                                endDate: Timestamp.fromDate(_date),
+                                startDate: Timestamp.now(),
+                                urlImage: _urlImage,
+                                isFinished: false);
+                            if (!_isLoadingImage) {
                               demandService.saveDemandData(demanda);
                               Navigator.of(context).pushNamed("/navigation");
                             }

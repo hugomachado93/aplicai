@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:aplicai/entity/empreendedor.dart';
+import 'package:aplicai/enum/userTypeEnum.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,19 +21,34 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
   String _companyName;
   String _cnpj;
   String _razaoSocial;
-  String _desciption;
+  String _description;
   String _linkedinUrl;
   String _portfolioUrl;
+  String _urlImage;
   File _image;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   SharedPreferences prefs;
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
   final picker = ImagePicker();
 
   Future _getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       _image = File(pickedFile.path);
+    });
+    var prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString("userId");
+
+    Reference reference = _firebaseStorage.ref().child(
+        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    UploadTask storageUploadTask = reference.putFile(_image);
+
+    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
+    var url = await storageTaskSnapshot.ref.getDownloadURL();
+    print("image url -> " + url);
+    setState(() {
+      _urlImage = url;
     });
   }
 
@@ -73,13 +90,25 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   Widget _buildDescriptionField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: "Descrição do empreendimento"),
+      maxLength: 400,
+      onSaved: (value) => _description = value,
       validator: (String value) {
         if (value.isEmpty) {
-          return "Descrição invalida";
+          return "Não pode ser vazio!";
         }
       },
-      onSaved: (value) => {_desciption = value},
+      buildCounter: (
+        BuildContext context, {
+        int currentLength,
+        int maxLength,
+        bool isFocused,
+      }) =>
+          Text("$currentLength/$maxLength"),
+      maxLines: 10,
+      decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: "Descrição",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
     );
   }
 
@@ -88,11 +117,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
       style: TextStyle(color: Colors.amber),
       obscureText: true,
       decoration: InputDecoration(labelText: "Url Linkedin (Opcional)"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Link invalido";
-        }
-      },
       onSaved: (value) => {_linkedinUrl = value},
     );
   }
@@ -102,49 +126,58 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
       style: TextStyle(color: Colors.amber),
       obscureText: true,
       decoration: InputDecoration(labelText: "Url Portfolio (Opcional)"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Link invalido";
-        }
-      },
       onSaved: (value) => {_portfolioUrl = value},
     );
   }
 
   Widget _buildPerfilImageField() {
-    return Container(
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        InkWell(
-            onTap: () => {_getImage()},
-            child: Text("Selecionar imagem de perfil")),
-        Container(
-          color: Colors.transparent,
-        ),
-        _image == null
-            ? Container(
-                height: 100,
-                width: 100,
-                child: FittedBox(
-                  fit: BoxFit.fill,
-                  child: Icon(Icons.photo),
-                ),
-              )
-            : Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: FileImage(_image), fit: BoxFit.fill)))
-      ]),
+    return InkWell(
+      onTap: () => {_getImage()},
+      child: Container(
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Text("Selecionar imagem de perfil"),
+          Container(
+            color: Colors.transparent,
+          ),
+          _image == null
+              ? Container(
+                  height: 100,
+                  width: 100,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Icon(Icons.photo),
+                  ),
+                )
+              : Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                          image: FileImage(_image), fit: BoxFit.fill)))
+        ]),
+      ),
     );
   }
 
   _saveUserData() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      _db.collection("Users").doc(prefs.getString("userId")).update({});
-
-      Navigator.of(context)..pushNamed("/navigation");
+      print(_urlImage);
+      if (_urlImage != null) {
+        _db.collection("Users").doc(prefs.getString("userId")).update({
+          "companyName": _companyName,
+          "cnpj": _cnpj,
+          "razaoSocial": _razaoSocial,
+          "description": _description,
+          "linkedinUrl": _linkedinUrl,
+          "portfolioUrl": _portfolioUrl,
+          "type": UserTypeEnum.employer.toString().split('.').last,
+          "urlImage": _urlImage,
+          "isFinished": true
+        });
+        Navigator.of(context)..pushNamed("/navigation");
+      }
     } catch (ex) {
       print("Failed to create user $ex");
     }
@@ -185,6 +218,9 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
                       _buildCompanyNameField(),
                       _buildCnpjField(),
                       _buildRazaoSocialField(),
+                      SizedBox(
+                        height: 30,
+                      ),
                       _buildDescriptionField(),
                       SizedBox(
                         height: 10,

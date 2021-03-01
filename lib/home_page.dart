@@ -131,14 +131,12 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           height: 30,
                         ),
-                        isLoading
-                            ? CircularProgressIndicator()
-                            : RaisedButton(
-                                child: Text("Entrar com o google"),
-                                onPressed: () {
-                                  Provider.of<LoginBloc>(context, listen: false)
-                                      .add(LoginGoogleEvent());
-                                }),
+                        RaisedButton(
+                            child: Text("Entrar com o google"),
+                            onPressed: () {
+                              Provider.of<LoginBloc>(context, listen: false)
+                                  .add(LoginGoogleEvent());
+                            }),
                       ],
                     ),
                   ));

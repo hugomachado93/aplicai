@@ -38,42 +38,41 @@ class _NavigationState extends State<NavigationPage> {
   @override
   Widget build(Object context) {
     var userEntity = Provider.of<UserEntity>(context);
-      return Scaffold(
-          body: _widgetsOptions.elementAt(_selectedIndex),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Explorar',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.business),
-                label: 'Em andamento',
-              ),
-              BottomNavigationBarItem(
-                icon: StreamBuilder<int>(
-                    initialData: 0,
-                    stream: userService.getUserNumNotifications(userEntity),
-                    builder: (context, snapshot) {
-                      return snapshot.data == 0
-                          ? Icon(Icons.school)
-                          : Badge(
-                              badgeContent: Text(snapshot.data.toString()),
-                              position:
-                                  BadgePosition.topEnd(top: -10, end: -10),
-                              child: Icon(Icons.school));
-                    }),
-                label: 'Notificações',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.school),
-                label: 'Perfil',
-              )
-            ],
-            onTap: _onItemTapped,
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
-          ));
+    return Scaffold(
+        body: _widgetsOptions.elementAt(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Explorar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'Em andamento',
+            ),
+            BottomNavigationBarItem(
+              icon: StreamBuilder<int>(
+                  initialData: 0,
+                  stream: userService.getUserNumNotifications(userEntity),
+                  builder: (context, snapshot) {
+                    return snapshot.data == 0
+                        ? Icon(Icons.school)
+                        : Badge(
+                            badgeContent: Text(snapshot.data.toString()),
+                            position: BadgePosition.topEnd(top: -10, end: -10),
+                            child: Icon(Icons.school));
+                  }),
+              label: 'Notificações',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school),
+              label: 'Perfil',
+            )
+          ],
+          onTap: _onItemTapped,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+        ));
   }
 }

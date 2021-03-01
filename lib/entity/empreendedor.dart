@@ -8,6 +8,7 @@ class Empreendedor {
   final String desciption;
   final String linkedinUrl;
   final String portfolioUrl;
+  final String imageUrl;
   final bool isFinished;
 
   Empreendedor(
@@ -18,6 +19,7 @@ class Empreendedor {
       this.desciption,
       this.linkedinUrl,
       this.portfolioUrl,
+      this.imageUrl,
       this.isFinished});
 
   Map<String, dynamic> toJson() => {
@@ -27,6 +29,7 @@ class Empreendedor {
         'description': desciption,
         'linkedinUrl': linkedinUrl,
         'portfolioUrl': portfolioUrl,
+        'imageUrl': imageUrl,
         'isFinished': isFinished,
         'type': UserTypeEnum.employer.toString().split('.').last
       };
