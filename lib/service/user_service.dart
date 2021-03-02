@@ -1,5 +1,4 @@
 import 'package:aplicai/entity/demanda.dart';
-import 'package:aplicai/entity/test.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,12 +45,12 @@ class UserService {
     return userEntityList;
   }
 
-  Stream<Test> getUserInfo(String uid) {
+  Stream<String> getUserType(String uid) {
     return _db
         .collection("Users")
         .doc(uid)
         .snapshots()
-        .map((doc) => Test.fromJson(doc.data()));
+        .map((doc) => doc.data()['type']);
   }
 
   Stream<List<Notify>> streamNotifications(String uid) {
@@ -89,6 +88,7 @@ class UserService {
     final userId = pref.getString("userId");
     DocumentSnapshot documentSnapshot =
         await _db.collection("Users").doc(userId).get();
+    if (documentSnapshot.data()['type'] == 'employer') {}
     var user = UserEntity.fromJson(documentSnapshot.data());
     QuerySnapshot querySnapshot = await _db
         .collection("Users")
