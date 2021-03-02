@@ -35,9 +35,9 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
           .get();
     } else {
       return _db
-          .collection("Demands")
+          .collection("Users")
           .doc(userId)
-          .collection("DemandList")
+          .collection("Demands")
           .where('isFinished', isEqualTo: false)
           .get();
     }

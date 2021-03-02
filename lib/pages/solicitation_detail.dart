@@ -28,13 +28,6 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
     final userData =
         await _db.collection("Users").doc(demanda.solicitationId).get();
 
-    final demandData = await _db
-        .collection("Demands")
-        .doc(demanda.parentId)
-        .collection("DemandList")
-        .doc(demanda.childId)
-        .get();
-
     await _db
         .collection("Demands")
         .doc(demanda.parentId)
@@ -55,6 +48,13 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final demandData = await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .get();
+
     await _db
         .collection("Users")
         .doc(prefs.getString("userId"))
@@ -64,7 +64,14 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
 
     await _db
         .collection("Users")
-        .doc(prefs.getString("userId"))
+        .doc(demanda.solicitationId)
+        .collection("Demands")
+        .doc(demanda.childId)
+        .set(demandData.data());
+
+    await _db
+        .collection("Users")
+        .doc(demanda.solicitationId)
         .collection("Notifications")
         .doc()
         .set({

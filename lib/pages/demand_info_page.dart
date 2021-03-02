@@ -67,7 +67,8 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
 
   double progressBarCalculation() {
     int daysToEnd = calculateDaysToEndDemand();
-    int totalNumOfDays = demanda.endDate.toDate().difference(demanda.startDate.toDate()).inDays;
+    int totalNumOfDays =
+        demanda.endDate.toDate().difference(demanda.startDate.toDate()).inDays;
     var date = 1 - ((daysToEnd) / totalNumOfDays);
     return date.toDouble();
   }
@@ -157,48 +158,58 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Divider(
                           color: Colors.black,
                         ),
-                        Text("Participantes"),
-                        snapshot.data.docs.length != 0 ? Container(
-                            height: 100,
-                            width: MediaQuery.of(context).size.width,
-                            child: Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.docs.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                            image: NetworkImage(snapshot
-                                                .data.docs[index]
-                                                .data()['urlImage']),
-                                            fit: BoxFit.fill)),
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return SizedBox(
-                                    width: 30,
-                                  );
-                                },
-                              ),
-                            )) : Container(
-                              child: Column(
+                        Text(
+                          "Participantes",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        snapshot.data.docs.length != 0
+                            ? Container(
+                                height: 100,
+                                width: MediaQuery.of(context).size.width,
+                                child: Expanded(
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data.docs.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                                image: NetworkImage(snapshot
+                                                    .data.docs[index]
+                                                    .data()['urlImage']),
+                                                fit: BoxFit.fill)),
+                                      );
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return SizedBox(
+                                        width: 30,
+                                      );
+                                    },
+                                  ),
+                                ))
+                            : Container(
+                                child: Column(
                                 children: [
-                                  SizedBox(height: 15,),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
                                   Text("Ainda não existe participantes..."),
-                                  SizedBox(height: 15,)
+                                  SizedBox(
+                                    height: 15,
+                                  )
                                 ],
                               )),
+                        Divider(color: Colors.black),
                         Text("Contatos"),
                         Row(children: [
                           Icon(Icons.email),
-                          Text("${demanda.name}:"),
-                          SizedBox(width: 50,),
-                          Text("${demanda.name}"),
+                          Expanded(child: Text("${demanda.name}:")),
+                          Expanded(child: Text("${demanda.name}")),
                         ]),
                         Expanded(
                             child: ListView.builder(

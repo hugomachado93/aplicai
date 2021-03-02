@@ -50,16 +50,21 @@ class DemandService {
   saveDemandData(Demanda demanda) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-        _db
-            .collection("Demands")
-            .doc(prefs.getString("userId"))
-            .collection("DemandList")
-            .doc()
-            .set(demanda.toJson());
-      
-    }catch (ex) {
+      _db
+          .collection("Demands")
+          .doc(prefs.getString("userId"))
+          .collection("DemandList")
+          .doc()
+          .set(demanda.toJson());
+
+      _db
+          .collection("Users")
+          .doc(prefs.getString("userId"))
+          .collection("Demands")
+          .doc()
+          .set(demanda.toJson());
+    } catch (ex) {
       print("Failed to create user $ex");
     }
   }
-
 }

@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -88,7 +89,7 @@ class UserService {
     final userId = pref.getString("userId");
     DocumentSnapshot documentSnapshot =
         await _db.collection("Users").doc(userId).get();
-    if (documentSnapshot.data()['type'] == 'employer') {}
+
     var user = UserEntity.fromJson(documentSnapshot.data());
     QuerySnapshot querySnapshot = await _db
         .collection("Users")
@@ -101,5 +102,57 @@ class UserService {
     });
     user.demandas = demandas;
     return user;
+  }
+
+  Future getUserTypeFuture() async {
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString("userId");
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(userId).get();
+    return documentSnapshot.data()['type'];
+  }
+
+  Future<UserEntity> getUserStudentAndFinishedDemands() async {
+    final pref = await SharedPreferences.getInstance();
+
+    List<Demanda> demandas = [];
+    final userId = pref.getString("userId");
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(userId).get();
+    UserEntity userEntity = UserEntity.fromJson(documentSnapshot.data());
+
+    QuerySnapshot querySnapshot = await _db
+        .collection("Users")
+        .doc(userId)
+        .collection("Demands")
+        .where('isFinished', isEqualTo: true)
+        .get();
+    querySnapshot.docs.forEach((element) {
+      demandas.add(Demanda.fromJson(element.data()));
+    });
+    userEntity.demandas = demandas;
+    return userEntity;
+  }
+
+  Future<Empreendedor> getUserEmpolyerAndFinishedDemands() async {
+    final pref = await SharedPreferences.getInstance();
+
+    List<Demanda> demandas = [];
+    final userId = pref.getString("userId");
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(userId).get();
+    Empreendedor empreendedor = Empreendedor.fromJson(documentSnapshot.data());
+
+    QuerySnapshot querySnapshot = await _db
+        .collection("Users")
+        .doc(userId)
+        .collection("Demands")
+        .where('isFinished', isEqualTo: true)
+        .get();
+    querySnapshot.docs.forEach((element) {
+      demandas.add(Demanda.fromJson(element.data()));
+    });
+    empreendedor.demandas = demandas;
+    return empreendedor;
   }
 }
