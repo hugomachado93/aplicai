@@ -1,3 +1,4 @@
+import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/user_entity.dart';
@@ -154,5 +155,36 @@ class UserService {
     });
     empreendedor.demandas = demandas;
     return empreendedor;
+  }
+
+  Future<DemandInfoAllUsers> getAllUsersFromProject(
+      String employerId, String studentUserListId) async {
+    List<UserEntity> students = [];
+
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString("userId");
+
+    QuerySnapshot querySnapshot = await _db
+        .collection("Demands")
+        .doc(employerId)
+        .collection("DemandList")
+        .doc(studentUserListId)
+        .collection("Users")
+        .get();
+
+    querySnapshot.docs.forEach((element) {
+      students.add(UserEntity.fromJson(element.data()));
+    });
+
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(employerId).get();
+    Empreendedor empreendedor = Empreendedor.fromJson(documentSnapshot.data());
+
+    documentSnapshot = await _db.collection("Users").doc(userId).get();
+
+    final String type = documentSnapshot.data()['type'];
+
+    return DemandInfoAllUsers(
+        empreendedor: empreendedor, students: students, currentUserType: type);
   }
 }

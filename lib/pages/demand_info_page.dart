@@ -1,8 +1,10 @@
+import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/providers/demand_provider.dart';
 import 'package:aplicai/service/demand_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class DemandInfoPage extends StatefulWidget {
@@ -76,20 +78,18 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder<QuerySnapshot>(
-            stream: _db
-                .collection("Demands")
-                .doc(demanda.parentId)
-                .collection("DemandList")
-                .doc(demanda.childId)
-                .collection("Users")
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Container();
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
+        body: BlocProvider(
+            create: (context) => DemandInfoBloc()
+              ..add(GetAllUsers(
+                  employerId: demanda.parentId,
+                  studentUserListId: demanda.childId)),
+            child: BlocConsumer<DemandInfoBloc, DemandInfoState>(
+                listener: (context, state) {
+              // TODO: implement listener
+            }, builder: (context, state) {
+              if (state is DemandInfoInitial || state is DemandInfoLoading) {
                 return Center(child: CircularProgressIndicator());
-              } else {
+              } else if (state is DemandInfoAllUsers) {
                 return Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
@@ -126,35 +126,41 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                 size: 50,
                               )
                             ]),
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              width: 170,
-                              child: RaisedButton(
-                                  color: Colors.blue,
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(
-                                        "/solicitation",
-                                        arguments: demanda);
-                                  },
-                                  child: Text("Ver solicitações")),
-                            ),
-                            Container(
-                                width: 170,
-                                child: RaisedButton(
-                                    color: Colors.blue,
-                                    onPressed: () async {
-                                      DemandService().finishDemand(
-                                          demanda.parentId, demanda.childId);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Concluir demanda")))
-                          ],
-                        ),
+                        state.currentUserType == 'employer'
+                            ? Divider(
+                                color: Colors.black,
+                              )
+                            : Container(),
+                        state.currentUserType == 'employer'
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    width: 170,
+                                    child: RaisedButton(
+                                        color: Colors.blue,
+                                        onPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                              "/solicitation",
+                                              arguments: demanda);
+                                        },
+                                        child: Text("Ver solicitações")),
+                                  ),
+                                  Container(
+                                      width: 170,
+                                      child: RaisedButton(
+                                          color: Colors.blue,
+                                          onPressed: () async {
+                                            DemandService().finishDemand(
+                                                demanda.parentId,
+                                                demanda.childId);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Concluir demanda")))
+                                ],
+                              )
+                            : Container(),
                         Divider(
                           color: Colors.black,
                         ),
@@ -162,14 +168,14 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                           "Participantes",
                           style: TextStyle(fontSize: 20),
                         ),
-                        snapshot.data.docs.length != 0
+                        state.students.length != 0
                             ? Container(
                                 height: 100,
                                 width: MediaQuery.of(context).size.width,
                                 child: Expanded(
                                   child: ListView.separated(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: snapshot.data.docs.length,
+                                    itemCount: state.students.length,
                                     itemBuilder: (context, index) {
                                       return Container(
                                         height: 100,
@@ -178,9 +184,8 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             image: DecorationImage(
-                                                image: NetworkImage(snapshot
-                                                    .data.docs[index]
-                                                    .data()['urlImage']),
+                                                image: NetworkImage(state
+                                                    .students[index].urlImage),
                                                 fit: BoxFit.fill)),
                                       );
                                     },
@@ -198,7 +203,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  Text("Ainda não existe participantes..."),
+                                  Text("Ainda não existem participantes..."),
                                   SizedBox(
                                     height: 15,
                                   )
@@ -214,7 +219,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                         Expanded(
                             child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data.docs.length,
+                                itemCount: state.students.length,
                                 itemBuilder: (context, index) {
                                   return Row(
                                     children: [
@@ -222,13 +227,13 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                       Container(
                                         width: 140,
                                         child: Text(
-                                          "${snapshot.data.docs[index].data()['name']}",
+                                          "${state.students[index].name}",
                                         ),
                                       ),
                                       Container(
                                         width: 200,
                                         child: Text(
-                                            "${snapshot.data.docs[index].data()['email']}"),
+                                            "${state.students[index].name}"),
                                       ),
                                     ],
                                   );
@@ -236,6 +241,6 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                       ],
                     ));
               }
-            }));
+            })));
   }
 }
