@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
+import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/user_entity.dart';
@@ -186,5 +187,39 @@ class UserService {
 
     return DemandInfoAllUsers(
         empreendedor: empreendedor, students: students, currentUserType: type);
+  }
+
+  Future<DemandInfoExploreGetUserAndEmployerData> getCurrentUserAndEmployerData(
+      String employerId) async {
+    List<Demanda> demandas = [];
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString("userId");
+    final userData = await _db.collection("Users").doc(userId).get();
+    final userType = userData.data()['type'];
+
+    if (userType != 'employer') {
+      DocumentSnapshot documentSnapshot =
+          await _db.collection("Users").doc(employerId).get();
+      Empreendedor empreendedor =
+          Empreendedor.fromJson(documentSnapshot.data());
+
+      QuerySnapshot querySnapshot = await _db
+          .collection("Users")
+          .doc(employerId)
+          .collection("Demands")
+          .get();
+      querySnapshot.docs.forEach((element) {
+        var demanda = Demanda.fromJson(element.data());
+        demanda.parentId = employerId;
+        demandas.add(demanda);
+      });
+
+      empreendedor.demandas = demandas;
+
+      return DemandInfoExploreGetUserAndEmployerData(
+          empreendedor: empreendedor);
+    } else {
+      return DemandInfoExploreGetUserAndEmployerData();
+    }
   }
 }

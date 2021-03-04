@@ -9,6 +9,7 @@ import 'package:aplicai/pages/pre_singup_pages.dart';
 import 'package:aplicai/pages/signup_page_empreendedor.dart';
 import 'package:aplicai/pages/solicitation_detail.dart';
 import 'package:aplicai/pages/solicitation_page.dart';
+import 'package:aplicai/pages/employer_info.dart';
 import 'package:aplicai/pages/subscription_finished.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
@@ -59,6 +60,11 @@ class RouteGenerator {
                 ));
       case '/notifications':
         return MaterialPageRoute(builder: (_) => NotificationPage());
+      case '/employer-info':
+        return MaterialPageRoute(
+            builder: (_) => EmployerInfo(
+                  empreendedor: args,
+                ));
     }
   }
 }

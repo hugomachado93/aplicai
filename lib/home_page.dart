@@ -86,7 +86,8 @@ class _HomePageState extends State<HomePage> {
             if (state is LoginUserCreatedState) {
               Navigator.of(context).pushNamed("/signup-start");
             } else if (state is LoginUserFinishedState) {
-              Navigator.of(context).pushNamed("/navigation");
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/navigation", (Route<dynamic> route) => false);
             } else if (state is LoginUserNotFinishedState) {
               Navigator.of(context).pushNamed("/signup-start");
             }

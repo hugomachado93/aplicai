@@ -207,7 +207,7 @@ class StudentProfile {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: userEntity.categories
-                        .map((skill) => Text("; "))
+                        .map((skill) => Text("$skill; "))
                         .toList()),
                 SizedBox(
                   height: 10,

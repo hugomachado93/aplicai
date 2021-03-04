@@ -48,6 +48,7 @@ class EmployerProfile {
   List<Container> _finishedEmployerDemands(
       Empreendedor empreendedor, BuildContext context) {
     return empreendedor.demandas.map((emp) {
+      print(emp.parentId);
       return Container(
         child: InkWell(
           onTap: () => {
@@ -172,6 +173,75 @@ class EmployerProfile {
         width: 10,
       ),
     ]);
+  }
+
+  buildEmployerInfo(Empreendedor empreendedor, BuildContext context,
+      AuthService authService) {
+    return Scaffold(
+      body: Container(
+          margin: EdgeInsets.all(20),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            SizedBox(
+              height: 30,
+            ),
+            _createEmployerTop(empreendedor),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "Descrição:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(empreendedor.description),
+            SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                empreendedor.linkedinUrl.isNotEmpty
+                    ? Container(
+                        width: 170,
+                        child: RaisedButton(
+                            hoverColor: Colors.orange,
+                            color: Colors.blue,
+                            onPressed: () async {
+                              _launchUrl(empreendedor.linkedinUrl);
+                            },
+                            child: Text("Acessar linkedin")),
+                      )
+                    : Container(),
+                empreendedor.portfolioUrl.isNotEmpty
+                    ? Container(
+                        width: 170,
+                        child: RaisedButton(
+                            color: Colors.blue,
+                            onPressed: () async {
+                              _launchUrl(empreendedor.portfolioUrl);
+                            },
+                            child: Text("Acessar portfolio")))
+                    : Container()
+              ],
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            Text(
+              "Demandas concluidas",
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            empreendedor.demandas.length == 0
+                ? Text("Não há demandas concluidas...")
+                : Container(),
+            ..._finishedEmployerDemands(empreendedor, context)
+          ])),
+    );
   }
 
   buildEmployer(Empreendedor empreendedor, BuildContext context,

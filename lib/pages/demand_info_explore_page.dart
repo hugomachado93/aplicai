@@ -1,8 +1,12 @@
+import 'package:aplicai/bloc/demand_info_bloc.dart';
+import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DemandInfoExplorePage extends StatefulWidget {
@@ -79,96 +83,114 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
     );
   }
 
-  _loadData() async {
-    var prefs = await SharedPreferences.getInstance();
-    var userData =
-        await _db.collection("Users").doc(prefs.getString("userId")).get();
-    return userData.data()['type'];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-          future: _loadData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(child: Text("Error"));
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              return SingleChildScrollView(
-                  child: Container(
-                      margin: EdgeInsets.all(20),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                            ),
-                            _createTop(),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            SizedBox(height: 15),
-                            Center(
-                              child: InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  "Ver perfil do empreendimento",
-                                  style: TextStyle(color: Colors.blueAccent),
+        body: BlocProvider(
+      create: (context) => DemandInfoExploreBloc()
+        ..add(GetCurrentUserAndEmployerData(employerId: demanda.parentId)),
+      child: BlocConsumer<DemandInfoExploreBloc, DemandInfoExploreState>(
+          listener: (context, state) {
+        if (state is DemandInfoExploreEmployerPerfil) {
+          Navigator.of(context)
+              .pushNamed("/employer-info", arguments: state.empreendedor);
+        }
+      }, builder: (context, state) {
+        if (state is DemandInfoExploreInitial ||
+            state is DemandInfoExploreLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is DemandInfoExploreError) {
+          return Center(
+            child: Text("Error"),
+          );
+        } else if (state is DemandInfoExploreGetUserAndEmployerData) {
+          return SingleChildScrollView(
+              child: Container(
+                  margin: EdgeInsets.all(20),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                        ),
+                        _createTop(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(height: 15),
+                        state.empreendedor != null
+                            ? Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    print(state
+                                        .empreendedor.demandas[0].parentId);
+                                    Provider.of<DemandInfoExploreBloc>(context,
+                                            listen: false)
+                                        .add(GoToEmployerPerfil(
+                                            empreendedor: state.empreendedor));
+                                  },
+                                  child: Text(
+                                    "Ver perfil do empreendimento",
+                                    style: TextStyle(color: Colors.blueAccent),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              "Descrição:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(demanda.description),
-                            Divider(
-                              height: 50,
-                              thickness: 1,
-                            ),
-                            _bottomDescriptions(Icons.calendar_today,
-                                "Fim das inscrições", endDateFormated()),
-                            _bottomDescriptions(Icons.watch_later, "Duração",
-                                "Média, até 1 mês"),
-                            _bottomDescriptions(Icons.group, "Grupo",
-                                "${demanda.quantityParticipants} participantes"),
-                            _bottomDescriptions(Icons.folder, "Categorias",
-                                demanda.categories.toString()),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            snapshot.data != "employer" && !demanda.isFinished
-                                ? Center(
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: RaisedButton(
-                                        color: Colors.blueAccent,
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                              "/demand-subscription",
-                                              arguments: demanda);
-                                        },
-                                        child: Text(
-                                          "Quero me increver!",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          "Descrição:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(demanda.description),
+                        Divider(
+                          height: 50,
+                          thickness: 1,
+                        ),
+                        _bottomDescriptions(Icons.calendar_today,
+                            "Fim das inscrições", endDateFormated()),
+                        _bottomDescriptions(
+                            Icons.watch_later, "Duração", "Média, até 1 mês"),
+                        _bottomDescriptions(Icons.group, "Grupo",
+                            "${demanda.quantityParticipants} participantes"),
+                        _bottomDescriptions(Icons.folder, "Categorias",
+                            demanda.categories.toString()),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        state.empreendedor != null && !demanda.isFinished
+                            ? Center(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: RaisedButton(
+                                    color: Colors.blueAccent,
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                          "/demand-subscription",
+                                          arguments: demanda);
+                                    },
+                                    child: Text(
+                                      "Quero me increver!",
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  )
-                                : Container()
-                          ])));
-            }
-          }),
-    );
+                                  ),
+                                ),
+                              )
+                            : Container()
+                      ])));
+        } else {
+          Provider.of<DemandInfoExploreBloc>(context)
+              .add(GetCurrentUserAndEmployerData(employerId: demanda.parentId));
+          return CircularProgressIndicator();
+        }
+      }),
+    ));
   }
 }

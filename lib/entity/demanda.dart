@@ -14,8 +14,16 @@ class Demanda {
   String urlImage;
   bool isFinished;
 
-  Demanda({this.name, this.categories, this.endDate, this.startDate, this.localization,
-      this.quantityParticipants, this.description, this.urlImage, this.isFinished});
+  Demanda(
+      {this.name,
+      this.categories,
+      this.endDate,
+      this.startDate,
+      this.localization,
+      this.quantityParticipants,
+      this.description,
+      this.urlImage,
+      this.isFinished});
 
   Demanda.fromJson(Map<String, dynamic> json) {
     name = json['name'];
