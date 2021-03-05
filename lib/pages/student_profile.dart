@@ -79,42 +79,55 @@ class StudentProfile {
     ]);
   }
 
-  Widget _drawer(BuildContext context, AuthService authService) {
+  Widget _drawer(
+      BuildContext context, AuthService authService, UserEntity userEntity) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            margin: EdgeInsets.zero,
-            decoration: BoxDecoration(
-              color: Colors.blueGrey,
+      child: Container(
+        color: Color.fromARGB(255, 0, 100, 255),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: 50,
             ),
-          ),
-          Container(
-            height: 10,
-            color: Colors.black87,
-          ),
-          ListTile(
-            tileColor: Colors.blue,
-            title: Text('Settings'),
-            onTap: () async {},
-            onLongPress: () {},
-          ),
-          Container(
-            height: 1,
-            color: Colors.black87,
-          ),
-          ListTile(
-            title: Text('Logout'),
-            tileColor: Colors.blue,
-            onTap: () async {
-              await authService.logoutUser();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/", (Route<dynamic> route) => false);
-            },
-          ),
-        ],
+            Row(
+              children: [
+                Expanded(
+                  child: CachedNetworkImage(
+                    imageUrl: userEntity.urlImage,
+                    imageBuilder: (context, imageProvider) => ListTile(
+                      title: Text(userEntity.name),
+                      subtitle: Text(userEntity.email),
+                      leading: CircleAvatar(
+                        backgroundImage: imageProvider,
+                      ),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Minha Conta'),
+              onTap: () async {},
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: Text('Configurações'),
+              onTap: () async {},
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: Text('Sair'),
+              onTap: () async {
+                await authService.logoutUser();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/", (Route<dynamic> route) => false);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -182,7 +195,7 @@ class StudentProfile {
           title: Text("Perfil do estudante"),
           leading: Container(),
         ),
-        endDrawer: _drawer(context, authService),
+        endDrawer: _drawer(context, authService, userEntity),
         body: SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(20),

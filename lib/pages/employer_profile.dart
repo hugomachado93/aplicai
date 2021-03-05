@@ -48,7 +48,6 @@ class EmployerProfile {
   List<Container> _finishedEmployerDemands(
       Empreendedor empreendedor, BuildContext context) {
     return empreendedor.demandas.map((emp) {
-      print(emp.parentId);
       return Container(
         child: InkWell(
           onTap: () => {
@@ -65,13 +64,17 @@ class EmployerProfile {
                 SizedBox(
                   width: 0,
                 ),
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                          image: NetworkImage(emp.urlImage), fit: BoxFit.fill)),
+                CachedNetworkImage(
+                  imageUrl: emp.urlImage,
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 120,
+                    width: 120,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill)),
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
                 ),
                 SizedBox(
                   width: 15,
@@ -101,42 +104,55 @@ class EmployerProfile {
     }).toList();
   }
 
-  Widget _drawer(BuildContext context, AuthService authService) {
+  Widget _drawer(BuildContext context, AuthService authService,
+      Empreendedor empreendedor) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            margin: EdgeInsets.zero,
-            decoration: BoxDecoration(
-              color: Colors.blueGrey,
+      child: Container(
+        color: Color.fromARGB(255, 0, 100, 255),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: 50,
             ),
-          ),
-          Container(
-            height: 10,
-            color: Colors.black87,
-          ),
-          ListTile(
-            tileColor: Colors.blue,
-            title: Text('Settings'),
-            onTap: () async {},
-            onLongPress: () {},
-          ),
-          Container(
-            height: 1,
-            color: Colors.black87,
-          ),
-          ListTile(
-            title: Text('Logout'),
-            tileColor: Colors.blue,
-            onTap: () async {
-              await authService.logoutUser();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/", (Route<dynamic> route) => false);
-            },
-          ),
-        ],
+            Row(
+              children: [
+                Expanded(
+                  child: CachedNetworkImage(
+                    imageUrl: empreendedor.urlImage,
+                    imageBuilder: (context, imageProvider) => ListTile(
+                      title: Text(empreendedor.companyName),
+                      subtitle: Text(empreendedor.email),
+                      leading: CircleAvatar(
+                        backgroundImage: imageProvider,
+                      ),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Minha Conta'),
+              onTap: () async {},
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: Text('Configurações'),
+              onTap: () async {},
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: Text('Sair'),
+              onTap: () async {
+                await authService.logoutUser();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/", (Route<dynamic> route) => false);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -252,7 +268,7 @@ class EmployerProfile {
           title: Text("Perfil do empreendedor"),
           leading: Container(),
         ),
-        endDrawer: _drawer(context, authService),
+        endDrawer: _drawer(context, authService, empreendedor),
         body: SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(20),

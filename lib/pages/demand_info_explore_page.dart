@@ -1,6 +1,7 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -34,13 +35,16 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
 
   Widget _createTop() {
     return Row(children: [
-      Container(
-        height: 120,
-        width: 120,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-                image: NetworkImage(demanda.urlImage), fit: BoxFit.fill)),
+      CachedNetworkImage(
+        imageUrl: demanda.urlImage,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(image: imageProvider, fit: BoxFit.fill)),
+        ),
+        placeholder: (context, url) => CircularProgressIndicator(),
       ),
       SizedBox(
         width: 30,
