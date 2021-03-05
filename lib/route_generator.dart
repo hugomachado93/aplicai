@@ -2,6 +2,7 @@ import 'package:aplicai/home_page.dart';
 import 'package:aplicai/pages/demand_info_explore_page.dart';
 import 'package:aplicai/pages/demand_info_page.dart';
 import 'package:aplicai/pages/demand_subscription.dart';
+import 'package:aplicai/pages/employer_demand_info.dart';
 import 'package:aplicai/pages/navigation_page.dart';
 import 'package:aplicai/pages/notification_page.dart';
 import 'package:aplicai/pages/nova_demanda_page.dart';
@@ -64,6 +65,11 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => EmployerInfo(
                   empreendedor: args,
+                ));
+      case '/employer-demand-info':
+        return MaterialPageRoute(
+            builder: (_) => EmployerDemandInfo(
+                  demanda: args,
                 ));
     }
   }

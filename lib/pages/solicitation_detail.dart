@@ -190,29 +190,36 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Container(
-                                width: 180,
-                                child: RaisedButton(
-                                    child: Text("Aceitar"),
-                                    color: Colors.green,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    onPressed: () async {
-                                      await _updateParticipantsOfDemand(
-                                          snapshot);
-                                      Navigator.of(context).pop();
-                                    }),
+                              Expanded(
+                                child: Container(
+                                  width: 180,
+                                  child: RaisedButton(
+                                      child: Text("Aceitar"),
+                                      color: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      onPressed: () async {
+                                        await _updateParticipantsOfDemand(
+                                            snapshot);
+                                        Navigator.of(context).pop();
+                                      }),
+                                ),
                               ),
-                              Container(
-                                width: 180,
-                                child: RaisedButton(
-                                    child: Text("Recusar"),
-                                    color: Colors.red,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    onPressed: () {}),
+                              SizedBox(
+                                width: 50,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  width: 180,
+                                  child: RaisedButton(
+                                      child: Text("Recusar"),
+                                      color: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      onPressed: () {}),
+                                ),
                               )
                             ],
                           )

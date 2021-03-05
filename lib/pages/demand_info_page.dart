@@ -1,6 +1,7 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/providers/demand_provider.dart';
 import 'package:aplicai/service/demand_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +33,16 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
 
   Widget _createTop() {
     return Row(children: [
-      Container(
-        height: 120,
-        width: 120,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-                image: NetworkImage(demanda.urlImage), fit: BoxFit.fill)),
+      CachedNetworkImage(
+        imageUrl: demanda.urlImage,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(image: imageProvider, fit: BoxFit.fill)),
+        ),
+        placeholder: (context, url) => CircularProgressIndicator(),
       ),
       SizedBox(
         width: 30,
@@ -210,7 +214,13 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                 ],
                               )),
                         Divider(color: Colors.black),
-                        Text("Contatos"),
+                        Text(
+                          "Contatos",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
                         Row(children: [
                           Icon(Icons.email),
                           Expanded(child: Text("${demanda.name}:")),
@@ -224,16 +234,20 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   return Row(
                                     children: [
                                       Icon(Icons.email),
-                                      Container(
-                                        width: 140,
-                                        child: Text(
-                                          "${state.students[index].name}",
+                                      Expanded(
+                                        child: Container(
+                                          width: 140,
+                                          child: Text(
+                                            "${state.students[index].name}",
+                                          ),
                                         ),
                                       ),
-                                      Container(
-                                        width: 200,
-                                        child: Text(
-                                            "${state.students[index].name}"),
+                                      Expanded(
+                                        child: Container(
+                                          width: 200,
+                                          child: Text(
+                                              "${state.students[index].name}"),
+                                        ),
                                       ),
                                     ],
                                   );

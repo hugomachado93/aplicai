@@ -1,6 +1,7 @@
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/demand_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +28,13 @@ class _ExplorePageState extends State<ExplorePage> {
         width: 10,
       ),
       Expanded(
-        child: Row(children: listText.map((e) => Text(e,
-          overflow: TextOverflow.ellipsis,)).toList()
-      ))
+          child: Row(
+              children: listText
+                  .map((e) => Text(
+                        e,
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                  .toList()))
     ]);
   }
 
@@ -69,7 +74,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       child: ListView.builder(
                           itemCount: demandList.length,
                           itemBuilder: (context, index) {
-                            Demanda demanda = Demanda.fromJson(demandList[index].data());
+                            Demanda demanda =
+                                Demanda.fromJson(demandList[index].data());
                             return InkWell(
                               onTap: () {
                                 demanda.parentId = demandList[index]
@@ -90,18 +96,22 @@ class _ExplorePageState extends State<ExplorePage> {
                                 child: Container(
                                     child: Row(
                                   children: [
-                                    Container(
-                                      height: 120,
-                                      width: 120,
-                                      margin: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  demandList[index]
-                                                      .data()['urlImage']),
-                                              fit: BoxFit.fill)),
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          demandList[index].data()['urlImage'],
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        height: 120,
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill)),
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -117,11 +127,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                               thickness: 1,
                                             ),
                                             _textBuilder(
-                                                Icons.work,
-                                                demanda.name),
-                                            _textListBuilder(Icons.folder, demanda.categories),
-                                            _textBuilder(
-                                                Icons.location_on,
+                                                Icons.work, demanda.name),
+                                            _textListBuilder(Icons.folder,
+                                                demanda.categories),
+                                            _textBuilder(Icons.location_on,
                                                 demanda.localization),
                                           ]),
                                     ),

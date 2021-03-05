@@ -53,7 +53,7 @@ class EmployerProfile {
         child: InkWell(
           onTap: () => {
             Navigator.of(context)
-                .pushNamed("/demand-info-explore", arguments: emp)
+                .pushNamed("/employer-demand-info", arguments: emp)
           },
           child: Container(
             height: 120,

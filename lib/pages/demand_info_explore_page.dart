@@ -123,8 +123,8 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
                         SizedBox(height: 15),
                         state.empreendedor != null
                             ? Center(
-                                child: InkWell(
-                                  onTap: () {
+                                child: RaisedButton(
+                                  onPressed: () {
                                     print(state
                                         .empreendedor.demandas[0].parentId);
                                     Provider.of<DemandInfoExploreBloc>(context,

@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,15 +30,21 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
     return Row(children: [Icon(icon), Text(text)]);
   }
 
-  Widget _createTop() {
+  Widget _createTop(Demanda demanda) {
     return Row(children: [
-      Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/placeholder.png"),
-                fit: BoxFit.fill)),
+      CachedNetworkImage(
+        imageUrl: demanda.urlImage,
+        imageBuilder: (context, imageProvider) => Container(
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: Colors.black, blurRadius: 5)
+              ],
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(image: imageProvider, fit: BoxFit.fill)),
+        ),
+        placeholder: (context, url) => CircularProgressIndicator(),
       ),
       SizedBox(
         width: 30,
@@ -85,8 +92,9 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
         .doc(prefs.getString("userId"))
         .set({'motivationText': _motivationText});
 
-    Navigator.of(context)
-        .pushNamed("/finished-subscription", arguments: demanda);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        "/finished-subscription", (Route<dynamic> route) => false,
+        arguments: demanda);
   }
 
   @override
@@ -111,7 +119,7 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
                         SizedBox(
                           height: 50,
                         ),
-                        _createTop(),
+                        _createTop(demanda),
                         Divider(
                           height: 50,
                           thickness: 1,
