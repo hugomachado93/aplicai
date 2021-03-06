@@ -151,13 +151,17 @@ class StudentProfile {
                 SizedBox(
                   width: 0,
                 ),
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                          image: NetworkImage(stu.urlImage), fit: BoxFit.fill)),
+                CachedNetworkImage(
+                  imageUrl: userEntity.urlImage,
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 120,
+                    width: 120,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill)),
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
                 ),
                 SizedBox(
                   width: 15,
@@ -171,9 +175,13 @@ class StudentProfile {
                         ),
                         Text("Title"),
                         Divider(color: Colors.black),
-                        _textBuilder(Icons.work, stu.name),
-                        _textListBuilder(Icons.folder, stu.categories),
-                        _textBuilder(Icons.location_on, stu.localization),
+                        Expanded(child: _textBuilder(Icons.work, stu.name)),
+                        Expanded(
+                            child:
+                                _textListBuilder(Icons.folder, stu.categories)),
+                        Expanded(
+                            child: _textBuilder(
+                                Icons.location_on, stu.localization)),
                       ]),
                 ),
                 SizedBox(

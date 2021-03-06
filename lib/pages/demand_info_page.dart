@@ -88,173 +88,176 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                   employerId: demanda.parentId,
                   studentUserListId: demanda.childId)),
             child: BlocConsumer<DemandInfoBloc, DemandInfoState>(
-                listener: (context, state) {
-              // TODO: implement listener
-            }, builder: (context, state) {
-              if (state is DemandInfoInitial || state is DemandInfoLoading) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is DemandInfoAllUsers) {
-                return Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                        ),
-                        _createTop(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        calculateDaysToEndDemand() > 1
-                            ? Text("Faltam ${calculateDaysToEndDemand()} dias")
-                            : Text("Prazo para a entrega finalizado"),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          height: 15,
-                          width: MediaQuery.of(context).size.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: LinearProgressIndicator(
-                              value: progressBarCalculation(),
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is DemandInfoInitial ||
+                      state is DemandInfoLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is DemandInfoAllUsers) {
+                    return Container(
+                        margin: EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 50,
                             ),
-                          ),
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                  "Entrega do projeto\n           ${endDateFormated()}"),
-                              Icon(
-                                Icons.calendar_today,
-                                size: 50,
-                              )
-                            ]),
-                        state.currentUserType == 'employer'
-                            ? Divider(
-                                color: Colors.black,
-                              )
-                            : Container(),
-                        state.currentUserType == 'employer'
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                            _createTop(),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            calculateDaysToEndDemand() > 1
+                                ? Text(
+                                    "Faltam ${calculateDaysToEndDemand()} dias")
+                                : Text("Prazo para a entrega finalizado"),
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              height: 15,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: LinearProgressIndicator(
+                                  value: progressBarCalculation(),
+                                ),
+                              ),
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    width: 170,
-                                    child: RaisedButton(
-                                        color: Colors.blue,
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                              "/solicitation",
-                                              arguments: demanda);
+                                  Text(
+                                      "Entrega do projeto\n           ${endDateFormated()}"),
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 50,
+                                  )
+                                ]),
+                            state.currentUserType == 'employer'
+                                ? Divider(
+                                    color: Colors.black,
+                                  )
+                                : Container(),
+                            state.currentUserType == 'employer'
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        width: 170,
+                                        child: RaisedButton(
+                                            color: Colors.blue,
+                                            onPressed: () {
+                                              Navigator.of(context).pushNamed(
+                                                  "/solicitation",
+                                                  arguments: demanda);
+                                            },
+                                            child: Text("Ver solicitações")),
+                                      ),
+                                      Container(
+                                          width: 170,
+                                          child: RaisedButton(
+                                              color: Colors.blue,
+                                              onPressed: () async {
+                                                DemandService().finishDemand(
+                                                    demanda.parentId,
+                                                    demanda.childId);
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Concluir demanda")))
+                                    ],
+                                  )
+                                : Container(),
+                            Divider(
+                              color: Colors.black,
+                            ),
+                            Text(
+                              "Participantes",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            state.students.length != 0
+                                ? Container(
+                                    height: 100,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Expanded(
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.students.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            height: 100,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                image: DecorationImage(
+                                                    image: NetworkImage(state
+                                                        .students[index]
+                                                        .urlImage),
+                                                    fit: BoxFit.fill)),
+                                          );
                                         },
-                                        child: Text("Ver solicitações")),
-                                  ),
-                                  Container(
-                                      width: 170,
-                                      child: RaisedButton(
-                                          color: Colors.blue,
-                                          onPressed: () async {
-                                            DemandService().finishDemand(
-                                                demanda.parentId,
-                                                demanda.childId);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Concluir demanda")))
-                                ],
-                              )
-                            : Container(),
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        Text(
-                          "Participantes",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        state.students.length != 0
-                            ? Container(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width,
-                                child: Expanded(
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.horizontal,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return SizedBox(
+                                            width: 30,
+                                          );
+                                        },
+                                      ),
+                                    ))
+                                : Container(
+                                    child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                          "Ainda não existem participantes..."),
+                                      SizedBox(
+                                        height: 15,
+                                      )
+                                    ],
+                                  )),
+                            Divider(color: Colors.black),
+                            Text(
+                              "Contatos",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Row(children: [
+                              Icon(Icons.email),
+                              Expanded(child: Text("${demanda.name}:")),
+                              Expanded(child: Text("${demanda.name}")),
+                            ]),
+                            Expanded(
+                                child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
                                     itemCount: state.students.length,
                                     itemBuilder: (context, index) {
-                                      return Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            image: DecorationImage(
-                                                image: NetworkImage(state
-                                                    .students[index].urlImage),
-                                                fit: BoxFit.fill)),
-                                      );
-                                    },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return SizedBox(
-                                        width: 30,
-                                      );
-                                    },
-                                  ),
-                                ))
-                            : Container(
-                                child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text("Ainda não existem participantes..."),
-                                  SizedBox(
-                                    height: 15,
-                                  )
-                                ],
-                              )),
-                        Divider(color: Colors.black),
-                        Text(
-                          "Contatos",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(children: [
-                          Icon(Icons.email),
-                          Expanded(child: Text("${demanda.name}:")),
-                          Expanded(child: Text("${demanda.name}")),
-                        ]),
-                        Expanded(
-                            child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: state.students.length,
-                                itemBuilder: (context, index) {
-                                  return Row(
-                                    children: [
-                                      Icon(Icons.email),
-                                      Expanded(
-                                        child: Container(
-                                          width: 140,
-                                          child: Text(
-                                            "${state.students[index].name}",
+                                      return Row(
+                                        children: [
+                                          Icon(Icons.email),
+                                          Expanded(
+                                            child: Container(
+                                              width: 140,
+                                              child: Text(
+                                                "${state.students[index].name}",
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: 200,
-                                          child: Text(
-                                              "${state.students[index].name}"),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }))
-                      ],
-                    ));
-              }
-            })));
+                                          Expanded(
+                                            child: Container(
+                                              width: 200,
+                                              child: Text(
+                                                  "${state.students[index].name}"),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }))
+                          ],
+                        ));
+                  }
+                })));
   }
 }

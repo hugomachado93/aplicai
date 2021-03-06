@@ -207,6 +207,7 @@ class UserService {
           .collection("Users")
           .doc(employerId)
           .collection("Demands")
+          .where('isFinished', isEqualTo: true)
           .get();
       querySnapshot.docs.forEach((element) {
         var demanda = Demanda.fromJson(element.data());

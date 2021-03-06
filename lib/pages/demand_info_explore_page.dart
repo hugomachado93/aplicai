@@ -96,6 +96,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
       child: BlocConsumer<DemandInfoExploreBloc, DemandInfoExploreState>(
           listener: (context, state) {
         if (state is DemandInfoExploreEmployerPerfil) {
+          print("here");
           Navigator.of(context)
               .pushNamed("/employer-info", arguments: state.empreendedor);
         }
@@ -129,8 +130,6 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
                             ? Center(
                                 child: RaisedButton(
                                   onPressed: () {
-                                    print(state
-                                        .empreendedor.demandas[0].parentId);
                                     Provider.of<DemandInfoExploreBloc>(context,
                                             listen: false)
                                         .add(GoToEmployerPerfil(
