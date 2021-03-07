@@ -1,20 +1,17 @@
 import 'package:aplicai/entity/notify.dart';
+import 'package:aplicai/notifications/notification_enum.dart';
 import 'package:aplicai/notifications/notifications_strategy.dart';
 import 'package:flutter/material.dart';
-import 'package:aplicai/notifications/notification_enum.dart';
 
-class SubscriptionNotification implements NotificationsStrategy {
+class RequestNotification implements NotificationsStrategy {
   @override
   Widget createCard(Notify notify) {
     return Container(
-      height: 120,
+      height: 100,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         margin: EdgeInsets.all(15),
         child: Row(children: [
-          SizedBox(
-            width: 15,
-          ),
           Expanded(
             child: Text(
               notify.notification,
@@ -28,9 +25,6 @@ class SubscriptionNotification implements NotificationsStrategy {
 
   @override
   String getType() {
-    return NotificationType.Solicitation.toString()
-        .split('.')
-        .last
-        .toLowerCase();
+    return NotificationType.Request.toString().split('.').last.toLowerCase();
   }
 }

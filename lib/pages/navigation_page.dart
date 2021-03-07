@@ -72,7 +72,7 @@ class _NavigationState extends State<NavigationPage> {
           ],
           onTap: _onItemTapped,
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          selectedItemColor: Colors.blue,
         ));
   }
 }

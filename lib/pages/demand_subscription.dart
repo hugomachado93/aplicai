@@ -1,4 +1,5 @@
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/user_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -82,15 +83,32 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
     }
     _formKey.currentState.save();
 
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString("userId");
     _db
         .collection("Demands")
         .doc(demanda.parentId)
         .collection("DemandList")
         .doc(demanda.childId)
         .collection("Solicitation")
-        .doc(prefs.getString("userId"))
+        .doc(userId)
         .set({'motivationText': _motivationText});
+
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Users").doc(userId).get();
+
+    UserEntity userEntity = UserEntity.fromJson(documentSnapshot.data());
+
+    _db
+        .collection("Users")
+        .doc(demanda.parentId)
+        .collection("Notifications")
+        .doc()
+        .set({
+      "notification":
+          "Você recebeu uma proposta de ${userEntity.name} para participar do projeto ${demanda.name}",
+      "type": "request"
+    });
 
     Navigator.of(context).pushNamedAndRemoveUntil(
         "/finished-subscription", (Route<dynamic> route) => false,

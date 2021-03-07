@@ -48,6 +48,10 @@ class _NotificationPageState extends State<NotificationPage> {
                           Text("Notificações", style: TextStyle(fontSize: 30))
                         ]),
                       ),
+                      SizedBox(height: 20),
+                      notifications.length == 0
+                          ? Text("Não há notificações")
+                          : Container(),
                       ListView.builder(
                           shrinkWrap: true,
                           itemCount: notifications.length,

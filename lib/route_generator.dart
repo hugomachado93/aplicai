@@ -11,6 +11,7 @@ import 'package:aplicai/pages/signup_page_empreendedor.dart';
 import 'package:aplicai/pages/solicitation_detail.dart';
 import 'package:aplicai/pages/solicitation_page.dart';
 import 'package:aplicai/pages/employer_info.dart';
+import 'package:aplicai/pages/student_demand_info.dart';
 import 'package:aplicai/pages/subscription_finished.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
@@ -69,6 +70,11 @@ class RouteGenerator {
       case '/employer-demand-info':
         return MaterialPageRoute(
             builder: (_) => EmployerDemandInfo(
+                  demanda: args,
+                ));
+      case '/student-demand-info':
+        return MaterialPageRoute(
+            builder: (_) => StudentDemandInfo(
                   demanda: args,
                 ));
     }

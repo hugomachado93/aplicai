@@ -96,9 +96,9 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
       child: BlocConsumer<DemandInfoExploreBloc, DemandInfoExploreState>(
           listener: (context, state) {
         if (state is DemandInfoExploreEmployerPerfil) {
-          print("here");
           Navigator.of(context)
               .pushNamed("/employer-info", arguments: state.empreendedor);
+          return CircularProgressIndicator();
         }
       }, builder: (context, state) {
         if (state is DemandInfoExploreInitial ||
@@ -111,83 +111,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
             child: Text("Error"),
           );
         } else if (state is DemandInfoExploreGetUserAndEmployerData) {
-          return SingleChildScrollView(
-              child: Container(
-                  margin: EdgeInsets.all(20),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                        ),
-                        _createTop(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        SizedBox(height: 15),
-                        state.empreendedor != null
-                            ? Center(
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Provider.of<DemandInfoExploreBloc>(context,
-                                            listen: false)
-                                        .add(GoToEmployerPerfil(
-                                            empreendedor: state.empreendedor));
-                                  },
-                                  child: Text(
-                                    "Ver perfil do empreendimento",
-                                    style: TextStyle(color: Colors.blueAccent),
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Descrição:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(demanda.description),
-                        Divider(
-                          height: 50,
-                          thickness: 1,
-                        ),
-                        _bottomDescriptions(Icons.calendar_today,
-                            "Fim das inscrições", endDateFormated()),
-                        _bottomDescriptions(
-                            Icons.watch_later, "Duração", "Média, até 1 mês"),
-                        _bottomDescriptions(Icons.group, "Grupo",
-                            "${demanda.quantityParticipants} participantes"),
-                        _bottomDescriptions(Icons.folder, "Categorias",
-                            demanda.categories.toString()),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        state.empreendedor != null && !demanda.isFinished
-                            ? Center(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: RaisedButton(
-                                    color: Colors.blueAccent,
-                                    onPressed: () {
-                                      Navigator.of(context).pushNamed(
-                                          "/demand-subscription",
-                                          arguments: demanda);
-                                    },
-                                    child: Text(
-                                      "Quero me increver!",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Container()
-                      ])));
+          return buildDemandInfoExploreGetUserAndEmployerData(state, context);
         } else {
           Provider.of<DemandInfoExploreBloc>(context)
               .add(GetCurrentUserAndEmployerData(employerId: demanda.parentId));
@@ -195,5 +119,88 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
         }
       }),
     ));
+  }
+
+  SingleChildScrollView buildDemandInfoExploreGetUserAndEmployerData(
+      DemandInfoExploreGetUserAndEmployerData state, BuildContext context) {
+    return SingleChildScrollView(
+        child: Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  _createTop(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(height: 15),
+                  state.empreendedor != null
+                      ? Center(
+                          child: InkWell(
+                          onTap: () {
+                            Provider.of<DemandInfoExploreBloc>(context,
+                                    listen: false)
+                                .add(GoToEmployerPerfil(
+                                    empreendedor: state.empreendedor));
+                          },
+                          child: Text(
+                            "Ver perfil do empreendimento",
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ))
+                      : Container(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "Descrição:",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(demanda.description),
+                  Divider(
+                    height: 50,
+                    thickness: 1,
+                  ),
+                  _bottomDescriptions(Icons.calendar_today,
+                      "Fim das inscrições", endDateFormated()),
+                  _bottomDescriptions(
+                      Icons.watch_later, "Duração", "Média, até 1 mês"),
+                  _bottomDescriptions(Icons.group, "Grupo",
+                      "${demanda.quantityParticipants} participantes"),
+                  _bottomDescriptions(Icons.folder, "Categorias",
+                      demanda.categories.toString()),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  state.empreendedor != null && !demanda.isFinished
+                      ? Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: RaisedButton(
+                              color: Colors.blueAccent,
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                    "/demand-subscription",
+                                    arguments: demanda);
+                              },
+                              child: Text(
+                                "Quero me increver!",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container()
+                ])));
   }
 }

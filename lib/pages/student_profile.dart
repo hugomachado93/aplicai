@@ -134,12 +134,12 @@ class StudentProfile {
 
   List<Container> _finishedStudentDemands(
       UserEntity userEntity, BuildContext context) {
-    return userEntity.demandas.map((stu) {
+    return userEntity.demandas.map((demand) {
       return Container(
         child: InkWell(
           onTap: () => {
             Navigator.of(context)
-                .pushNamed("/demand-info-explore", arguments: stu)
+                .pushNamed("/student-demand-info", arguments: demand)
           },
           child: Container(
             height: 120,
@@ -152,7 +152,7 @@ class StudentProfile {
                   width: 0,
                 ),
                 CachedNetworkImage(
-                  imageUrl: userEntity.urlImage,
+                  imageUrl: demand.urlImage,
                   imageBuilder: (context, imageProvider) => Container(
                     height: 120,
                     width: 120,
@@ -175,13 +175,13 @@ class StudentProfile {
                         ),
                         Text("Title"),
                         Divider(color: Colors.black),
-                        Expanded(child: _textBuilder(Icons.work, stu.name)),
+                        Expanded(child: _textBuilder(Icons.work, demand.name)),
                         Expanded(
-                            child:
-                                _textListBuilder(Icons.folder, stu.categories)),
+                            child: _textListBuilder(
+                                Icons.folder, demand.categories)),
                         Expanded(
                             child: _textBuilder(
-                                Icons.location_on, stu.localization)),
+                                Icons.location_on, demand.localization)),
                       ]),
                 ),
                 SizedBox(

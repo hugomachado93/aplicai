@@ -1,1 +1,1 @@
-enum NotificationType { Signup, Solicitation }
+enum NotificationType { Signup, Solicitation, Request }

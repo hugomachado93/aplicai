@@ -89,7 +89,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     arguments: demanda);
                               },
                               child: Card(
-                                color: Colors.white60,
+                                color: Colors.blueGrey,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15)),
                                 margin: EdgeInsets.all(15),

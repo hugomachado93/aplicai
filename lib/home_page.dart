@@ -24,30 +24,49 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _passwordController = TextEditingController();
 
   _buildEmailField(LoginState state, BuildContext context) {
-    return TextFormField(
-      controller: _emailController,
-      decoration: InputDecoration(
-          labelText: "Email",
-          errorText: !state.isEmailValid ? "Email invalido" : null),
-      onChanged: (value) {
-        Provider.of<LoginBloc>(context, listen: false)
-            .add(LoginEmailEvent(value));
-      },
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(30, 0, 0, 255),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: TextFormField(
+        controller: _emailController,
+        decoration: InputDecoration(
+          icon: Icon(Icons.email),
+          border: InputBorder.none,
+          hintText: "Email",
+        ),
+        // errorText: !state.isEmailValid ? "Email invalido" : null),
+        onChanged: (value) {
+          Provider.of<LoginBloc>(context, listen: false)
+              .add(LoginEmailEvent(value));
+        },
+      ),
     );
   }
 
   _buildPasswordField(LoginState state, BuildContext context) {
-    return TextFormField(
-      controller: _passwordController,
-      obscureText: true,
-      decoration: InputDecoration(
-          labelText: "Senha",
-          errorText: !state.isPasswordValid ? "Senha invalida" : null),
-      onChanged: (value) {
-        Provider.of<LoginBloc>(context, listen: false)
-            .add(LoginPasswordEvent(value));
-      },
-    );
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(30, 0, 0, 255),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: TextFormField(
+          controller: _passwordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            icon: Icon(Icons.lock),
+            border: InputBorder.none,
+            hintText: "Senha",
+          ),
+          // errorText: !state.isPasswordValid ? "Senha invalida" : null),
+          onChanged: (value) {
+            Provider.of<LoginBloc>(context, listen: false)
+                .add(LoginPasswordEvent(value));
+          },
+        ));
   }
 
   _buildLoginButton(BuildContext context, LoginState state) {
@@ -98,49 +117,54 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is LoginState) {
-              return Container(
-                  margin: EdgeInsets.all(30),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 100,
-                        ),
-                        _buildEmailField(state, context),
-                        _buildPasswordField(state, context),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        !state.userLoginState.isValid
-                            ? Text(
-                                state.userLoginState.message,
-                                style: TextStyle(color: Colors.red),
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildLoginButton(context, state),
-                            _buildSignupButton(context, state),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        RaisedButton(
-                            child: Text("Entrar com o google"),
-                            onPressed: () {
-                              Provider.of<LoginBloc>(context, listen: false)
-                                  .add(LoginGoogleEvent());
-                            }),
-                      ],
-                    ),
-                  ));
+              return SingleChildScrollView(
+                child: Container(
+                    margin: EdgeInsets.all(30),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 200,
+                          ),
+                          _buildEmailField(state, context),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          _buildPasswordField(state, context),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          !state.userLoginState.isValid
+                              ? Text(
+                                  state.userLoginState.message,
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _buildLoginButton(context, state),
+                              _buildSignupButton(context, state),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          RaisedButton(
+                              child: Text("Entrar com o google"),
+                              onPressed: () {
+                                Provider.of<LoginBloc>(context, listen: false)
+                                    .add(LoginGoogleEvent());
+                              }),
+                        ],
+                      ),
+                    )),
+              );
             }
           },
         ),

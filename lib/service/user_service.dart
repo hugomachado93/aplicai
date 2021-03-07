@@ -2,6 +2,7 @@ import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
+import 'package:aplicai/entity/solicitation.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -222,5 +223,86 @@ class UserService {
     } else {
       return DemandInfoExploreGetUserAndEmployerData();
     }
+  }
+
+  Future<Solicitation> getUserSolicitation(Demanda demanda) async {
+    final solicitation = await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Solicitation")
+        .doc(demanda.solicitationId)
+        .get();
+
+    String data = solicitation.data()['motivationText'];
+
+    final _data =
+        await _db.collection("Users").doc(demanda.solicitationId).get();
+
+    UserEntity userEntity = UserEntity.fromJson(_data.data());
+
+    Solicitation solicitationData = new Solicitation(
+        userEntity: userEntity, demanda: demanda, motivationText: data);
+
+    return solicitationData;
+  }
+
+  Future<void> updateParticipantsOfDemand(Demanda demanda) async {
+    final userData =
+        await _db.collection("Users").doc(demanda.solicitationId).get();
+
+    await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Users")
+        .doc(demanda.solicitationId)
+        .set(userData.data());
+
+    await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Solicitation")
+        .doc(demanda.solicitationId)
+        .delete();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final demandData = await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .get();
+
+    await _db
+        .collection("Users")
+        .doc(prefs.getString("userId"))
+        .collection("Demands")
+        .doc(demanda.childId)
+        .set(demandData.data());
+
+    await _db
+        .collection("Users")
+        .doc(demanda.solicitationId)
+        .collection("Demands")
+        .doc(demanda.childId)
+        .set(demandData.data());
+
+    await _db
+        .collection("Users")
+        .doc(demanda.solicitationId)
+        .collection("Notifications")
+        .doc()
+        .set({
+      "name": demanda.name,
+      "imageUrl": demanda.urlImage,
+      "notification": "Sua proposta para o projeto ${demanda.name} foi aceita",
+      "type": "solicitation"
+    });
   }
 }
