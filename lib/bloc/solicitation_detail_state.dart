@@ -20,3 +20,5 @@ class SolicitationDetailLoaded extends SolicitationDetailState {
 }
 
 class SolicitationAcceptState extends SolicitationDetailState {}
+
+class SolicitationRejectState extends SolicitationDetailState {}

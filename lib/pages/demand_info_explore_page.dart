@@ -1,11 +1,13 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,35 +92,35 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocProvider(
-      create: (context) => DemandInfoExploreBloc()
-        ..add(GetCurrentUserAndEmployerData(employerId: demanda.parentId)),
-      child: BlocConsumer<DemandInfoExploreBloc, DemandInfoExploreState>(
-          listener: (context, state) {
-        if (state is DemandInfoExploreEmployerPerfil) {
-          Navigator.of(context)
-              .pushNamed("/employer-info", arguments: state.empreendedor);
-          return CircularProgressIndicator();
-        }
-      }, builder: (context, state) {
-        if (state is DemandInfoExploreInitial ||
-            state is DemandInfoExploreLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is DemandInfoExploreError) {
-          return Center(
-            child: Text("Error"),
-          );
-        } else if (state is DemandInfoExploreGetUserAndEmployerData) {
-          return buildDemandInfoExploreGetUserAndEmployerData(state, context);
-        } else {
-          Provider.of<DemandInfoExploreBloc>(context)
-              .add(GetCurrentUserAndEmployerData(employerId: demanda.parentId));
-          return CircularProgressIndicator();
-        }
-      }),
-    ));
+      body: BlocProvider(
+        create: (context) => DemandInfoExploreBloc()
+          ..add(GetCurrentUserAndEmployerData(employerId: demanda.parentId)),
+        child: BlocConsumer<DemandInfoExploreBloc, DemandInfoExploreState>(
+            listener: (context, state) {
+          if (state is DemandInfoExploreEmployerPerfil) {
+            Navigator.of(context)
+                .pushNamed("/employer-info", arguments: state.empreendedor)
+                .whenComplete(() =>
+                    Provider.of<DemandInfoExploreBloc>(context, listen: false)
+                        .add(GetCurrentUserAndEmployerData(
+                            employerId: demanda.parentId)));
+          }
+        }, builder: (context, state) {
+          if (state is DemandInfoExploreInitial ||
+              state is DemandInfoExploreLoading) {
+            return CustomCircularProgressIndicator();
+          } else if (state is DemandInfoExploreError) {
+            return Center(
+              child: Text("Error"),
+            );
+          } else if (state is DemandInfoExploreGetUserAndEmployerData) {
+            return buildDemandInfoExploreGetUserAndEmployerData(state, context);
+          } else if (state is DemandInfoExploreEmployerPerfil) {
+            return Container();
+          }
+        }),
+      ),
+    );
   }
 
   SingleChildScrollView buildDemandInfoExploreGetUserAndEmployerData(

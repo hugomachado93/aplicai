@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/login_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:aplicai/entity/user_entity.dart';
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is LoginLoadingState) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: CustomCircularProgressIndicator(),
               );
             } else if (state is LoginState) {
               return SingleChildScrollView(

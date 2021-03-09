@@ -53,6 +53,8 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
     demanda.parentId = demand.reference.parent.parent.id;
     demanda.childId = demand.id;
     return Card(
+      shadowColor: Colors.grey,
+      elevation: 15,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       margin: EdgeInsets.all(15),
       child: InkWell(

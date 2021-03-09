@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/providers/demand_provider.dart';
 import 'package:aplicai/service/demand_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -92,7 +93,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                 builder: (context, state) {
                   if (state is DemandInfoInitial ||
                       state is DemandInfoLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: CustomCircularProgressIndicator());
                   } else if (state is DemandInfoAllUsers) {
                     return Container(
                         margin: EdgeInsets.all(20),

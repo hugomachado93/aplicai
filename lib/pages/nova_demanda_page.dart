@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/service/demand_service.dart';
 import 'package:flutter_tags/flutter_tags.dart';
@@ -186,7 +187,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                     )
                   : Container(
                       margin: EdgeInsets.all(15),
-                      child: CircularProgressIndicator())
+                      child: CustomCircularProgressIndicator())
               : Container(
                   height: 100,
                   width: 100,

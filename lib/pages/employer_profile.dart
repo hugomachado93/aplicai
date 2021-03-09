@@ -1,3 +1,4 @@
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -57,9 +58,9 @@ class EmployerProfile {
           child: Container(
             height: 120,
             child: Card(
-              color: Colors.blueGrey,
-              shadowColor: Colors.blueGrey,
-              elevation: 10,
+              color: Colors.white,
+              shadowColor: Colors.grey,
+              elevation: 15,
               child: Row(children: [
                 SizedBox(
                   width: 0,
@@ -127,7 +128,8 @@ class EmployerProfile {
                         backgroundImage: imageProvider,
                       ),
                     ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) =>
+                        CustomCircularProgressIndicator(),
                   ),
                 ),
               ],

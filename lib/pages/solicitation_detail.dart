@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/solicitation_detail_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,17 +34,18 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
             child:
                 BlocConsumer<SolicitationDetailBloc, SolicitationDetailState>(
                     listener: (context, state) {
-              if (state is SolicitationAcceptState) {
+              if (state is SolicitationAcceptState ||
+                  state is SolicitationRejectState) {
                 Navigator.of(context).pop();
               }
             }, builder: (context, state) {
               if (state is SolicitationDetailInitial ||
                   state is SolicitationDetailLoading) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: CustomCircularProgressIndicator());
               } else if (state is SolicitationDetailLoaded) {
                 return buildSolicitationDetailLoaded(state, context);
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: CustomCircularProgressIndicator());
               }
             })));
   }
@@ -142,8 +144,9 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
-                        Provider.of<SolicitationDetailBloc>(context)
-                            .add(RejectSolicitationEvent());
+                        Provider.of<SolicitationDetailBloc>(context,
+                                listen: false)
+                            .add(RejectSolicitationEvent(demanda: demanda));
                         Navigator.of(context).pop();
                       }),
                 ),

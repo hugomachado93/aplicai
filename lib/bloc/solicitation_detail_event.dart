@@ -25,4 +25,11 @@ class AcceptSolicitationEvent extends SolicitationDetailEvent {
   List<Object> get props => [demanda];
 }
 
-class RejectSolicitationEvent extends SolicitationDetailEvent {}
+class RejectSolicitationEvent extends SolicitationDetailEvent {
+  Demanda demanda;
+
+  RejectSolicitationEvent({this.demanda});
+
+  @override
+  List<Object> get props => [demanda];
+}

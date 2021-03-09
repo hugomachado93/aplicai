@@ -92,7 +92,7 @@ class AuthService {
       String message;
       switch (err.code) {
         case "user-not-found":
-          message = "Não foi possivel encontrar o usuário";
+          message = "O usuário não existe";
           break;
         case "invalid-email":
           message = "Email invalido";

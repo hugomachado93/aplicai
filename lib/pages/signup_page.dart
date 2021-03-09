@@ -1,13 +1,14 @@
 import 'dart:ui';
+import 'package:aplicai/bloc/image_picker_bloc.dart';
 import 'package:aplicai/bloc/signup_bloc.dart';
-import 'package:aplicai/entity/notify.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/user_entity.dart';
+import 'package:aplicai/service/user_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'dart:io';
@@ -37,27 +38,6 @@ class _SignupPageState extends State<SignupPage> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List _items = [];
   List<String> _itemsTitle = [];
-
-  final picker = ImagePicker();
-
-  Future _getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-
-    var prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString("userId");
-
-    Reference reference = _storage.ref().child(
-        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    UploadTask storageUploadTask = reference.putFile(_image);
-
-    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
-
-    _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
-  }
 
   Widget _buildNameField() {
     return TextFormField(
@@ -149,39 +129,48 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _buildPerfilImageField() {
     return InkWell(
-      onTap: _getImage,
+      onTap: () => Provider.of<ImagePickerBloc>(context, listen: false)
+          .add(PickImageEvent()),
       child: Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text("Selecionar imagem de perfil"),
           Container(
             color: Colors.transparent,
           ),
-          _image == null
-              ? Container(
-                  height: 100,
-                  width: 100,
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: Icon(
-                      Icons.photo,
-                      color: Colors.black.withOpacity(0.5),
-                    ),
+          BlocBuilder<ImagePickerBloc, ImagePickerState>(
+              builder: (context, state) {
+            if (state is ImagePickerInitial) {
+              return Container(
+                height: 100,
+                width: 100,
+                child: FittedBox(
+                  fit: BoxFit.fill,
+                  child: Icon(
+                    Icons.photo,
+                    color: Colors.black.withOpacity(0.5),
                   ),
-                )
-              : Container(
+                ),
+              );
+            } else if (state is ImageLoadedState) {
+              _urlImage = state.urlImage;
+              return Container(
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.black, width: 1.0),
                       image: DecorationImage(
-                          image: FileImage(_image), fit: BoxFit.fill)))
+                          image: FileImage(state.image), fit: BoxFit.fill)));
+            } else if (state is ImageLoadingState) {
+              return CustomCircularProgressIndicator();
+            }
+          })
         ]),
       ),
     );
   }
 
-  _getAllItem() {
+  _getAllCategories() {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
     if (lst != null)
       lst
@@ -190,44 +179,11 @@ class _SignupPageState extends State<SignupPage> {
     return _itemsTitle.toList();
   }
 
-  _saveUserData(String userId) async {
-    try {
-      if (_urlImage != null) {
-        var user = UserEntity(
-            name: _name,
-            cpf: _cpf,
-            curso: _curso,
-            matricula: _matricula,
-            description: _description,
-            urlImage: _urlImage,
-            categories: _getAllItem(),
-            linkedinUrl: _linkedinUrl,
-            portfolioUrl: _portfolioUrl,
-            isFinished: true);
-        _db.collection("Users").doc(userId).update(user.toJson());
-
-        _db
-            .collection("Users")
-            .doc(userId)
-            .collection("Notifications")
-            .doc()
-            .set({
-          "name": _name,
-          "imageUrl": "",
-          "notification": "Seja bem vindo ao Aplicai",
-          "type": "signup"
-        });
-        Navigator.of(context).pushNamed("/navigation");
-      }
-    } catch (ex) {
-      print("Failed to create user $ex");
-    }
-  }
-
   _buildCategoryTagField() {
     return Tags(
       key: _tagStateKey,
       textField: TagsTextField(
+          width: MediaQuery.of(context).size.width,
           textStyle: TextStyle(fontSize: 15),
           hintText: "Adicionar skill, ex: Java",
           constraintSuggestion: false,
@@ -266,87 +222,111 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserEntity userEntity = Provider.of<UserEntity>(context);
+    UserService userService = Provider.of<UserService>(context);
     return Scaffold(
       body: BlocProvider(
-        create: (context) => SignupBloc(),
+        create: (context) => SignupBloc(userService: userService),
         child: BlocConsumer<SignupBloc, SignupState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if (state is SignupLoadedState) {
+              Navigator.of(context).pushNamed("/navigation");
+            }
           },
           builder: (context, state) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Aluno",
-                          style: TextStyle(fontSize: 40),
-                        ),
-                      ],
+            if (state is SignupLoadingState) {
+              return Center(child: CustomCircularProgressIndicator());
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomLeft,
+                      width: MediaQuery.of(context).size.width,
+                      height: 100,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Aluno",
+                            style: TextStyle(fontSize: 40),
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          border:
+                              Border(bottom: BorderSide(color: Colors.black))),
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        border:
-                            Border(bottom: BorderSide(color: Colors.black))),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(24),
-                    child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            _buildNameField(),
-                            _buildCpfField(),
-                            _buildCursoField(),
-                            _buildMatriculaField(),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            _buildDescriptionField(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            _buildCategoryTagField(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            _buildPerfilImageField(),
-                            _buildLinkedinLinkField(),
-                            _buildPortfolioLinkField(),
-                            SizedBox(
-                              height: 70,
-                            ),
-                            Container(
-                              width: 400,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Text("Criar conta"),
-                                onPressed: () {
-                                  if (!_formKey.currentState.validate()) {
-                                    return;
-                                  }
-                                  _formKey.currentState.save();
-                                  _saveUserData(userEntity.userId);
-                                },
+                    Container(
+                      margin: EdgeInsets.all(24),
+                      child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              _buildNameField(),
+                              _buildCpfField(),
+                              _buildCursoField(),
+                              _buildMatriculaField(),
+                              SizedBox(
+                                height: 20,
                               ),
-                            )
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-            );
+                              _buildDescriptionField(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              _buildCategoryTagField(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              _buildPerfilImageField(),
+                              _buildLinkedinLinkField(),
+                              _buildPortfolioLinkField(),
+                              SizedBox(
+                                height: 70,
+                              ),
+                              Container(
+                                width: 400,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text("Criar conta"),
+                                  onPressed: () {
+                                    if (!_formKey.currentState.validate()) {
+                                      return;
+                                    }
+                                    _formKey.currentState.save();
+                                    var userEntity = UserEntity(
+                                        name: _name,
+                                        cpf: _cpf,
+                                        curso: _curso,
+                                        matricula: _matricula,
+                                        description: _description,
+                                        urlImage: _urlImage,
+                                        categories: _getAllCategories(),
+                                        linkedinUrl: _linkedinUrl,
+                                        portfolioUrl: _portfolioUrl,
+                                        isFinished: true);
+
+                                    if (_urlImage != null) {
+                                      print("here");
+                                      Provider.of<SignupBloc>(context,
+                                              listen: false)
+                                          .add(SignupUserEvent(
+                                              userEntity: userEntity));
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                  ],
+                ),
+              );
+            }
           },
         ),
       ),

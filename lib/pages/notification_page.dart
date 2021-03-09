@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/notification_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/notifications/notification_invoker.dart';
@@ -28,10 +29,10 @@ class _NotificationPageState extends State<NotificationPage> {
             child: BlocBuilder<NotificationBloc, NotificationState>(
                 builder: (context, state) {
               if (state is NotificationInitial) {
-                return CircularProgressIndicator();
+                return CustomCircularProgressIndicator();
               } else if (state is NotificationLoading) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: CustomCircularProgressIndicator(),
                 );
               } else if (state is NotificationLoaded) {
                 List<QueryDocumentSnapshot> notifications =

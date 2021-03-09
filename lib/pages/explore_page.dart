@@ -1,3 +1,4 @@
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/demand_service.dart';
@@ -55,7 +56,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 return Center(child: Text(querySnapshot.error.toString()));
               } else if (querySnapshot.connectionState ==
                   ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: CustomCircularProgressIndicator());
               } else {
                 final demandList = querySnapshot.data.docs;
                 return Container(
@@ -89,7 +90,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                     arguments: demanda);
                               },
                               child: Card(
-                                color: Colors.blueGrey,
+                                color: Colors.white,
+                                shadowColor: Colors.grey,
+                                elevation: 15,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15)),
                                 margin: EdgeInsets.all(15),

@@ -27,6 +27,10 @@ class SolicitationDetailBloc
       yield SolicitationDetailLoading();
       await userService.updateParticipantsOfDemand(event.demanda);
       yield SolicitationAcceptState();
+    } else if (event is RejectSolicitationEvent) {
+      yield SolicitationDetailLoading();
+      await userService.recjectUserSolicitation(event.demanda);
+      yield SolicitationRejectState();
     }
   }
 }

@@ -9,18 +9,17 @@ class SignupNotification implements NotificationsStrategy {
     return Container(
       height: 100,
       child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            margin: EdgeInsets.all(15),
-            child: Row(children: [
-                  Text("${notify.name}, ", style: TextStyle(
-                      fontSize: 20
-                    )),
-                  Expanded(
-                                  child: Text(notify.notification, style: TextStyle(
-                      fontSize: 18
-                    ),),
-                  )
-                ]),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        margin: EdgeInsets.all(15),
+        child: Row(children: [
+          Text("Ola ${notify.name}, ", style: TextStyle(fontSize: 20)),
+          Expanded(
+            child: Text(
+              notify.notification,
+              style: TextStyle(fontSize: 18),
+            ),
+          )
+        ]),
       ),
     );
   }
@@ -29,5 +28,4 @@ class SignupNotification implements NotificationsStrategy {
   String getType() {
     return NotificationType.Signup.toString().split('.').last.toLowerCase();
   }
-
 }

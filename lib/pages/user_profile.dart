@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/user_profile_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/pages/employer_profile.dart';
@@ -38,7 +39,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         },
         builder: (context, state) {
           if (state is UserProfileInitial || state is UserProfileLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CustomCircularProgressIndicator());
           } else if (state is UserProfileStudent) {
             return studentProfile.buildStudent(
                 state.userEntity, context, authService);

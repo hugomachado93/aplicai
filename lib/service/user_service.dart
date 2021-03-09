@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
+import 'package:aplicai/bloc/image_picker_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/solicitation.dart';
@@ -7,11 +10,13 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final picker = ImagePicker();
 
   UserEntity user;
 
@@ -303,6 +308,64 @@ class UserService {
       "imageUrl": demanda.urlImage,
       "notification": "Sua proposta para o projeto ${demanda.name} foi aceita",
       "type": "solicitation"
+    });
+  }
+
+  Future<void> recjectUserSolicitation(Demanda demanda) async {
+    await _db
+        .collection("Demands")
+        .doc(demanda.parentId)
+        .collection("DemandList")
+        .doc(demanda.childId)
+        .collection("Solicitation")
+        .doc(demanda.solicitationId)
+        .delete();
+
+    await _db
+        .collection("Users")
+        .doc(demanda.solicitationId)
+        .collection("Notifications")
+        .doc()
+        .set({
+      "name": demanda.name,
+      "imageUrl": demanda.urlImage,
+      "notification":
+          "Sua proposta para o projeto ${demanda.name} foi recusada",
+      "type": "solicitation"
+    });
+  }
+
+  Future<ImageLoadedState> getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    File image = File(pickedFile.path);
+
+    var prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString("userId");
+
+    Reference reference = _storage.ref().child(
+        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    UploadTask storageUploadTask = reference.putFile(image);
+
+    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
+
+    String urlImage = await storageTaskSnapshot.ref.getDownloadURL();
+
+    return ImageLoadedState(image: image, urlImage: urlImage);
+  }
+
+  saveUserData(UserEntity userEntity) async {
+    var prefs = await SharedPreferences.getInstance();
+
+    String userId = prefs.getString("userId");
+
+    _db.collection("Users").doc(userId).update(userEntity.toJson());
+
+    _db.collection("Users").doc(userId).collection("Notifications").doc().set({
+      "name": userEntity.name,
+      "imageUrl": "",
+      "notification": "Seja bem vindo ao Aplicai",
+      "type": "signup"
     });
   }
 }

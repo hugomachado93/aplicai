@@ -1,3 +1,4 @@
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -102,7 +103,8 @@ class StudentProfile {
                         backgroundImage: imageProvider,
                       ),
                     ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) =>
+                        CustomCircularProgressIndicator(),
                   ),
                 ),
               ],
@@ -144,9 +146,9 @@ class StudentProfile {
           child: Container(
             height: 120,
             child: Card(
-              color: Colors.blueGrey,
-              shadowColor: Colors.blueGrey,
-              elevation: 10,
+              color: Colors.white,
+              shadowColor: Colors.grey,
+              elevation: 15,
               child: Row(children: [
                 SizedBox(
                   width: 0,
@@ -225,10 +227,15 @@ class StudentProfile {
                   "Skills:",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
                     children: userEntity.categories
-                        .map((skill) => Text("$skill; "))
+                        .map((skill) => Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5)),
+                            margin: EdgeInsets.all(5),
+                            child: Text("$skill")))
                         .toList()),
                 SizedBox(
                   height: 10,

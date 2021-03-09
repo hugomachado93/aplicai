@@ -1,3 +1,4 @@
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -126,7 +127,7 @@ class _DemandSubscriptionPageState extends State<DemandSubscriptionPage> {
               return Text("Error");
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: CustomCircularProgressIndicator());
             } else {
               return Container(
                   margin: EdgeInsets.all(20),
