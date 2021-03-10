@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/login_bloc.dart';
+import 'package:aplicai/bloc/signin_page_bloc.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,14 +50,14 @@ class AuthService {
     }
   }
 
-  Future<UserLoginState> createUser(String email, String password) async {
+  Future<LoadedSignupPage> createUser(String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       await userService.createInitialuserLogin(userCredential.user.uid, email);
       var prefs = await SharedPreferences.getInstance();
       prefs.setString("userId", userCredential.user.uid);
-      return UserLoginState(isValid: true);
+      return LoadedSignupPage(isValid: true);
     } on FirebaseAuthException catch (err) {
       String message;
       switch (err.code) {
@@ -73,9 +74,9 @@ class AuthService {
           message = "Não foi possivel efetuar o cadastro";
           break;
       }
-      return UserLoginState(isValid: false, message: message);
+      return LoadedSignupPage(isValid: false, message: message);
     } catch (err) {
-      return UserLoginState(
+      return LoadedSignupPage(
           isValid: false, message: "Não foi possivel efetuar o cadastro");
     }
   }

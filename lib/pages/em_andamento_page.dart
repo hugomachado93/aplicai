@@ -1,3 +1,4 @@
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -109,7 +110,7 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
         if (snapshot.hasError) {
           return Center(child: Text("Error"));
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CustomCircularProgressIndicator());
         } else {
           return Scaffold(
               floatingActionButtonLocation:
@@ -142,7 +143,7 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
                     }
                     if (querySnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: CustomCircularProgressIndicator());
                     } else {
                       List<QueryDocumentSnapshot> demandList =
                           querySnapshot.data.docs;

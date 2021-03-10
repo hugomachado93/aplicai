@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/service/demand_service.dart';
 import 'package:flutter_tags/flutter_tags.dart';
@@ -84,6 +83,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
     return Tags(
       key: _tagStateKey,
       textField: TagsTextField(
+          width: MediaQuery.of(context).size.width,
           textStyle: TextStyle(fontSize: 15),
           hintText: "Adicionar skill, ex: Java",
           constraintSuggestion: false,
@@ -187,7 +187,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                     )
                   : Container(
                       margin: EdgeInsets.all(15),
-                      child: CustomCircularProgressIndicator())
+                      child: CircularProgressIndicator())
               : Container(
                   height: 100,
                   width: 100,

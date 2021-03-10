@@ -13,6 +13,7 @@ import 'package:aplicai/pages/solicitation_page.dart';
 import 'package:aplicai/pages/employer_info.dart';
 import 'package:aplicai/pages/student_demand_info.dart';
 import 'package:aplicai/pages/subscription_finished.dart';
+import 'package:aplicai/signup_with_email.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicai/signup_start.dart';
 import 'package:aplicai/pages/signup_page.dart';
@@ -77,6 +78,8 @@ class RouteGenerator {
             builder: (_) => StudentDemandInfo(
                   demanda: args,
                 ));
+      case '/signup-with-email':
+        return MaterialPageRoute(builder: (_) => SignupWithEmail());
     }
   }
 }

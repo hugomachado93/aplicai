@@ -1,11 +1,15 @@
+import 'package:aplicai/bloc/explore_page_bloc.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/demand_service.dart';
+import 'package:aplicai/service/user_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -48,17 +52,24 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(Object context) {
+    DemandService demandService = Provider.of<DemandService>(context);
     return Scaffold(
-        body: StreamBuilder<QuerySnapshot>(
-            stream: _getDemandsFilteredForUser(),
-            builder: (context, querySnapshot) {
-              if (querySnapshot.hasError) {
-                return Center(child: Text(querySnapshot.error.toString()));
-              } else if (querySnapshot.connectionState ==
-                  ConnectionState.waiting) {
-                return Center(child: CustomCircularProgressIndicator());
-              } else {
-                final demandList = querySnapshot.data.docs;
+        body: BlocProvider(
+            create: (context) => ExplorePageBloc(demandService: demandService)
+              ..add(GetActiveDemands()),
+            child: BlocConsumer<ExplorePageBloc, ExplorePageState>(
+                listener: (context, state) {
+              if (state is ClickDemandState) {
+                Navigator.of(context)
+                    .pushNamed("/demand-info-explore", arguments: state.demanda)
+                    .whenComplete(() =>
+                        Provider.of<ExplorePageBloc>(context, listen: false)
+                            .add(GetActiveDemands()));
+              }
+            }, builder: (context, state) {
+              if (state is ExplorePageInitial || state is LoadingPageState) {
+                return CustomCircularProgressIndicator();
+              } else if (state is LoadedPageState) {
                 return Container(
                     child: Center(
                         child: Column(children: [
@@ -73,21 +84,14 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                   Expanded(
                       child: ListView.builder(
-                          itemCount: demandList.length,
+                          itemCount: state.demandas.length,
                           itemBuilder: (context, index) {
-                            Demanda demanda =
-                                Demanda.fromJson(demandList[index].data());
                             return InkWell(
                               onTap: () {
-                                demanda.parentId = demandList[index]
-                                    .reference
-                                    .parent
-                                    .parent
-                                    .id;
-                                demanda.childId = demandList[index].id;
-                                Navigator.of(context).pushNamed(
-                                    "/demand-info-explore",
-                                    arguments: demanda);
+                                Provider.of<ExplorePageBloc>(context,
+                                        listen: false)
+                                    .add(ClickDemand(
+                                        demanda: state.demandas[index]));
                               },
                               child: Card(
                                 color: Colors.white,
@@ -100,8 +104,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     child: Row(
                                   children: [
                                     CachedNetworkImage(
-                                      imageUrl:
-                                          demandList[index].data()['urlImage'],
+                                      imageUrl: state.demandas[index].urlImage,
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
                                         height: 120,
@@ -124,17 +127,21 @@ class _ExplorePageState extends State<ExplorePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Title"),
+                                            Text(state.demandas[index].name),
                                             Divider(
                                               height: 5,
                                               thickness: 1,
                                             ),
+                                            _textBuilder(Icons.work,
+                                                state.demandas[index].name),
+                                            _textListBuilder(
+                                                Icons.folder,
+                                                state.demandas[index]
+                                                    .categories),
                                             _textBuilder(
-                                                Icons.work, demanda.name),
-                                            _textListBuilder(Icons.folder,
-                                                demanda.categories),
-                                            _textBuilder(Icons.location_on,
-                                                demanda.localization),
+                                                Icons.location_on,
+                                                state.demandas[index]
+                                                    .localization),
                                           ]),
                                     ),
                                     SizedBox(
@@ -146,7 +153,9 @@ class _ExplorePageState extends State<ExplorePage> {
                             );
                           }))
                 ])));
+              } else if (state is ClickDemandState) {
+                return Container();
               }
-            }));
+            })));
   }
 }

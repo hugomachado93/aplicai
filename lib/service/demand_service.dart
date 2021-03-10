@@ -1,3 +1,4 @@
+import 'package:aplicai/bloc/explore_page_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,9 +21,23 @@ class DemandService {
         list.docs.map((doc) => Demanda.fromJson(doc.data())).toList());
   }
 
+  Future<List<Demanda>> getActiveDemands() async {
+    List<Demanda> listDemands = [];
+    QuerySnapshot querySnapshot = await _db
+        .collectionGroup("DemandList")
+        .where('isFinished', isEqualTo: false)
+        .get();
+
+    querySnapshot.docs.forEach((e) {
+      var demanda = Demanda.fromJson(e.data());
+      demanda.childId = e.id;
+      demanda.parentId = e.reference.parent.parent.id;
+      listDemands.add(demanda);
+    });
+    return listDemands;
+  }
+
   finishDemand(String parentId, String childId) async {
-    print(parentId);
-    print(childId);
     var users = await _db
         .collection("Demands")
         .doc(parentId)

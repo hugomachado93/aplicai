@@ -1,6 +1,7 @@
 import 'package:aplicai/bloc/image_picker_bloc.dart';
 import 'package:aplicai/bloc/signup_bloc.dart';
 import 'package:aplicai/service/auth_service.dart';
+import 'package:aplicai/service/demand_service.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       providers: [
         StreamProvider.value(value: AuthService().user),
         RepositoryProvider<UserService>(create: (context) => UserService()),
+        RepositoryProvider<DemandService>(create: (context) => DemandService()),
         BlocProvider(
             create: (context) => ImagePickerBloc(userService: UserService())),
       ],

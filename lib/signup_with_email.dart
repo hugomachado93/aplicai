@@ -1,4 +1,6 @@
 import 'package:aplicai/bloc/login_bloc.dart';
+import 'package:aplicai/bloc/signin_page_bloc.dart';
+import 'package:aplicai/bloc/signup_bloc.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:aplicai/service/user_service.dart';
@@ -7,14 +9,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatefulWidget {
+class SignupWithEmail extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomePageState();
+    return _SignupWithEmailState();
   }
 }
 
-class _HomePageState extends State<HomePage> {
+class _SignupWithEmailState extends State<SignupWithEmail> {
   AuthService authService = AuthService();
   UserService userService = UserService();
   SharedPreferences prefs;
@@ -23,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  _buildEmailField(LoginState state, BuildContext context) {
+  _buildEmailField(SignupPageState state, BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
@@ -37,11 +39,14 @@ class _HomePageState extends State<HomePage> {
           border: InputBorder.none,
           hintText: "Email",
         ),
+        onChanged: (value) {
+          Provider.of<LoginBloc>(context, listen: false);
+        },
       ),
     );
   }
 
-  _buildPasswordField(LoginState state, BuildContext context) {
+  _buildPasswordField(SignupPageState state, BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
@@ -56,6 +61,9 @@ class _HomePageState extends State<HomePage> {
             border: InputBorder.none,
             hintText: "Senha",
           ),
+          onChanged: (value) {
+            Provider.of<LoginBloc>(context, listen: false);
+          },
         ));
   }
 
@@ -64,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-          child: Text("Entrar"),
+          child: Text("Cadastrar"),
           color: Colors.blue,
           onPressed: () => _login(context)),
     );
@@ -90,12 +98,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(Object context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => LoginBloc(),
-        child: BlocConsumer<LoginBloc, LoginState>(
+        create: (context) => SignupPageBloc(),
+        child: BlocConsumer<SignupPageBloc, SignupPageState>(
           listener: (context, state) {
-            if (state is LoginUserCreatedState) {
-              Navigator.of(context).pushNamed("/signup-with-email");
-            } else if (state is LoginUserFinishedState) {
+            if (state is LoginUserFinishedState) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   "/navigation", (Route<dynamic> route) => false);
             } else if (state is LoginUserNotFinishedState) {
@@ -107,7 +113,7 @@ class _HomePageState extends State<HomePage> {
               return Center(
                 child: CustomCircularProgressIndicator(),
               );
-            } else if (state is LoginState) {
+            } else if (state is SignupPageInitial) {
               return SingleChildScrollView(
                 child: Container(
                     margin: EdgeInsets.all(30),
@@ -127,20 +133,20 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: 10,
                           ),
-                          !state.userLoginState.isValid
-                              ? Text(
-                                  state.userLoginState.message,
-                                  style: TextStyle(color: Colors.red),
-                                )
-                              : Container(),
+                          // !state.isValid
+                          //     ? Text(
+                          //         state.userLoginState.message,
+                          //         style: TextStyle(color: Colors.red),
+                          //       )
+                          //     : Container(),
                           SizedBox(
                             height: 10,
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _buildLoginButton(context, state),
-                              _buildSignupButton(context, state),
+                              // _buildLoginButton(context, state),
+                              // _buildSignupButton(context, state),
                             ],
                           ),
                           SizedBox(

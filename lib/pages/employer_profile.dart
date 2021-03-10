@@ -71,7 +71,7 @@ class EmployerProfile {
                     height: 120,
                     width: 120,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(5),
                         image: DecorationImage(
                             image: imageProvider, fit: BoxFit.fill)),
                   ),

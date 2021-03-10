@@ -50,9 +50,9 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
       ),
       Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Title"),
+          Text(demanda.name),
           Divider(color: Colors.black),
-          _textBuilder(Icons.work, demanda.name),
+          _textBuilder(Icons.work, demanda.endDate.toDate().toString()),
           _textBuilder(Icons.folder, demanda.categories.toString()),
           _textBuilder(Icons.location_on, demanda.localization),
         ]),
@@ -95,169 +95,172 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                       state is DemandInfoLoading) {
                     return Center(child: CustomCircularProgressIndicator());
                   } else if (state is DemandInfoAllUsers) {
-                    return Container(
-                        margin: EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                            ),
-                            _createTop(),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            calculateDaysToEndDemand() > 1
-                                ? Text(
-                                    "Faltam ${calculateDaysToEndDemand()} dias")
-                                : Text("Prazo para a entrega finalizado"),
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              height: 15,
-                              width: MediaQuery.of(context).size.width,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: LinearProgressIndicator(
-                                  value: progressBarCalculation(),
+                    return SingleChildScrollView(
+                      child: Container(
+                          margin: EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 50,
+                              ),
+                              _createTop(),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              calculateDaysToEndDemand() > 1
+                                  ? Text(
+                                      "Faltam ${calculateDaysToEndDemand()} dias")
+                                  : Text("Prazo para a entrega finalizado"),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                height: 15,
+                                width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: LinearProgressIndicator(
+                                    value: progressBarCalculation(),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                      "Entrega do projeto\n           ${endDateFormated()}"),
-                                  Icon(
-                                    Icons.calendar_today,
-                                    size: 50,
-                                  )
-                                ]),
-                            state.currentUserType == 'employer'
-                                ? Divider(
-                                    color: Colors.black,
-                                  )
-                                : Container(),
-                            state.currentUserType == 'employer'
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Container(
-                                        width: 170,
-                                        child: RaisedButton(
-                                            color: Colors.blue,
-                                            onPressed: () {
-                                              Navigator.of(context).pushNamed(
-                                                  "/solicitation",
-                                                  arguments: demanda);
-                                            },
-                                            child: Text("Ver solicitações")),
-                                      ),
-                                      Container(
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        "Entrega do projeto\n           ${endDateFormated()}"),
+                                    Icon(
+                                      Icons.calendar_today,
+                                      size: 50,
+                                    )
+                                  ]),
+                              state.currentUserType == 'employer'
+                                  ? Divider(
+                                      color: Colors.black,
+                                    )
+                                  : Container(),
+                              state.currentUserType == 'employer'
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
                                           width: 170,
                                           child: RaisedButton(
                                               color: Colors.blue,
-                                              onPressed: () async {
-                                                DemandService().finishDemand(
-                                                    demanda.parentId,
-                                                    demanda.childId);
-                                                Navigator.pop(context);
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                    "/solicitation",
+                                                    arguments: demanda);
                                               },
-                                              child: Text("Concluir demanda")))
-                                    ],
-                                  )
-                                : Container(),
-                            Divider(
-                              color: Colors.black,
-                            ),
-                            Text(
-                              "Participantes",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            state.students.length != 0
-                                ? Container(
-                                    height: 100,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Expanded(
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: state.students.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                image: DecorationImage(
-                                                    image: NetworkImage(state
-                                                        .students[index]
-                                                        .urlImage),
-                                                    fit: BoxFit.fill)),
-                                          );
-                                        },
-                                        separatorBuilder:
-                                            (BuildContext context, int index) {
-                                          return SizedBox(
-                                            width: 30,
-                                          );
-                                        },
-                                      ),
-                                    ))
-                                : Container(
-                                    child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                          "Ainda não existem participantes..."),
-                                      SizedBox(
-                                        height: 15,
-                                      )
-                                    ],
-                                  )),
-                            Divider(color: Colors.black),
-                            Text(
-                              "Contatos",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Row(children: [
-                              Icon(Icons.email),
-                              Expanded(child: Text("${demanda.name}:")),
-                              Expanded(child: Text("${demanda.name}")),
-                            ]),
-                            Expanded(
-                                child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: state.students.length,
-                                    itemBuilder: (context, index) {
-                                      return Row(
-                                        children: [
-                                          Icon(Icons.email),
-                                          Expanded(
-                                            child: Container(
-                                              width: 140,
-                                              child: Text(
-                                                "${state.students[index].name}",
-                                              ),
+                                              child: Text("Ver solicitações")),
+                                        ),
+                                        Container(
+                                            width: 170,
+                                            child: RaisedButton(
+                                                color: Colors.blue,
+                                                onPressed: () async {
+                                                  DemandService().finishDemand(
+                                                      demanda.parentId,
+                                                      demanda.childId);
+                                                  Navigator.pop(context);
+                                                },
+                                                child:
+                                                    Text("Concluir demanda")))
+                                      ],
+                                    )
+                                  : Container(),
+                              Divider(
+                                color: Colors.black,
+                              ),
+                              Text(
+                                "Participantes",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              state.students.length != 0
+                                  ? Container(
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Expanded(
+                                        child: ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: state.students.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(state
+                                                          .students[index]
+                                                          .urlImage),
+                                                      fit: BoxFit.fill)),
+                                            );
+                                          },
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return SizedBox(
+                                              width: 30,
+                                            );
+                                          },
+                                        ),
+                                      ))
+                                  : Container(
+                                      child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                            "Ainda não existem participantes..."),
+                                        SizedBox(
+                                          height: 15,
+                                        )
+                                      ],
+                                    )),
+                              Divider(color: Colors.black),
+                              Text(
+                                "Contatos",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(children: [
+                                Icon(Icons.email),
+                                Expanded(child: Text("${demanda.name}:")),
+                                Expanded(child: Text("${demanda.name}")),
+                              ]),
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: state.students.length,
+                                  itemBuilder: (context, index) {
+                                    return Row(
+                                      children: [
+                                        Icon(Icons.email),
+                                        Expanded(
+                                          child: Container(
+                                            width: 140,
+                                            child: Text(
+                                              "${state.students[index].name}",
                                             ),
                                           ),
-                                          Expanded(
-                                            child: Container(
-                                              width: 200,
-                                              child: Text(
-                                                  "${state.students[index].name}"),
-                                            ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            width: 200,
+                                            child: Text(
+                                                "${state.students[index].name}"),
                                           ),
-                                        ],
-                                      );
-                                    }))
-                          ],
-                        ));
+                                        ),
+                                      ],
+                                    );
+                                  })
+                            ],
+                          )),
+                    );
                   }
                 })));
   }
