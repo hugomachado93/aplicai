@@ -162,4 +162,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _emailController.clear();
+    _passwordController.clear();
+    super.dispose();
+  }
 }

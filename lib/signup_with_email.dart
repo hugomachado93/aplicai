@@ -1,5 +1,5 @@
 import 'package:aplicai/bloc/login_bloc.dart';
-import 'package:aplicai/bloc/signin_page_bloc.dart';
+import 'package:aplicai/bloc/signup_page_bloc.dart';
 import 'package:aplicai/bloc/signup_bloc.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/service/auth_service.dart';
@@ -40,7 +40,8 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
           hintText: "Email",
         ),
         onChanged: (value) {
-          Provider.of<LoginBloc>(context, listen: false);
+          Provider.of<SignupPageBloc>(context, listen: false)
+              .add(ValidateEmail(email: value));
         },
       ),
     );
@@ -57,41 +58,43 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
           controller: _passwordController,
           obscureText: true,
           decoration: InputDecoration(
-            icon: Icon(Icons.lock),
-            border: InputBorder.none,
-            hintText: "Senha",
-          ),
+              icon: Icon(Icons.lock),
+              border: InputBorder.none,
+              hintText: "Senha"),
           onChanged: (value) {
-            Provider.of<LoginBloc>(context, listen: false);
+            Provider.of<SignupPageBloc>(context, listen: false)
+                .add(ValidatePassword(password: value));
           },
         ));
   }
 
-  _buildLoginButton(BuildContext context, LoginState state) {
+  _buildLoginButton(BuildContext context) {
     return Container(
-      height: 50,
-      width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
-          child: Text("Cadastrar"),
-          color: Colors.blue,
-          onPressed: () => _login(context)),
+      child: InkWell(
+          child: Text("Já tem cadastro? Clique aqui para logar!"),
+          onTap: () => _login(context)),
     );
   }
 
-  _buildSignupButton(BuildContext context, LoginState state) {
+  _buildSignupButton(BuildContext context, SignupPageState state) {
     return Container(
       child: RaisedButton(
-          child: Text("Não tem"), onPressed: () => _signup(context)),
+          color: Colors.blue,
+          child: Text("Cadastrar"),
+          onPressed: () => Provider.of<SignupPageBloc>(context, listen: false)
+              .add(SignupUser(
+                  email: _emailController.text,
+                  password: _passwordController.text))),
     );
   }
 
   _login(BuildContext context) {
-    Provider.of<LoginBloc>(context, listen: false).add(
-        LoginUserSigninEvent(_emailController.text, _passwordController.text));
+    Provider.of<SignupPageBloc>(context, listen: false).add(LoginUser());
   }
 
   _signup(BuildContext context) {
-    Provider.of<LoginBloc>(context, listen: false).add(LoginUserSignupEvent());
+    Provider.of<SignupPageBloc>(context, listen: false).add(SignupUser(
+        email: _emailController.text, password: _passwordController.text));
   }
 
   @override
@@ -101,19 +104,19 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
         create: (context) => SignupPageBloc(),
         child: BlocConsumer<SignupPageBloc, SignupPageState>(
           listener: (context, state) {
-            if (state is LoginUserFinishedState) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/navigation", (Route<dynamic> route) => false);
-            } else if (state is LoginUserNotFinishedState) {
+            if (state is ContinueSignup) {
               Navigator.of(context).pushNamed("/signup-start");
+            } else if (state is GoToLoginPage) {
+              Navigator.of(context).pop();
             }
           },
           builder: (context, state) {
-            if (state is LoginLoadingState) {
+            print(state.errorMessage);
+            if (state is LoadingPageState) {
               return Center(
                 child: CustomCircularProgressIndicator(),
               );
-            } else if (state is SignupPageInitial) {
+            } else if (state is SignupPageState) {
               return SingleChildScrollView(
                 child: Container(
                     margin: EdgeInsets.all(30),
@@ -133,31 +136,29 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
                           SizedBox(
                             height: 10,
                           ),
-                          // !state.isValid
-                          //     ? Text(
-                          //         state.userLoginState.message,
-                          //         style: TextStyle(color: Colors.red),
-                          //       )
-                          //     : Container(),
+                          state.displayErrorMessage
+                              ? Text(
+                                  state.errorMessage,
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : Container(),
                           SizedBox(
                             height: 10,
                           ),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // _buildLoginButton(context, state),
-                              // _buildSignupButton(context, state),
+                              _buildSignupButton(context, state),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              _buildLoginButton(context),
                             ],
                           ),
                           SizedBox(
                             height: 30,
                           ),
-                          RaisedButton(
-                              child: Text("Entrar com o google"),
-                              onPressed: () {
-                                Provider.of<LoginBloc>(context, listen: false)
-                                    .add(LoginGoogleEvent());
-                              }),
                         ],
                       ),
                     )),
@@ -167,5 +168,12 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.clear();
+    _passwordController.clear();
+    super.dispose();
   }
 }

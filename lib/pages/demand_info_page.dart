@@ -52,7 +52,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(demanda.name),
           Divider(color: Colors.black),
-          _textBuilder(Icons.work, demanda.endDate.toDate().toString()),
+          _textBuilder(Icons.work, endDateFormated()),
           _textBuilder(Icons.folder, demanda.categories.toString()),
           _textBuilder(Icons.location_on, demanda.localization),
         ]),

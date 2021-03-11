@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class EmAndamentoPage extends StatefulWidget {
   @override
@@ -49,6 +50,11 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
     return Row(children: [Icon(icon), Text(text)]);
   }
 
+  String endDateFormated(DateTime dateTime) {
+    var dateFormat = DateFormat('dd/MM/yyyy');
+    return dateFormat.format(dateTime);
+  }
+
   Widget _createCards(QueryDocumentSnapshot demand) {
     Demanda demanda = Demanda.fromJson(demand.data());
     demanda.parentId = demand.reference.parent.parent.id;
@@ -83,12 +89,13 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Title"),
+                    Text(demanda.name),
                     Divider(
                       height: 5,
                       thickness: 1,
                     ),
-                    _textBuilder(Icons.work, demanda.name),
+                    _textBuilder(Icons.calendar_today,
+                        endDateFormated(demanda.endDate.toDate())),
                     _textBuilder(Icons.folder, demanda.categories.toString()),
                     _textBuilder(Icons.location_on, demanda.localization),
                   ]),
