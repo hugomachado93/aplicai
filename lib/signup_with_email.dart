@@ -78,9 +78,9 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
   _buildSignupButton(BuildContext context, SignupPageState state) {
     return Container(
-      child: RaisedButton(
-          color: Colors.blue,
+      child: ElevatedButton(
           child: Text("Cadastrar"),
+          style: ElevatedButton.styleFrom(primary: Colors.blue),
           onPressed: () => Provider.of<SignupPageBloc>(context, listen: false)
               .add(SignupUser(
                   email: _emailController.text,

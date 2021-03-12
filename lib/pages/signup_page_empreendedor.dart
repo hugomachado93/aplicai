@@ -1,7 +1,13 @@
 import 'dart:ui';
+import 'package:aplicai/bloc/image_picker_bloc.dart';
+import 'package:aplicai/bloc/signup_bloc.dart';
+import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/enum/userTypeEnum.dart';
+import 'package:aplicai/service/user_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -132,29 +138,42 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   Widget _buildPerfilImageField() {
     return InkWell(
-      onTap: () => {_getImage()},
+      onTap: () => Provider.of<ImagePickerBloc>(context, listen: false)
+          .add(PickImageEvent()),
       child: Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text("Selecionar imagem de perfil"),
           Container(
             color: Colors.transparent,
           ),
-          _image == null
-              ? Container(
-                  height: 100,
-                  width: 100,
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: Icon(Icons.photo),
+          BlocBuilder<ImagePickerBloc, ImagePickerState>(
+              builder: (context, state) {
+            if (state is ImagePickerInitial) {
+              return Container(
+                height: 100,
+                width: 100,
+                child: FittedBox(
+                  fit: BoxFit.fill,
+                  child: Icon(
+                    Icons.photo,
+                    color: Colors.black.withOpacity(0.5),
                   ),
-                )
-              : Container(
+                ),
+              );
+            } else if (state is ImageLoadedState) {
+              _urlImage = state.urlImage;
+              return Container(
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black, width: 1.0),
                       image: DecorationImage(
-                          image: FileImage(_image), fit: BoxFit.fill)))
+                          image: FileImage(state.image), fit: BoxFit.fill)));
+            } else if (state is ImageLoadingState) {
+              return CircularProgressIndicator();
+            }
+          })
         ]),
       ),
     );
@@ -163,7 +182,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
   _saveUserData() async {
     try {
       prefs = await SharedPreferences.getInstance();
-      print(_urlImage);
       if (_urlImage != null) {
         _db.collection("Users").doc(prefs.getString("userId")).update({
           "companyName": _companyName,
@@ -185,71 +203,85 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   @override
   Widget build(BuildContext context) {
+    UserService userService = Provider.of<UserService>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.bottomLeft,
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    "Empreendimento",
-                    style: TextStyle(fontSize: 40),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.grey,
-                  border: Border(bottom: BorderSide(color: Colors.black))),
-            ),
-            Container(
-              margin: EdgeInsets.all(24),
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildCompanyNameField(),
-                      _buildCnpjField(),
-                      _buildRazaoSocialField(),
-                      SizedBox(
-                        height: 30,
+      body: BlocProvider(
+        create: (context) => SignupBloc(userService: userService),
+        child: BlocConsumer<SignupBloc, SignupState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is SignupLoadedState) {
+              return CustomCircularProgressIndicator();
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomLeft,
+                      width: MediaQuery.of(context).size.width,
+                      height: 100,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Empreendimento",
+                            style: TextStyle(fontSize: 40),
+                          ),
+                        ],
                       ),
-                      _buildDescriptionField(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildPerfilImageField(),
-                      _buildLinkedinLinkField(),
-                      _buildPortfolioLinkField(),
-                      SizedBox(
-                        height: 70,
-                      ),
-                      Container(
-                        width: 400,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text("Criar conta"),
-                          onPressed: () {
-                            if (!_formKey.currentState.validate()) {
-                              return;
-                            }
-                            _formKey.currentState.save();
-                            _saveUserData();
-                          },
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          ],
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          border:
+                              Border(bottom: BorderSide(color: Colors.black))),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(24),
+                      child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              _buildCompanyNameField(),
+                              _buildCnpjField(),
+                              _buildRazaoSocialField(),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              _buildDescriptionField(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              _buildPerfilImageField(),
+                              _buildLinkedinLinkField(),
+                              _buildPortfolioLinkField(),
+                              SizedBox(
+                                height: 70,
+                              ),
+                              Container(
+                                width: 400,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text("Criar conta"),
+                                  onPressed: () {
+                                    if (!_formKey.currentState.validate()) {
+                                      return;
+                                    }
+                                    _formKey.currentState.save();
+                                    _saveUserData();
+                                  },
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
         ),
       ),
     );

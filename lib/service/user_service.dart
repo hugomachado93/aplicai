@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
+import 'package:aplicai/bloc/em_andamento_bloc.dart';
 import 'package:aplicai/bloc/image_picker_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/entity/solicitation.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
+import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -367,5 +369,28 @@ class UserService {
       "notification": "Seja bem vindo ao Aplicai",
       "type": "signup"
     });
+  }
+
+  Future<EmAndamentoLoaded> getUserDemandsAndType() async {
+    List<Demanda> demands = [];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString("userId");
+    final userData = await _db.collection("Users").doc(userId).get();
+    final type = userData.data()['type'];
+    var userSnapshot = await _db
+        .collection("Users")
+        .doc(userId)
+        .collection("Demands")
+        .where('isFinished', isEqualTo: false)
+        .get();
+
+    userSnapshot.docs.forEach((e) {
+      var demanda = Demanda.fromJson(e.data());
+      demanda.parentId = e.reference.parent.parent.id;
+      demanda.childId = e.id;
+      demands.add(demanda);
+    });
+
+    return EmAndamentoLoaded(demands: demands, type: type);
   }
 }

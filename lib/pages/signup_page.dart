@@ -162,7 +162,7 @@ class _SignupPageState extends State<SignupPage> {
                       image: DecorationImage(
                           image: FileImage(state.image), fit: BoxFit.fill)));
             } else if (state is ImageLoadingState) {
-              return CustomCircularProgressIndicator();
+              return CircularProgressIndicator();
             }
           })
         ]),
@@ -311,7 +311,6 @@ class _SignupPageState extends State<SignupPage> {
                                         isFinished: true);
 
                                     if (_urlImage != null) {
-                                      print("here");
                                       Provider.of<SignupBloc>(context,
                                               listen: false)
                                           .add(SignupUserEvent(

@@ -63,17 +63,19 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 50,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: ElevatedButton(
           child: Text("Entrar"),
-          color: Colors.blue,
+          style: ElevatedButton.styleFrom(primary: Colors.blue),
           onPressed: () => _login(context)),
     );
   }
 
   _buildSignupButton(BuildContext context, LoginState state) {
     return Container(
-      child: RaisedButton(
-          child: Text("Não tem"), onPressed: () => _signup(context)),
+      child: InkWell(
+          highlightColor: Colors.amber,
+          child: Text("Não tem conta? Clique aqui para criar agora!"),
+          onTap: () => _signup(context)),
     );
   }
 
@@ -136,22 +138,24 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildLoginButton(context, state),
-                              _buildSignupButton(context, state),
-                            ],
+                          _buildLoginButton(context, state),
+                          SizedBox(
+                            height: 250,
+                          ),
+                          Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            child: ElevatedButton(
+                                child: Text("Entrar com o google"),
+                                onPressed: () {
+                                  Provider.of<LoginBloc>(context, listen: false)
+                                      .add(LoginGoogleEvent());
+                                }),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: 15,
                           ),
-                          RaisedButton(
-                              child: Text("Entrar com o google"),
-                              onPressed: () {
-                                Provider.of<LoginBloc>(context, listen: false)
-                                    .add(LoginGoogleEvent());
-                              }),
+                          _buildSignupButton(context, state),
                         ],
                       ),
                     )),

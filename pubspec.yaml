@@ -24,14 +24,15 @@ dependencies:
   flutter:
     sdk: flutter
   dots_indicator: ^1.2.0
-  image_picker: ^0.6.7+7
-  cloud_firestore: ^0.16.0
-  firebase_auth: 0.20.0+1
+  image_picker: ^0.7.2+1
+  cloud_firestore: ^1.0.1
+  firebase_auth: ^1.0.1
+  # firebase_auth_web: ^1.0.2
   google_sign_in: ^4.5.3
   flutter_bloc: ^6.1.2
-  shared_preferences: ^0.5.10
-  url_launcher: ^5.7.10
-  firebase_storage: ^7.0.0
+  shared_preferences: ^2.0.4
+  url_launcher: ^6.0.2
+  firebase_storage: ^8.0.0
   provider: ^4.3.2+2
   badges: ^1.1.6
   flutter_tags: "^0.4.9+1"
