@@ -6,7 +6,7 @@ workflows:
         name: iOS App
         environment:
             vars:
-                XCODE_WORKSPACE: projeto
+                XCODE_WORKSPACE: aplicai
                 XCODE_SCHEME: aplicai
             xcode: latest
             cocoapods: default
