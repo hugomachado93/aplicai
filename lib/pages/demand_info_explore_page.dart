@@ -1,5 +1,6 @@
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
+import 'package:aplicai/commons/commons.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -53,9 +54,9 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
       ),
       Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("Title"),
+          Text(demanda.name),
           Divider(color: Colors.black),
-          _textBuilder(Icons.work, demanda.name),
+          _textBuilder(Icons.work, Commons.getDemandDate(demanda.endDate)),
           _textBuilder(Icons.folder, demanda.categories.toString()),
           _textBuilder(Icons.location_on, demanda.localization),
         ]),

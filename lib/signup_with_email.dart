@@ -78,6 +78,8 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
 
   _buildSignupButton(BuildContext context, SignupPageState state) {
     return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
           child: Text("Cadastrar"),
           style: ElevatedButton.styleFrom(primary: Colors.blue),

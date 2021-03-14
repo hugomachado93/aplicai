@@ -1,4 +1,5 @@
 import 'package:aplicai/bloc/explore_page_bloc.dart';
+import 'package:aplicai/commons/commons.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/user_entity.dart';
@@ -132,8 +133,12 @@ class _ExplorePageState extends State<ExplorePage> {
                                               height: 5,
                                               thickness: 1,
                                             ),
-                                            _textBuilder(Icons.work,
-                                                state.demandas[index].name),
+                                            _textBuilder(
+                                                Icons.calendar_today,
+                                                Commons.getDemandDate(state
+                                                        .demandas[index]
+                                                        .endDate)
+                                                    .toString()),
                                             _textListBuilder(
                                                 Icons.folder,
                                                 state.demandas[index]
