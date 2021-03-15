@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  file_picker: ^3.0.0
   dots_indicator: ^1.2.0
   image_picker: ^0.7.2+1
   cloud_firestore: ^1.0.1

@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/service/demand_service.dart';
@@ -9,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
 class NovaDemandaPage extends StatefulWidget {
   @override
@@ -30,6 +32,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   DateTime _date = DateTime.now();
   TextEditingController endDateCtrl = TextEditingController();
   File _image;
+  Uint8List _uploadfile;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   SharedPreferences prefs;
@@ -44,15 +47,22 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
       setState(() {
         _isLoadingImage = true;
       });
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
-      _image = File(pickedFile.path);
+
+      FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.image);
+
+      var plataformFile = result.files.single;
+      if(plataformFile.bytes != null) {
+        _uploadfile = plataformFile.bytes;
+      } else {
+        _uploadfile = await File(result.files.single.path).readAsBytes();
+      }
 
       var prefs = await SharedPreferences.getInstance();
       String userId = prefs.getString("userId");
 
       Reference reference = _storage.ref().child(
           "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-      UploadTask uploadTask = reference.putFile(_image);
+      UploadTask uploadTask = reference.putData(_uploadfile);
 
       TaskSnapshot storageTaskSnapshot = await uploadTask;
       _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
@@ -195,7 +205,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
-                          image: FileImage(_image), fit: BoxFit.fill)))
+                          image: MemoryImage(_uploadfile), fit: BoxFit.fill)))
         ]),
       ),
     );
