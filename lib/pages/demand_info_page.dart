@@ -234,8 +234,11 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                               ),
                               Row(children: [
                                 Icon(Icons.email),
-                                Expanded(child: Text("${demanda.name}:")),
-                                Expanded(child: Text("${demanda.name}")),
+                                Expanded(
+                                    child: Text(
+                                        "${state.empreendedor.companyName}:")),
+                                Expanded(
+                                    child: Text("${state.empreendedor.email}")),
                               ]),
                               ListView.builder(
                                   shrinkWrap: true,
@@ -256,7 +259,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                           child: Container(
                                             width: 200,
                                             child: Text(
-                                                "${state.students[index].name}"),
+                                                "${state.students[index].email}"),
                                           ),
                                         ),
                                       ],
