@@ -160,7 +160,7 @@ class _SignupPageState extends State<SignupPage> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.black, width: 1.0),
                       image: DecorationImage(
-                          image: FileImage(state.image), fit: BoxFit.fill)));
+                          image: MemoryImage(state.image), fit: BoxFit.fill)));
             } else if (state is ImageLoadingState) {
               return CircularProgressIndicator();
             }

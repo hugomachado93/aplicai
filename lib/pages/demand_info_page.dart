@@ -82,28 +82,32 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BlocProvider(
-            create: (context) => DemandInfoBloc()
-              ..add(GetAllUsers(
-                  employerId: demanda.parentId,
-                  studentUserListId: demanda.childId)),
-            child: BlocConsumer<DemandInfoBloc, DemandInfoState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is DemandInfoInitial ||
-                      state is DemandInfoLoading) {
-                    return Center(child: CustomCircularProgressIndicator());
-                  } else if (state is DemandInfoAllUsers) {
-                    return SingleChildScrollView(
+    return BlocProvider(
+        create: (context) => DemandInfoBloc()
+          ..add(GetAllUsers(
+              employerId: demanda.parentId,
+              studentUserListId: demanda.childId)),
+        child: BlocConsumer<DemandInfoBloc, DemandInfoState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is DemandInfoInitial || state is DemandInfoLoading) {
+                return Center(child: CustomCircularProgressIndicator());
+              } else if (state is DemandInfoAllUsers) {
+                return Scaffold(
+                    appBar: AppBar(
+                      centerTitle: true,
+                      backgroundColor: Colors.transparent,
+                      leading: BackButton(
+                        color: Colors.black,
+                      ),
+                      elevation: 0,
+                    ),
+                    body: SingleChildScrollView(
                       child: Container(
                           margin: EdgeInsets.all(20),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 50,
-                              ),
                               _createTop(),
                               SizedBox(
                                 height: 30,
@@ -260,8 +264,8 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   })
                             ],
                           )),
-                    );
-                  }
-                })));
+                    ));
+              }
+            }));
   }
 }

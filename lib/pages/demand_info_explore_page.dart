@@ -1,4 +1,3 @@
-import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
 import 'package:aplicai/commons/commons.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
@@ -8,10 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DemandInfoExplorePage extends StatefulWidget {
   final Demanda demanda;
@@ -93,6 +90,12 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(color: Colors.black,),
+        elevation: 0,
+      ),
       body: BlocProvider(
         create: (context) => DemandInfoExploreBloc()
           ..add(GetCurrentUserAndEmployerData(employerId: demanda.parentId)),
@@ -133,9 +136,6 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 50,
-                  ),
                   _createTop(),
                   SizedBox(
                     height: 15,

@@ -1,6 +1,4 @@
-import 'package:aplicai/bloc/login_bloc.dart';
 import 'package:aplicai/bloc/signup_page_bloc.dart';
-import 'package:aplicai/bloc/signup_bloc.dart';
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:aplicai/service/user_service.dart';
@@ -102,6 +100,11 @@ class _SignupWithEmailState extends State<SignupWithEmail> {
   @override
   Widget build(Object context) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent,
+      leading: BackButton(color: Colors.black,),
+      elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
       body: BlocProvider(
         create: (context) => SignupPageBloc(),
         child: BlocConsumer<SignupPageBloc, SignupPageState>(

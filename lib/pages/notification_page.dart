@@ -37,45 +37,46 @@ class _NotificationPageState extends State<NotificationPage> {
               } else if (state is NotificationLoaded) {
                 List<QueryDocumentSnapshot> notifications =
                     state.notifySnapshot;
-                return Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(children: [
-                          SizedBox(width: 15),
-                          Text("Notificações", style: TextStyle(fontSize: 30))
-                        ]),
-                      ),
-                      SizedBox(height: 20),
-                      notifications.length == 0
-                          ? Text("Não há notificações")
-                          : Container(),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: notifications.length,
-                          itemBuilder: (context, index) {
-                            Notify notify =
-                                Notify.fromJson(notifications[index].data());
-                            return Dismissible(
-                                onDismissed: (direction) {
-                                  _db
-                                      .collection("Users")
-                                      .doc(userEntity.userId)
-                                      .collection("Notifications")
-                                      .doc(notifications[index].id)
-                                      .delete();
-                                },
-                                key: Key(notify.imageUrl),
-                                background: Container(
-                                  child: Icon(Icons.delete),
-                                ),
-                                child: NotificationInvoker()
-                                    .invokeNotificationByType(notify));
-                          }),
-                    ],
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text("Notificações",
+                        style: TextStyle(fontSize: 30, color: Colors.black)),
+                    centerTitle: true,
+                    backgroundColor: Colors.transparent,
+                    leading: null,
+                    elevation: 0,
+                  ),
+                  body: Container(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                        notifications.length == 0
+                            ? Text("Não há notificações")
+                            : Container(),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: notifications.length,
+                            itemBuilder: (context, index) {
+                              Notify notify =
+                                  Notify.fromJson(notifications[index].data());
+                              return Dismissible(
+                                  onDismissed: (direction) {
+                                    _db
+                                        .collection("Users")
+                                        .doc(userEntity.userId)
+                                        .collection("Notifications")
+                                        .doc(notifications[index].id)
+                                        .delete();
+                                  },
+                                  key: Key(notify.imageUrl),
+                                  background: Container(
+                                    child: Icon(Icons.delete),
+                                  ),
+                                  child: NotificationInvoker()
+                                      .invokeNotificationByType(notify));
+                            }),
+                      ],
+                    ),
                   ),
                 );
               }

@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:aplicai/bloc/image_picker_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/service/demand_service.dart';
+import 'package:aplicai/service/user_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,41 +45,6 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   bool _isLoadingImage = false;
 
   final picker = ImagePicker();
-
-  Future _getImage() async {
-    try {
-      setState(() {
-        _isLoadingImage = true;
-      });
-
-      FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.image);
-
-      var plataformFile = result.files.single;
-      if(plataformFile.bytes != null) {
-        _uploadfile = plataformFile.bytes;
-      } else {
-        _uploadfile = await File(result.files.single.path).readAsBytes();
-      }
-
-      var prefs = await SharedPreferences.getInstance();
-      String userId = prefs.getString("userId");
-
-      Reference reference = _storage.ref().child(
-          "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-      UploadTask uploadTask = reference.putData(_uploadfile);
-
-      TaskSnapshot storageTaskSnapshot = await uploadTask;
-      _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
-      setState(() {
-        _isLoadingImage = false;
-      });
-    } catch (err) {
-      print(err);
-      setState(() {
-        _isLoadingImage = false;
-      });
-    }
-  }
 
   Widget _buildNameField() {
     return TextFormField(
@@ -180,32 +149,40 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
 
   Widget _buildDemandImageField() {
     return InkWell(
-      onTap: () => {_getImage()},
+      onTap: () => Provider.of<ImagePickerBloc>(context, listen: false)
+          .add(PickImageEvent()),
       child: Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text("Selecionar imagem"),
-          _urlImage == null
-              ? !_isLoadingImage
-                  ? Container(
-                      height: 100,
-                      width: 100,
-                      margin: EdgeInsets.all(15),
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(Icons.photo),
-                      ),
-                    )
-                  : Container(
-                      margin: EdgeInsets.all(15),
-                      child: CircularProgressIndicator())
-              : Container(
+          BlocBuilder<ImagePickerBloc, ImagePickerState>(
+              builder: (context, state) {
+            if (state is ImagePickerInitial) {
+              print(state);
+              return Container(
+                height: 100,
+                width: 100,
+                child: FittedBox(
+                  fit: BoxFit.fill,
+                  child: Icon(
+                    Icons.photo,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+              );
+            } else if (state is ImageLoadedState) {
+              _urlImage = state.urlImage;
+              return Container(
                   height: 100,
                   width: 100,
-                  margin: EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black, width: 1.0),
                       image: DecorationImage(
-                          image: MemoryImage(_uploadfile), fit: BoxFit.fill)))
+                          image: MemoryImage(state.image), fit: BoxFit.fill)));
+            } else if (state is ImageLoadingState) {
+              return CircularProgressIndicator();
+            }
+          })
         ]),
       ),
     );

@@ -196,14 +196,17 @@ class EmployerProfile {
   buildEmployerInfo(Empreendedor empreendedor, BuildContext context,
       AuthService authService) {
     return Scaffold(
+      appBar: AppBar(
+                    centerTitle: true,
+                    backgroundColor: Colors.transparent,
+                    leading: BackButton(color: Colors.black,),
+                    elevation: 0,
+                  ),
       body: SingleChildScrollView(
         child: Container(
             margin: EdgeInsets.all(20),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              SizedBox(
-                height: 30,
-              ),
               _createEmployerTop(empreendedor),
               SizedBox(
                 height: 30,

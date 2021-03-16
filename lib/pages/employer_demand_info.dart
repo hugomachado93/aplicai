@@ -70,6 +70,12 @@ class EmployerDemandInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(color: Colors.black,),
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
           child: Container(
               margin: EdgeInsets.all(20),
@@ -77,9 +83,6 @@ class EmployerDemandInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 50,
-                    ),
                     _createTop(),
                     SizedBox(
                       height: 15,

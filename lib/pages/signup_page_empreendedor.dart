@@ -38,26 +38,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   final picker = ImagePicker();
 
-  Future _getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-    var prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString("userId");
-
-    Reference reference = _firebaseStorage.ref().child(
-        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    UploadTask storageUploadTask = reference.putFile(_image);
-
-    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
-    var url = await storageTaskSnapshot.ref.getDownloadURL();
-    print("image url -> " + url);
-    setState(() {
-      _urlImage = url;
-    });
-  }
-
   Widget _buildCompanyNameField() {
     return TextFormField(
       decoration: InputDecoration(labelText: "Nome da empresa"),
@@ -169,7 +149,7 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.black, width: 1.0),
                       image: DecorationImage(
-                          image: FileImage(state.image), fit: BoxFit.fill)));
+                          image: MemoryImage(state.image), fit: BoxFit.fill)));
             } else if (state is ImageLoadingState) {
               return CircularProgressIndicator();
             }

@@ -94,6 +94,15 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
             return Center(child: CustomCircularProgressIndicator());
           } else if (state is EmAndamentoLoaded) {
             return Scaffold(
+                appBar: AppBar(
+                  title: Text("Em Andamento",
+                      style: TextStyle(fontSize: 30, color: Colors.black)),
+                  centerTitle: true,
+                  backgroundColor: Colors.transparent,
+                  leading: null,
+                  elevation: 0,
+                ),
+                extendBodyBehindAppBar: false,
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: state.type == 'employer'
@@ -120,15 +129,6 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
                   child: Center(
                       child: Column(
                     children: [
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(children: [
-                          SizedBox(width: 15),
-                          Text("Em Andamento", style: TextStyle(fontSize: 30))
-                        ]),
-                      ),
                       Expanded(
                           child: ListView.builder(
                               itemCount: state.demands.length,

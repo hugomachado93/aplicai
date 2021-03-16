@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:aplicai/bloc/demand_info_bloc.dart';
 import 'package:aplicai/bloc/demand_info_explore_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/entity/notify.dart';
 import 'package:aplicai/enum/userTypeEnum.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -338,22 +340,29 @@ class UserService {
   }
 
   Future<ImageLoadedState> getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      Uint8List _uploadfile;
+      String _urlImage;
+      FilePickerResult result =
+          await FilePicker.platform.pickFiles(type: FileType.image);
 
-    File image = File(pickedFile.path);
+      var plataformFile = result.files.single;
+      if (plataformFile.bytes != null) {
+        _uploadfile = plataformFile.bytes;
+      } else {
+        _uploadfile = await File(result.files.single.path).readAsBytes();
+      }
 
-    var prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString("userId");
+      var prefs = await SharedPreferences.getInstance();
+      String userId = prefs.getString("userId");
 
-    Reference reference = _storage.ref().child(
-        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-    UploadTask storageUploadTask = reference.putFile(image);
+      Reference reference = _storage.ref().child(
+          "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+      UploadTask uploadTask = reference.putData(_uploadfile);
 
-    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
+      TaskSnapshot storageTaskSnapshot = await uploadTask;
+      _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
 
-    String urlImage = await storageTaskSnapshot.ref.getDownloadURL();
-
-    return ImageLoadedState(image: image, urlImage: urlImage);
+      return ImageLoadedState(image: _uploadfile, urlImage: _urlImage);
   }
 
   saveUserData(UserEntity userEntity) async {

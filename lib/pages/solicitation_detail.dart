@@ -28,7 +28,13 @@ class _SolicitationDetailPageState extends State<SolicitationDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocProvider(
+            appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(color: Colors.black,),
+        elevation: 0,
+      ),
+        body:  BlocProvider(
             create: (context) => SolicitationDetailBloc()
               ..add(GetUserSolicitationEvent(demanda: demanda)),
             child:

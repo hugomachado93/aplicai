@@ -27,7 +27,17 @@ class _SolicitationPageState extends State<SolicitationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<UserEntity>>(
+            appBar: AppBar(
+              title:                         Text(
+                          "Suas Solicitações",
+                          style: TextStyle(fontSize: 30, color: Colors.black),
+                        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(color: Colors.black,),
+        elevation: 0,
+      ),
+        body: FutureBuilder<List<UserEntity>>(
           future: userService.getAllUsersSolicitation(demanda),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -43,20 +53,13 @@ class _SolicitationPageState extends State<SolicitationPage> {
                 child: Container(
                   margin: EdgeInsets.all(20),
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          "Suas Solicitações",
-                          style: TextStyle(fontSize: 30),
-                        ),
                         Divider(
                           thickness: 1,
                         ),
                         Expanded(
-                          child: ListView.builder(
+                          child: snapshot.data.length > 0 ? ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 return Card(
@@ -118,7 +121,7 @@ class _SolicitationPageState extends State<SolicitationPage> {
                                     ],
                                   ),
                                 );
-                              }),
+                              }) :Text("Não há solicitações"),
                         ),
                       ]),
                 ),

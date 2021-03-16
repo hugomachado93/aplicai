@@ -54,35 +54,34 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(Object context) {
     DemandService demandService = Provider.of<DemandService>(context);
-    return Scaffold(
-        body: BlocProvider(
-            create: (context) => ExplorePageBloc(demandService: demandService)
-              ..add(GetActiveDemands()),
-            child: BlocConsumer<ExplorePageBloc, ExplorePageState>(
-                listener: (context, state) {
-              if (state is ClickDemandState) {
-                Navigator.of(context)
-                    .pushNamed("/demand-info-explore", arguments: state.demanda)
-                    .whenComplete(() =>
-                        Provider.of<ExplorePageBloc>(context, listen: false)
-                            .add(GetActiveDemands()));
-              }
-            }, builder: (context, state) {
-              if (state is ExplorePageInitial || state is LoadingPageState) {
-                return CustomCircularProgressIndicator();
-              } else if (state is LoadedPageState) {
-                return Container(
+    return BlocProvider(
+        create: (context) => ExplorePageBloc(demandService: demandService)
+          ..add(GetActiveDemands()),
+        child: BlocConsumer<ExplorePageBloc, ExplorePageState>(
+            listener: (context, state) {
+          if (state is ClickDemandState) {
+            Navigator.of(context)
+                .pushNamed("/demand-info-explore", arguments: state.demanda)
+                .whenComplete(() =>
+                    Provider.of<ExplorePageBloc>(context, listen: false)
+                        .add(GetActiveDemands()));
+          }
+        }, builder: (context, state) {
+          if (state is ExplorePageInitial || state is LoadingPageState) {
+            return CustomCircularProgressIndicator();
+          } else if (state is LoadedPageState) {
+            return Scaffold(
+                appBar: AppBar(
+                  title: Text("Explorar",
+                      style: TextStyle(fontSize: 30, color: Colors.black)),
+                  centerTitle: true,
+                  backgroundColor: Colors.transparent,
+                  leading: null,
+                  elevation: 0,
+                ),
+                body: Container(
                     child: Center(
                         child: Column(children: [
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    height: 100,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(children: [
-                      SizedBox(width: 15),
-                      Text("Explorar", style: TextStyle(fontSize: 30))
-                    ]),
-                  ),
                   Expanded(
                       child: ListView.builder(
                           itemCount: state.demandas.length,
@@ -157,10 +156,10 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                             );
                           }))
-                ])));
-              } else if (state is ClickDemandState) {
-                return Container();
-              }
-            })));
+                ]))));
+          } else if (state is ClickDemandState) {
+            return Container();
+          }
+        }));
   }
 }

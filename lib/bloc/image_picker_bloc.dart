@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:aplicai/service/user_service.dart';
 import 'package:bloc/bloc.dart';

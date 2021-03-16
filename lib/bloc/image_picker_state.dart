@@ -13,9 +13,9 @@ class ImageLoadingState extends ImagePickerState {}
 
 class ImageLoadedState extends ImagePickerState {
   String urlImage;
-  File image;
+  Uint8List image;
   ImageLoadedState({this.urlImage, this.image});
 
   @override
-  List<Object> get props => [urlImage];
+  List<Object> get props => [urlImage, image];
 }
