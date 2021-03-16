@@ -27,5 +27,3 @@
 .pub/
 /build/
 pubspec.lock
-web
-linux

@@ -342,9 +342,9 @@ class UserService {
   Future<ImageLoadedState> getImage() async {
       Uint8List _uploadfile;
       String _urlImage;
+
       FilePickerResult result =
           await FilePicker.platform.pickFiles(type: FileType.image);
-
       var plataformFile = result.files.single;
       if (plataformFile.bytes != null) {
         _uploadfile = plataformFile.bytes;

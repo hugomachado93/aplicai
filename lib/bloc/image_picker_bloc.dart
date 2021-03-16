@@ -23,6 +23,7 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
         yield ImageLoadingState();
         yield await userService.getImage();
       } catch (err) {
+        print(err);
         yield ImagePickerInitial();
       }
     }
