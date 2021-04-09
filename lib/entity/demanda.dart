@@ -13,6 +13,7 @@ class Demanda {
   String solicitationId;
   String urlImage;
   bool isFinished;
+  double similarity;
 
   Demanda(
       {this.name,

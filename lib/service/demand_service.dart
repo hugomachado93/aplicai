@@ -1,7 +1,9 @@
 import 'package:aplicai/bloc/explore_page_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
+import 'package:aplicai/entity/recomendation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class DemandService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -23,17 +25,45 @@ class DemandService {
 
   Future<List<Demanda>> getActiveDemands() async {
     List<Demanda> listDemands = [];
-    QuerySnapshot querySnapshot = await _db
-        .collectionGroup("DemandList")
-        .where('isFinished', isEqualTo: false)
-        .get();
 
-    querySnapshot.docs.forEach((e) {
-      var demanda = Demanda.fromJson(e.data());
-      demanda.childId = e.id;
-      demanda.parentId = e.reference.parent.parent.id;
-      listDemands.add(demanda);
-    });
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString("userId");
+    DocumentSnapshot documentSnapshot =
+        await _db.collection("Recomendation").doc(userid).get();
+
+    if (documentSnapshot.exists) {
+      Recomendation recomendation =
+          Recomendation.fromJson(documentSnapshot.data());
+      for (DemandInfo demandInfo in recomendation.recomendedDemand) {
+        documentSnapshot = await _db
+            .collection("Demands")
+            .doc(demandInfo.userOwnerId)
+            .collection("DemandList")
+            .doc(demandInfo.demandId)
+            .get();
+
+        final demanda = Demanda.fromJson(documentSnapshot.data());
+        if (!demanda.isFinished) {
+          demanda.childId = demandInfo.demandId;
+          demanda.parentId = demandInfo.userOwnerId;
+          demanda.similarity = demandInfo.similarity;
+          listDemands.add(demanda);
+        }
+      }
+    } else {
+      QuerySnapshot querySnapshot = await _db
+          .collectionGroup("DemandList")
+          .where('isFinished', isEqualTo: false)
+          .get();
+
+      querySnapshot.docs.forEach((e) {
+        var demanda = Demanda.fromJson(e.data());
+        demanda.childId = e.id;
+        demanda.parentId = e.reference.parent.parent.id;
+        listDemands.add(demanda);
+      });
+    }
+
     return listDemands;
   }
 
