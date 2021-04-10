@@ -184,33 +184,31 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                   ? Container(
                                       height: 100,
                                       width: MediaQuery.of(context).size.width,
-                                      child: Expanded(
-                                        child: ListView.separated(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: state.students.length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              height: 100,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(state
-                                                          .students[index]
-                                                          .urlImage),
-                                                      fit: BoxFit.fill)),
-                                            );
-                                          },
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return SizedBox(
-                                              width: 30,
-                                            );
-                                          },
-                                        ),
-                                      ))
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.students.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            height: 100,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                image: DecorationImage(
+                                                    image: NetworkImage(state
+                                                        .students[index]
+                                                        .urlImage),
+                                                    fit: BoxFit.fill)),
+                                          );
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return SizedBox(
+                                            width: 30,
+                                          );
+                                        },
+                                      ),
+                                    )
                                   : Container(
                                       child: Column(
                                       children: [
