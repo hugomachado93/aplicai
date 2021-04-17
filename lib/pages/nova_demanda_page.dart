@@ -31,6 +31,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   String _quantityParticipants;
   String _localization;
   String _urlImage;
+  bool showTagValidation = false;
   List _items = [];
   List<String> _itemsTitle = [];
   DateTime _date = DateTime.now();
@@ -59,43 +60,59 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
   }
 
   Widget _buildCategoryTagField() {
-    return Tags(
-      key: _tagStateKey,
-      textField: TagsTextField(
-          width: MediaQuery.of(context).size.width,
-          textStyle: TextStyle(fontSize: 15),
-          hintText: "Adicionar skill, ex: Java",
-          constraintSuggestion: false,
-          suggestions: [],
-          onSubmitted: (String str) {
-            setState(() {
-              _items.add(Item(title: str));
-            });
-          }),
-      columns: 6,
-      itemCount: _items.length,
-      itemBuilder: (index) {
-        final item = _items[index];
+    return Column(
+      children: [
+        Tags(
+          key: _tagStateKey,
+          textField: TagsTextField(
+              width: MediaQuery.of(context).size.width,
+              textStyle: TextStyle(fontSize: 15),
+              hintText: "Adicionar skill, ex: Java",
+              constraintSuggestion: false,
+              suggestions: [],
+              onSubmitted: (String str) {
+                setState(() {
+                  _items.add(Item(title: str));
+                });
+              }),
+          columns: 6,
+          itemCount: _items.length,
+          itemBuilder: (index) {
+            final item = _items[index];
 
-        return ItemTags(
-          key: Key(index.toString()),
-          index: index,
-          title: item.title,
-          pressEnabled: false,
-          customData: item.customData,
-          combine: ItemTagsCombine.withTextBefore,
-          icon: ItemTagsIcon(icon: Icons.add),
-          onPressed: (i) => print(i),
-          onLongPressed: (i) => print(i),
-          removeButton: ItemTagsRemoveButton(onRemoved: () {
-            setState(() {
-              _items.removeAt(index);
-            });
+            return ItemTags(
+              key: Key(index.toString()),
+              index: index,
+              title: item.title,
+              pressEnabled: false,
+              customData: item.customData,
+              combine: ItemTagsCombine.withTextBefore,
+              icon: ItemTagsIcon(icon: Icons.add),
+              onPressed: (i) => print(i),
+              onLongPressed: (i) => print(i),
+              removeButton: ItemTagsRemoveButton(onRemoved: () {
+                setState(() {
+                  _items.removeAt(index);
+                });
 
-            return true;
-          }),
-        );
-      },
+                return true;
+              }),
+            );
+          },
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: showTagValidation
+              ? Text(
+                  "Deve ter pelo menos 3 skills",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                )
+              : Container(),
+        )
+      ],
     );
   }
 
@@ -262,7 +279,17 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                               borderRadius: BorderRadius.circular(20)),
                           child: Text("Criar demanda"),
                           onPressed: () {
-                            if (!_formKey.currentState.validate()) {
+                            if (_items.length < 3) {
+                              setState(() {
+                                showTagValidation = true;
+                              });
+                            } else {
+                              setState(() {
+                                showTagValidation = false;
+                              });
+                            }
+                            if (!_formKey.currentState.validate() ||
+                                showTagValidation) {
                               return;
                             }
                             _formKey.currentState.save();
@@ -276,7 +303,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                                 startDate: Timestamp.now(),
                                 urlImage: _urlImage,
                                 isFinished: false);
-                            if (!_isLoadingImage) {
+                            if (_urlImage != null) {
                               demandService.saveDemandData(demanda);
                               Navigator.of(context).pushNamed("/navigation");
                             }

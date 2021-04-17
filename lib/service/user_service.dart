@@ -340,29 +340,29 @@ class UserService {
   }
 
   Future<ImageLoadedState> getImage() async {
-      Uint8List _uploadfile;
-      String _urlImage;
+    Uint8List _uploadfile;
+    String _urlImage;
 
-      FilePickerResult result =
-          await FilePicker.platform.pickFiles(type: FileType.image);
-      var plataformFile = result.files.single;
-      if (plataformFile.bytes != null) {
-        _uploadfile = plataformFile.bytes;
-      } else {
-        _uploadfile = await File(result.files.single.path).readAsBytes();
-      }
+    FilePickerResult result = await FilePicker.platform
+        .pickFiles(type: FileType.image, allowCompression: true);
+    var plataformFile = result.files.single;
+    if (plataformFile.bytes != null) {
+      _uploadfile = plataformFile.bytes;
+    } else {
+      _uploadfile = await File(result.files.single.path).readAsBytes();
+    }
 
-      var prefs = await SharedPreferences.getInstance();
-      String userId = prefs.getString("userId");
+    var prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString("userId");
 
-      Reference reference = _storage.ref().child(
-          "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
-      UploadTask uploadTask = reference.putData(_uploadfile);
+    Reference reference = _storage.ref().child(
+        "/demands/$userId${DateTime.now().toUtc().millisecondsSinceEpoch}");
+    UploadTask uploadTask = reference.putData(_uploadfile);
 
-      TaskSnapshot storageTaskSnapshot = await uploadTask;
-      _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
+    TaskSnapshot storageTaskSnapshot = await uploadTask;
+    _urlImage = await storageTaskSnapshot.ref.getDownloadURL();
 
-      return ImageLoadedState(image: _uploadfile, urlImage: _urlImage);
+    return ImageLoadedState(image: _uploadfile, urlImage: _urlImage);
   }
 
   saveUserData(UserEntity userEntity) async {
