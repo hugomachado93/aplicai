@@ -68,7 +68,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                         .doc(notifications[index].id)
                                         .delete();
                                   },
-                                  key: Key(notify.imageUrl),
+                                  key: Key(
+                                      "${DateTime.now().toUtc().millisecondsSinceEpoch}"),
                                   background: Container(
                                     child: Icon(Icons.delete),
                                   ),

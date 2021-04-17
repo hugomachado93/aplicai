@@ -1,1 +1,7 @@
-enum NotificationType { Signup, Solicitation, Request }
+enum NotificationType {
+  Signup,
+  Solicitation,
+  Request,
+  Recomendation,
+  DemandRecomendNotification
+}
