@@ -1,6 +1,6 @@
 import 'package:aplicai/bloc/explore_page_bloc.dart';
 import 'package:aplicai/entity/demanda.dart';
-import 'package:aplicai/entity/recomendation.dart';
+import 'package:aplicai/entity/recommendation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -29,12 +29,12 @@ class DemandService {
     final prefs = await SharedPreferences.getInstance();
     String userid = prefs.getString("userId");
     DocumentSnapshot documentSnapshot =
-        await _db.collection("Recomendation").doc(userid).get();
+        await _db.collection("Recommendation").doc(userid).get();
 
     if (documentSnapshot.exists) {
-      Recomendation recomendation =
-          Recomendation.fromJson(documentSnapshot.data());
-      for (DemandInfo demandInfo in recomendation.recomendedDemand) {
+      Recommendation recommendation =
+          Recommendation.fromJson(documentSnapshot.data());
+      for (DemandInfo demandInfo in recommendation.recomendedDemand) {
         documentSnapshot = await _db
             .collection("Demands")
             .doc(demandInfo.userOwnerId)

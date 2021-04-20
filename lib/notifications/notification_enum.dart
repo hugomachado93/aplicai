@@ -2,6 +2,7 @@ enum NotificationType {
   Signup,
   Solicitation,
   Request,
-  Recomendation,
-  DemandRecomendNotification
+  Recommendation,
+  DemandRecomendNotification,
+  FirstRecommendation,
 }

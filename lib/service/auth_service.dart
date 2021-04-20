@@ -1,5 +1,4 @@
 import 'package:aplicai/bloc/login_bloc.dart';
-import 'package:aplicai/bloc/signup_page_bloc.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';

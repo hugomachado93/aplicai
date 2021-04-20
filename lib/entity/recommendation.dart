@@ -1,9 +1,9 @@
-class Recomendation {
+class Recommendation {
   List<DemandInfo> recomendedDemand;
 
-  Recomendation({this.recomendedDemand});
+  Recommendation({this.recomendedDemand});
 
-  Recomendation.fromJson(Map<String, dynamic> json) {
+  Recommendation.fromJson(Map<String, dynamic> json) {
     recomendedDemand = (json['recomended_demand'] as List)
         .map((e) => DemandInfo.fromJson(e))
         .toList();
@@ -20,6 +20,6 @@ class DemandInfo {
   DemandInfo.fromJson(Map<String, dynamic> json) {
     demandId = json['demand_id'];
     userOwnerId = json['user_owner_id'];
-    similarity = json['similarity'];
+    similarity = json['similarity'].toDouble();
   }
 }

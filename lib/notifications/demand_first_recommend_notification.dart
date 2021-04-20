@@ -3,7 +3,7 @@ import 'package:aplicai/notifications/notification_enum.dart';
 import 'package:aplicai/notifications/notifications_strategy.dart';
 import 'package:flutter/material.dart';
 
-class DemandRecomendNotification implements NotificationsStrategy {
+class DemandFirstRecomemndNotification implements NotificationsStrategy {
   @override
   Widget createCard(Notify notify) {
     return Container(
@@ -25,9 +25,6 @@ class DemandRecomendNotification implements NotificationsStrategy {
 
   @override
   String getType() {
-    return NotificationType.Recomendation.toString()
-        .split('.')
-        .last
-        .toLowerCase();
+    return "first_recommendation";
   }
 }

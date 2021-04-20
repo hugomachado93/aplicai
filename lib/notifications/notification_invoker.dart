@@ -1,5 +1,6 @@
 import 'package:aplicai/entity/notify.dart';
-import 'package:aplicai/notifications/demand_recomend_notification.dart';
+import 'package:aplicai/notifications/demand_first_recommend_notification.dart';
+import 'package:aplicai/notifications/demand_recommend_notification.dart';
 import 'package:aplicai/notifications/notifications_strategy.dart';
 import 'package:aplicai/notifications/request_notification.dart';
 import 'package:aplicai/notifications/signup_notification.dart';
@@ -11,7 +12,8 @@ class NotificationInvoker {
     SignupNotification(),
     SubscriptionNotification(),
     RequestNotification(),
-    DemandRecomendNotification(),
+    DemandRecommendNotification(),
+    DemandFirstRecomemndNotification(),
   ];
 
   Widget invokeNotificationByType(Notify notify) {
