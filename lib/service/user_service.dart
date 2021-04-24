@@ -85,12 +85,14 @@ class UserService {
   }
 
   Stream<int> getUserNumNotifications(UserEntity userEntity) {
-    return _db
-        .collection("Users")
-        .doc(userEntity.userId)
-        .collection("Notifications")
-        .snapshots()
-        .map((event) => event.docs.length);
+    if (userEntity != null) {
+      return _db
+          .collection("Users")
+          .doc(userEntity.userId)
+          .collection("Notifications")
+          .snapshots()
+          .map((event) => event.docs.length);
+    }
   }
 
   Future<UserEntity> getUserFinishedDemands() async {
