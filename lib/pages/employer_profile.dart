@@ -1,9 +1,12 @@
 import 'package:aplicai/components/custom_circular_progress_indicator.dart';
+import 'package:aplicai/entity/demanda.dart';
 import 'package:aplicai/entity/empreendedor.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class EmployerProfile {
   Widget _textBuilder(IconData icon, String text) {
@@ -31,7 +34,7 @@ class EmployerProfile {
           child: Row(
               children: listText
                   .map((e) => Text(
-                        e,
+                        "$e ",
                         overflow: TextOverflow.ellipsis,
                       ))
                   .toList()))
@@ -44,6 +47,11 @@ class EmployerProfile {
     } else {
       throw 'Could not launch your url';
     }
+  }
+
+  String endDateFormated(Timestamp timestamp) {
+    var dateFormat = DateFormat('dd/MM/yyyy');
+    return dateFormat.format(timestamp.toDate());
   }
 
   List<Container> _finishedEmployerDemands(
@@ -87,9 +95,9 @@ class EmployerProfile {
                         SizedBox(
                           height: 5,
                         ),
-                        Text("Title"),
+                        Text(emp.name),
                         Divider(color: Colors.black),
-                        _textBuilder(Icons.work, emp.name),
+                        _textBuilder(Icons.work, endDateFormated(emp.endDate)),
                         _textListBuilder(Icons.folder, emp.categories),
                         _textBuilder(Icons.location_on, emp.localization),
                       ]),
@@ -197,11 +205,13 @@ class EmployerProfile {
       AuthService authService) {
     return Scaffold(
       appBar: AppBar(
-                    centerTitle: true,
-                    backgroundColor: Colors.transparent,
-                    leading: BackButton(color: Colors.black,),
-                    elevation: 0,
-                  ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(
+          color: Colors.black,
+        ),
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Container(
             margin: EdgeInsets.all(20),

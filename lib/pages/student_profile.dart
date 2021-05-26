@@ -2,8 +2,10 @@ import 'package:aplicai/components/custom_circular_progress_indicator.dart';
 import 'package:aplicai/entity/user_entity.dart';
 import 'package:aplicai/service/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class StudentProfile {
   Widget _textListBuilder(IconData icon, List listText) {
@@ -16,7 +18,7 @@ class StudentProfile {
           child: Row(
               children: listText
                   .map((e) => Text(
-                        e,
+                        "$e ",
                         overflow: TextOverflow.ellipsis,
                       ))
                   .toList()))
@@ -134,6 +136,11 @@ class StudentProfile {
     );
   }
 
+  String endDateFormated(Timestamp timestamp) {
+    var dateFormat = DateFormat('dd/MM/yyyy');
+    return dateFormat.format(timestamp.toDate());
+  }
+
   List<Container> _finishedStudentDemands(
       UserEntity userEntity, BuildContext context) {
     return userEntity.demandas.map((demand) {
@@ -175,9 +182,11 @@ class StudentProfile {
                         SizedBox(
                           height: 5,
                         ),
-                        Text("Title"),
+                        Text(demand.name),
                         Divider(color: Colors.black),
-                        Expanded(child: _textBuilder(Icons.work, demand.name)),
+                        Expanded(
+                            child: _textBuilder(
+                                Icons.work, endDateFormated(demand.endDate))),
                         Expanded(
                             child: _textListBuilder(
                                 Icons.folder, demand.categories)),
