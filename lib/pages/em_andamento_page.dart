@@ -20,7 +20,14 @@ class _EmAndamentoPageState extends State<EmAndamentoPage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Widget _textBuilder(IconData icon, String text) {
-    return Row(children: [Icon(icon), Text(text)]);
+    return Row(children: [
+      Icon(icon),
+      Flexible(
+          child: Text(
+        text,
+        overflow: TextOverflow.ellipsis,
+      ))
+    ]);
   }
 
   String endDateFormated(DateTime dateTime) {

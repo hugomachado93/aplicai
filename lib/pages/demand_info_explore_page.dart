@@ -30,7 +30,7 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
   _DemandInfoExplorePageState({this.demanda});
 
   Widget _textBuilder(IconData icon, String text) {
-    return Row(children: [Icon(icon), Text(text)]);
+    return Row(children: [Icon(icon), Flexible(child: Text(text))]);
   }
 
   Widget _createTop() {
@@ -93,7 +93,9 @@ class _DemandInfoExplorePageState extends State<DemandInfoExplorePage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        leading: BackButton(color: Colors.black,),
+        leading: BackButton(
+          color: Colors.black,
+        ),
         elevation: 0,
       ),
       body: BlocProvider(

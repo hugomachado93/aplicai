@@ -17,9 +17,11 @@ class StudentProfile {
       Expanded(
           child: Row(
               children: listText
-                  .map((e) => Text(
-                        "$e ",
-                        overflow: TextOverflow.ellipsis,
+                  .map((e) => Flexible(
+                        child: Text(
+                          "$e ",
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ))
                   .toList()))
     ]);
@@ -187,9 +189,7 @@ class StudentProfile {
                         Expanded(
                             child: _textBuilder(
                                 Icons.work, endDateFormated(demand.endDate))),
-                        Expanded(
-                            child: _textListBuilder(
-                                Icons.folder, demand.categories)),
+                        _textListBuilder(Icons.folder, demand.categories),
                         Expanded(
                             child: _textBuilder(
                                 Icons.location_on, demand.localization)),

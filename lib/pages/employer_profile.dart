@@ -33,9 +33,11 @@ class EmployerProfile {
       Expanded(
           child: Row(
               children: listText
-                  .map((e) => Text(
-                        "$e ",
-                        overflow: TextOverflow.ellipsis,
+                  .map((e) => Flexible(
+                        child: Text(
+                          "$e ",
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ))
                   .toList()))
     ]);
