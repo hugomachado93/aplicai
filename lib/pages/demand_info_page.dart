@@ -29,7 +29,7 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Widget _textBuilder(IconData icon, String text) {
-    return Row(children: [Icon(icon), Text(text)]);
+    return Row(children: [Icon(icon), Flexible(child: Text(text))]);
   }
 
   Widget _createTop() {
@@ -147,29 +147,39 @@ class _DemandInfoPageState extends State<DemandInfoPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Container(
-                                          width: 170,
-                                          child: RaisedButton(
-                                              color: Colors.blue,
-                                              onPressed: () {
-                                                Navigator.of(context).pushNamed(
-                                                    "/solicitation",
-                                                    arguments: demanda);
-                                              },
-                                              child: Text("Ver solicitações")),
-                                        ),
-                                        Container(
+                                        Flexible(
+                                          child: Container(
                                             width: 170,
                                             child: RaisedButton(
                                                 color: Colors.blue,
-                                                onPressed: () async {
-                                                  DemandService().finishDemand(
-                                                      demanda.parentId,
-                                                      demanda.childId);
-                                                  Navigator.pop(context);
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed(
+                                                          "/solicitation",
+                                                          arguments: demanda);
                                                 },
                                                 child:
-                                                    Text("Concluir demanda")))
+                                                    Text("Ver solicitações")),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Flexible(
+                                          child: Container(
+                                              width: 170,
+                                              child: RaisedButton(
+                                                  color: Colors.blue,
+                                                  onPressed: () async {
+                                                    DemandService()
+                                                        .finishDemand(
+                                                            demanda.parentId,
+                                                            demanda.childId);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                      "Concluir demanda"))),
+                                        )
                                       ],
                                     )
                                   : Container(),
