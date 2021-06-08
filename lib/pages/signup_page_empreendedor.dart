@@ -64,12 +64,7 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   Widget _buildRazaoSocialField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: "Razão Social"),
-      validator: (String value) {
-        if (value.isEmpty) {
-          return "Curso invalido";
-        }
-      },
+      decoration: InputDecoration(labelText: "Razão Social (Opcional)"),
       onSaved: (value) => {_razaoSocial = value},
     );
   }
@@ -100,8 +95,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   Widget _buildLinkedinLinkField() {
     return TextFormField(
-      style: TextStyle(color: Colors.amber),
-      obscureText: true,
       decoration: InputDecoration(labelText: "Url Linkedin (Opcional)"),
       onSaved: (value) => {_linkedinUrl = value},
     );
@@ -109,8 +102,6 @@ class _SignupPageEmpreendedorState extends State<SignupPageEmpreendedor> {
 
   Widget _buildPortfolioLinkField() {
     return TextFormField(
-      style: TextStyle(color: Colors.amber),
-      obscureText: true,
       decoration: InputDecoration(labelText: "Url Portfolio (Opcional)"),
       onSaved: (value) => {_portfolioUrl = value},
     );
