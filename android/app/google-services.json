@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1021326242435:android:f8febed135d722d2f0a1b6",
         "android_client_info": {
-          "package_name": "com.example.aplicai"
+          "package_name": "com.project.aplicai"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1021326242435-vjggev0t0jqcmete538hn8e5b7draln7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.aplicai",
+            "package_name": "com.project.aplicai",
             "certificate_hash": "833d9079d1c40a61ed88fb43d6b56a6e76be628b"
           }
         },
