@@ -278,7 +278,7 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           child: Text("Criar demanda"),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_items.length < 3) {
                               setState(() {
                                 showTagValidation = true;
@@ -293,16 +293,19 @@ class _NovaDemandaPageState extends State<NovaDemandaPage> {
                               return;
                             }
                             _formKey.currentState.save();
+                            prefs = await SharedPreferences.getInstance();
                             final demanda = Demanda(
-                                name: _name,
-                                description: _description,
-                                categories: _getAllItem(),
-                                quantityParticipants: _quantityParticipants,
-                                localization: _localization,
-                                endDate: Timestamp.fromDate(_date),
-                                startDate: Timestamp.now(),
-                                urlImage: _urlImage,
-                                isFinished: false);
+                              name: _name,
+                              description: _description,
+                              categories: _getAllItem(),
+                              quantityParticipants: _quantityParticipants,
+                              localization: _localization,
+                              endDate: Timestamp.fromDate(_date),
+                              startDate: Timestamp.now(),
+                              urlImage: _urlImage,
+                              isFinished: false,
+                              parentId: prefs.getString("userId"),
+                            );
                             if (_urlImage != null) {
                               demandService.saveDemandData(demanda);
                               Navigator.of(context).pushNamed("/navigation");

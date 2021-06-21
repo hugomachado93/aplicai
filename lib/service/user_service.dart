@@ -397,7 +397,6 @@ class UserService {
 
     userSnapshot.docs.forEach((e) {
       var demanda = Demanda.fromJson(e.data());
-      demanda.parentId = e.reference.parent.parent.id;
       demanda.childId = e.id;
       demands.add(demanda);
     });

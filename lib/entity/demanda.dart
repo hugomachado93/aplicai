@@ -15,16 +15,18 @@ class Demanda {
   bool isFinished;
   double similarity;
 
-  Demanda(
-      {this.name,
-      this.categories,
-      this.endDate,
-      this.startDate,
-      this.localization,
-      this.quantityParticipants,
-      this.description,
-      this.urlImage,
-      this.isFinished});
+  Demanda({
+    this.name,
+    this.categories,
+    this.endDate,
+    this.startDate,
+    this.localization,
+    this.quantityParticipants,
+    this.description,
+    this.urlImage,
+    this.isFinished,
+    this.parentId,
+  });
 
   Demanda.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -36,6 +38,7 @@ class Demanda {
     quantityParticipants = json['quantityParticipants'];
     urlImage = json['urlImage'];
     isFinished = json['isFinished'];
+    parentId = json['parentId'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +50,7 @@ class Demanda {
         'localization': localization,
         'quantityParticipants': quantityParticipants,
         'urlImage': urlImage,
+        'parentId': parentId,
         'isFinished': isFinished
       };
 }
