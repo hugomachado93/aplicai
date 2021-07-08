@@ -11,8 +11,8 @@
 
 ### This project make the recomendation for demands based on the skills and for that is was used the Gensim library.
 
-## Recomendation System
-### To make the recomendation works two methods were used: 
+## Recommendation System
+### To make the recommendation works two methods were used: 
 * Word2Vec and Word Mover Distance
 ### Both of these methods were developed using the Gensim library.
 
